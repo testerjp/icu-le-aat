@@ -65,22 +65,23 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     switch (format) {
     case ltfSimpleArray: {
-#ifdef TEST_FORMAT
         LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(classTable, success);
         if (LE_FAILURE(success)) break;
 
         while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
             if (LE_FAILURE(success)) break;
+
             if (LE_STATE_PATIENCE_DECR()) {
                 LE_TRACE_LOG("patience exceeded - state table not moving");
                 break; // patience exceeded.
             }
+
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {
                 // XXX: How do we handle EOT vs. EOL?
                 classCode = classCodeEOT;
             } else {
-                LEGlyphID gid = glyphStorage[currGlyph];
+                LEGlyphID gid       = glyphStorage[currGlyph];
                 TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(gid);
 
                 if (glyphCode == 0xFFFF) {
@@ -89,12 +90,15 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                     classCode = SWAPW(simpleArrayLookupTable->valueArray[gid]);
                 }
             }
+
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-            currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex); // return a zero-based index instead of a byte offset
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses; current glyph %d", classCode, nClasses, entryTableIndex, currentState, glyphStorage[currGlyph]);
+            currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success); // return a zero-based index instead of a byte offset
+            LE_TRACE_LOG("new state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
-#endif
+
         break;
     }
 

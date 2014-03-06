@@ -14,7 +14,7 @@ U_NAMESPACE_BEGIN
 /*
     These are the rolled-up versions of the uniform binary search.
     Someday, if we need more performance, we can un-roll them.
-    
+
     Note: I put these in the base class, so they only have to
     be written once. Since the base class doesn't define the
     segment table, these routines assume that it's right after
@@ -23,10 +23,9 @@ U_NAMESPACE_BEGIN
     Another way to do this is to put each of these routines in one
     of the derived classes, and implement it in the others by casting
     the "this" pointer to the type that has the implementation.
-*/ 
+*/
 const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const
 {
-    
     le_int16  unity = SWAPW(unitSize);
     le_int16  probe = SWAPW(searchRange);
     le_int16  extra = SWAPW(rangeShift);
@@ -34,9 +33,9 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
     LEReferenceTo<LookupSegment> entry(base, success, segments);
     LEReferenceTo<LookupSegment> trial(entry, success, extra);
 
-    if(LE_FAILURE(success)) return NULL;
+    if (LE_FAILURE(success)) return NULL;
 
-    if (SWAPW(trial->lastGlyph) <= ttGlyph) {
+    if (SWAPW(trial->firstGlyph) <= ttGlyph) {
         entry = trial;
     }
 
@@ -45,13 +44,13 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
         trial = entry; // copy
         trial.addOffset(probe, success);
 
-        if (SWAPW(trial->lastGlyph) <= ttGlyph) {
+        if (SWAPW(trial->firstGlyph) <= ttGlyph) {
             entry = trial;
         }
     }
 
     if (SWAPW(entry->firstGlyph) <= ttGlyph) {
-      return entry.getAlias();
+        return entry.getAlias();
     }
 
     return NULL;
@@ -81,7 +80,7 @@ const LookupSingle *BinarySearchLookupTable::lookupSingle(const LETableReference
     }
 
     if (SWAPW(entry->glyph) == ttGlyph) {
-      return entry.getAlias();
+        return entry.getAlias();
     }
 
     return NULL;

@@ -305,11 +305,12 @@ typedef struct LEPoint LEPoint;
  */
 #if LE_TRACE
 #include <stdio.h>
-#define LE_TRACE_LOG(...)                                               \
-    do {                                                                \
-        fprintf(stderr, "%s:%d: ", __FILE__, __LINE__);                 \
-        fprintf(stderr, __VA_ARGS__);                                   \
-        fprintf(stderr, "\n");                                          \
+#define LE_TRACE_LOG(...)                               \
+    do {                                                \
+        FILE *dst = stdout;                             \
+        fprintf(dst, "%s:%d: ", __FILE__, __LINE__);    \
+        fprintf(dst, __VA_ARGS__);                      \
+        fprintf(dst, "\n");                             \
     } while (0)
 #else
 #define LE_TRACE_LOG

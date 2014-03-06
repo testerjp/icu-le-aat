@@ -159,21 +159,20 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
                 }
             }
         }
-
+        
         for (subtable = 0;  LE_SUCCESS(success) && subtable < nSubtables; subtable++) {
-            if (subtable > 0) {
-                le_uint32 length = SWAPL(subtableHeader->length);
-                subtableHeader.addOffset(length, success); // Don't addOffset for the last entry.
+            if(subtable>0)  {
+              le_uint32 length = SWAPL(subtableHeader->length);
+              subtableHeader.addOffset(length, success); // Don't addOffset for the last entry.
             }
             le_uint32 coverage = SWAPL(subtableHeader->coverage);
             FeatureFlags subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
             // should check coverage more carefully...
             if (((coverage & scfIgnoreVt2) || !(coverage & scfVertical2)) && (subtableFeatures & flag) != 0) {
-                LE_TRACE_LOG("subtable %d", subtable);
-                subtableHeader->process(subtableHeader, glyphStorage, success);
+              subtableHeader->process(subtableHeader, glyphStorage, success);
             }
         }
-  }
+    }    
 }
 
 void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
@@ -201,6 +200,7 @@ void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &ba
         processor = NonContextualGlyphSubstitutionProcessor2::createInstance(base, success);
         break;
 
+    
     case mstContextualGlyphInsertion:
         processor = new ContextualGlyphInsertionProcessor2(base, success);
         break;
@@ -211,12 +211,12 @@ void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &ba
     }
 
     if (processor != NULL) {
-        processor->process(glyphStorage, success);
+      processor->process(glyphStorage, success);
         delete processor;
     } else {
-        if (LE_SUCCESS(success)) {
-            success = LE_MEMORY_ALLOCATION_ERROR; // because ptr is null and we didn't break out.
-        }
+      if(LE_SUCCESS(success)) {
+        success = LE_MEMORY_ALLOCATION_ERROR; // because ptr is null and we didn't break out.
+      }
     }
 }
 

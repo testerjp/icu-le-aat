@@ -13,7 +13,6 @@
 #include "ContextualGlyphSubstProc2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
-#include "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -77,9 +76,9 @@ le_uint16 ContextualGlyphSubstitutionProcessor2::processStateEntry(LEGlyphStorag
 TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyphID gid, LEErrorCode &success)
 {
     TTGlyphID newGlyph = 0xFFFF;
-    if (LE_FAILURE(success)) return newGlyph;
+    if(LE_FAILURE(success))  return newGlyph;
     LEReferenceTo<LookupTable> lookupTable(perGlyphTable, success, offset);
-    if (LE_FAILURE(success)) return newGlyph;
+    if(LE_FAILURE(success))  return newGlyph;
     le_int16 format = SWAPW(lookupTable->format);
 
     switch (format) {
@@ -92,7 +91,6 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
             TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(gid);
             newGlyph = SWAPW(lookupTable0->valueArray(glyphCode, success));
 #endif
-            U_ASSERT(0);
             break;
         }
         case ltfSegmentSingle: {
@@ -104,11 +102,9 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
                 newGlyph = SWAPW(segment->value);
             }
 #endif
-            U_ASSERT(0);
             break;
         }
         case ltfSegmentArray: {
-            U_ASSERT(0);
             //printf("Context Lookup Table Format4: specific interpretation needed!\n");
             break;
         }
@@ -122,23 +118,18 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
                 newGlyph = SWAPW(segment->value);
             }
 #endif
-            LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(perGlyphTable, success, offset);
-            const LookupSingle *lookupSingle = singleTableLookupTable->lookupSingle(singleTableLookupTable, singleTableLookupTable->entries, gid, success);
-            if (lookupSingle != NULL) {
-                newGlyph = SWAPW(lookupSingle->value);
-            }
             break;
         }
         case ltfTrimmedArray: {
             LEReferenceTo<TrimmedArrayLookupTable> lookupTable8(lookupTable, success);
             if (LE_FAILURE(success)) return newGlyph;
-            TTGlyphID firstGlyph = SWAPW(lookupTable8->firstGlyph);
+            TTGlyphID firstGlyph = SWAPW(lookupTable8->firstGlyph);    
             TTGlyphID glyphCount = SWAPW(lookupTable8->glyphCount);
             TTGlyphID lastGlyph  = firstGlyph + glyphCount;
-            TTGlyphID glyphCode  = (TTGlyphID) LE_GET_GLYPH(gid);
+            TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(gid);
             if ((glyphCode >= firstGlyph) && (glyphCode < lastGlyph)) {
-                LEReferenceToArrayOf<LookupValue> valueArray(lookupTable8, success, &lookupTable8->valueArray[0], glyphCount);
-                newGlyph = SWAPW(valueArray(glyphCode - firstGlyph, success));
+              LEReferenceToArrayOf<LookupValue> valueArray(lookupTable8, success, &lookupTable8->valueArray[0], glyphCount);
+              newGlyph = SWAPW(valueArray(glyphCode - firstGlyph, success));
             }
         }
         default:

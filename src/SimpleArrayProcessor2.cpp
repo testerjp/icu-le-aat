@@ -42,13 +42,12 @@ void SimpleArrayProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
 
     for (glyph = 0; glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
-        LE_TRACE_LOG("glyph %d %d %d", glyph, glyphCount, thisGlyph);
         if (LE_GET_GLYPH(thisGlyph) < 0xFFFF) {
-            TTGlyphID newGlyph = SWAPW(valueArray(LE_GET_GLYPH(thisGlyph),success));
+          TTGlyphID newGlyph = SWAPW(valueArray(LE_GET_GLYPH(thisGlyph),success));
 
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }
 }
-
+ 
 U_NAMESPACE_END

@@ -18,12 +18,12 @@ U_NAMESPACE_BEGIN
 
 #define ExtendedComplement(m) ((le_int32) (~((le_uint32) (m))))
 #define SignBit(m) ((ExtendedComplement(m) >> 1) & (le_int32)(m))
-#define SignExtend(v, m) (((v) & SignBit(m)) ? ((v) | ExtendedComplement(m)) : (v))
+#define SignExtend(v,m) (((v) & SignBit(m))? ((v) | ExtendedComplement(m)): (v))
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LigatureSubstitutionProcessor2)
 
 LigatureSubstitutionProcessor2::LigatureSubstitutionProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-  : StateTableProcessor2(morphSubtableHeader, success),
+  : StateTableProcessor2(morphSubtableHeader, success), 
   ligActionOffset(0),
   ligatureSubstitutionHeader(morphSubtableHeader, success), componentOffset(0), ligatureOffset(0), entryTable()
 {
@@ -48,96 +48,92 @@ void LigatureSubstitutionProcessor2::beginStateTable()
 le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
 {
     const LigatureSubstitutionStateEntry2 *entry = entryTable.getAlias(index, success);
-    if (LE_FAILURE(success)) return 0;
+    if(LE_FAILURE(success)) return 0;
 
     le_uint16 nextStateIndex = SWAPW(entry->nextStateIndex);
-    le_uint16 flags          = SWAPW(entry->entryFlags);
+    le_uint16 flags = SWAPW(entry->entryFlags);
     le_uint16 ligActionIndex = SWAPW(entry->ligActionIndex);
-
-    LE_TRACE_LOG("ligature state entry: flags = %x; ligature action index = %d; glyph = %d; glyph index = %d; ", flags, ligActionIndex, glyphStorage[currGlyph], currGlyph);
-
+    
     if (flags & lsfSetComponent) {
-        if (nComponents <= m++) {
-            LE_TRACE_LOG("stack overflow");
-            currGlyph += dir;
-            m          = -1;
-            return 0; // force start of text state
+        if (++m >= nComponents) {
+            m = 0;
         }
         componentStack[m] = currGlyph;
-        LE_TRACE_LOG("push[%d]", m);
+    } else if ( m == -1) {
+        // bad font- skip this glyph.
+        //LE_DEBUG_BAD_FONT("m==-1 (componentCount went negative)")
+        currGlyph+= dir;
+        return nextStateIndex;
     }
 
-    if (flags & lsfPerformAction) {
-        LEReferenceTo<LigatureActionEntry> actionEntry(stHeader, success, ligActionOffset + ligActionIndex * sizeof(LigatureActionEntry));
-        LEReferenceToArrayOf<le_uint16> componentTable(stHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
+    ByteOffset actionOffset = flags & lsfPerformAction;
+
+    if (actionOffset != 0) {
+        LEReferenceTo<LigatureActionEntry> ap(stHeader, success, ligActionOffset); // byte offset
+        ap.addObject(ligActionIndex - 1, success);  // index offset ( one before the actual start, because we will pre-increment)
         LEReferenceToArrayOf<TTGlyphID> ligatureTable(stHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
-
-        if (LE_FAILURE(success)) { // FIXME
-            currGlyph += dir;
-            m          = -1;
-            return 0; // force start of text state
-        }
-
-        le_int32 componentIndex = 0;
         LigatureActionEntry action;
+        le_int32 offset, i = 0;
+        le_int32 stack[nComponents];
+        le_int16 mm = -1;
 
+        LEReferenceToArrayOf<le_uint16> componentTable(stHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
+        if(LE_FAILURE(success)) {
+          currGlyph+= dir;
+          return nextStateIndex; // get out! bad font
+        }
+        
         do {
-            if (m == -1) {
-                LE_TRACE_LOG("stack underflow");
-                currGlyph += dir;
-                return 0; // force start of text state
+            le_uint32 componentGlyph = componentStack[m--]; // pop off
+
+            ap.addObject(success);
+            action = SWAPL(*ap.getAlias());
+
+            if (m < 0) {
+                m = nComponents - 1;
             }
 
-            le_uint32 componentGlyph = componentStack[m--];
-
-            LE_TRACE_LOG("pop[%d]; %d", m + 1, componentGlyph);
-
-            if (glyphStorage.getGlyphCount() < componentGlyph) { // FIXME <= ?
-                LE_TRACE_LOG("preposterous componentGlyph");
-                currGlyph += dir;
-                m          = -1;
-                return 0; // force start of text state
-            }
-
-            action = SWAPL(*actionEntry.getAlias());
-
-            le_int32 offset = SignExtend(action & lafComponentOffsetMask, lafComponentOffsetMask);
-            componentIndex += SWAPW(componentTable(LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset, success));
-
-            LE_TRACE_LOG("action = %x; offset = %d", action, offset);
-            LE_TRACE_LOG("%d %d %d", componentIndex, glyphStorage[componentGlyph], LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset);
-
-            if (action & lafLast || action & lafStore)  {
-                TTGlyphID ligatureGlyph      = SWAPW(ligatureTable(componentIndex, success)); // FIXME: check index and gid boundary
-                glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
-
-                LE_TRACE_LOG("replace with %d", ligatureGlyph);
-
-                if (action & lafStore)  {
-                    if (nComponents <= m++) {
-                        LE_TRACE_LOG("stack overflow");
-                        currGlyph += dir;
-                        m          = -1;
-                        return 0; // force start of text state
-                    }
-                    componentStack[m] = ligatureGlyph;
-                    LE_TRACE_LOG("push[%d]", m);
+            offset = action & lafComponentOffsetMask;
+            if (offset != 0) {
+                if(componentGlyph > glyphStorage.getGlyphCount()) {
+                  LE_DEBUG_BAD_FONT("preposterous componentGlyph");
+                  currGlyph+= dir;
+                  return nextStateIndex; // get out! bad font
                 }
-            } else {
-                glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], 0xFFFF);
-                LE_TRACE_LOG("replace with deleted");
+                i += SWAPW(componentTable(LE_GET_GLYPH(glyphStorage[componentGlyph]) + (SignExtend(offset, lafComponentOffsetMask)),success));
+                       
+                if (action & (lafLast | lafStore))  {
+                  TTGlyphID ligatureGlyph = SWAPW(ligatureTable(i,success));
+                    glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
+                    if(mm==nComponents) {
+                      LE_DEBUG_BAD_FONT("exceeded nComponents");
+                      mm--; // don't overrun the stack.
+                    }
+                    stack[++mm] = componentGlyph;
+                    i = 0;
+                } else {
+                    glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], 0xFFFF);
+                }
+            }
+#if LE_ASSERT_BAD_FONT
+            if(m<0) {
+              LE_DEBUG_BAD_FONT("m<0")
+            }
+#endif
+        } while (!(action & lafLast) && (m>=0) ); // stop if last bit is set, or if run out of items
+
+        while (mm >= 0) {
+            if (++m >= nComponents) {
+                m = 0;
             }
 
-            if (!(action & lafLast))
-                actionEntry.addObject(success);
-        } while (!(action & lafLast));
+            componentStack[m] = stack[mm--];
+        }
     }
 
-    if (!(flags & lsfDontAdvance))
+    if (!(flags & lsfDontAdvance)) {
         currGlyph += dir;
-
-    if (nextStateIndex == 0 || nextStateIndex == 1) // undocumented
-        m = -1;
+    }
 
     return nextStateIndex;
 }

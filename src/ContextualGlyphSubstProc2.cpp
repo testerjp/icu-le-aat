@@ -82,49 +82,56 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
     le_int16 format = SWAPW(lookupTable->format);
 
     switch (format) {
-        case ltfSimpleArray: {
-            LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(lookupTable, success);
-            LEReferenceToArrayOf<LookupValue> valueArray(simpleArrayLookupTable, success, &simpleArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
-            newGlyph = SWAPW(valueArray((TTGlyphID) LE_GET_GLYPH(gid), success));
-            break;
-        }
+    case ltfSimpleArray: {
+        LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(lookupTable, success);
+        LEReferenceToArrayOf<LookupValue> valueArray(simpleArrayLookupTable, success, &simpleArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
+        newGlyph = SWAPW(valueArray((TTGlyphID) LE_GET_GLYPH(gid), success));
+        break;
+    }
 
-        case ltfSegmentSingle: {
-            LEReferenceTo<SegmentSingleLookupTable> segmentSingleLookupTable(perGlyphTable, success, offset);
-            const LookupSegment *segment = segmentSingleLookupTable->lookupSegment(segmentSingleLookupTable, segmentSingleLookupTable->segments, gid, success);
-            if (segment != NULL) {
-                newGlyph = SWAPW(segment->value);
-            }
-            break;
+    case ltfSegmentSingle: {
+        LEReferenceTo<SegmentSingleLookupTable> segmentSingleLookupTable(lookupTable, success);
+        const LookupSegment *segment = segmentSingleLookupTable->lookupSegment(segmentSingleLookupTable, segmentSingleLookupTable->segments, gid, success);
+        if (segment != NULL) {
+            newGlyph = SWAPW(segment->value);
         }
+        break;
+    }
 
-        case ltfSegmentArray: {
-            // printf("Context Lookup Table Format4: specific interpretation needed!\n");
-            break;
+    case ltfSegmentArray: {
+        LEReferenceTo<SegmentArrayLookupTable> segmentArrayLookupTable(lookupTable, success);
+        const LookupSegment *segment = segmentArrayLookupTable->lookupSegment(segmentArrayLookupTable, segmentArrayLookupTable->segments, gid, success);
+        if (segment != NULL) {
+            LookupValue firstGlyph = SWAPW(segment->firstGlyph);
+            LookupValue offset     = SWAPW(segment->value);
+            LEReferenceToArrayOf<LookupValue> glyphs(segmentArrayLookupTable, success, offset, LE_UNBOUNDED_ARRAY);
+            newGlyph = SWAPW(glyphs(gid - firstGlyph, success));
         }
+        break;
+    }
 
-        case ltfSingleTable: {
-            LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(perGlyphTable, success, offset);
-            const LookupSingle *lookupSingle = singleTableLookupTable->lookupSingle(singleTableLookupTable, singleTableLookupTable->entries, gid, success);
-            if (lookupSingle != NULL) {
-                newGlyph = SWAPW(lookupSingle->value);
-            }
-            break;
+    case ltfSingleTable: {
+        LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(lookupTable, success);
+        const LookupSingle *lookupSingle = singleTableLookupTable->lookupSingle(singleTableLookupTable, singleTableLookupTable->entries, gid, success);
+        if (lookupSingle != NULL) {
+            newGlyph = SWAPW(lookupSingle->value);
         }
+        break;
+    }
 
-        case ltfTrimmedArray: {
-            LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(lookupTable, success);
-            TTGlyphID firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
-            TTGlyphID glyphCount = SWAPW(trimmedArrayLookupTable->glyphCount);
-            TTGlyphID glyphCode  = (TTGlyphID) LE_GET_GLYPH(gid);
-            if (firstGlyph <= glyphCode && glyphCode < firstGlyph + glyphCount) {
-                LEReferenceToArrayOf<LookupValue> valueArray(trimmedArrayLookupTable, success, &trimmedArrayLookupTable->valueArray[0], glyphCount);
-                newGlyph = SWAPW(valueArray(glyphCode - firstGlyph, success));
-            }
+    case ltfTrimmedArray: {
+        LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(lookupTable, success);
+        TTGlyphID firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
+        TTGlyphID glyphCount = SWAPW(trimmedArrayLookupTable->glyphCount);
+        TTGlyphID glyphCode  = (TTGlyphID) LE_GET_GLYPH(gid);
+        if (firstGlyph <= glyphCode && glyphCode < firstGlyph + glyphCount) {
+            LEReferenceToArrayOf<LookupValue> valueArray(trimmedArrayLookupTable, success, &trimmedArrayLookupTable->valueArray[0], glyphCount);
+            newGlyph = SWAPW(valueArray(glyphCode - firstGlyph, success));
         }
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
     return newGlyph;
 }

@@ -108,12 +108,12 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
             LE_TRACE_LOG("%d %d %d", componentIndex, glyphStorage[componentGlyph], LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset);
 
             if (action & lafLast || action & lafStore)  {
-                TTGlyphID ligatureGlyph = SWAPW(ligatureTable(componentIndex, success)); // FIXME: check index and gid boundary
+                TTGlyphID ligatureGlyph      = SWAPW(ligatureTable(componentIndex, success)); // FIXME: check index and gid boundary
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
 
                 LE_TRACE_LOG("replace with %d", ligatureGlyph);
 
-                if (action &lafStore)  {
+                if (action & lafStore)  {
                     if (nComponents <= m++) {
                         LE_TRACE_LOG("stack overflow");
                         currGlyph += dir;

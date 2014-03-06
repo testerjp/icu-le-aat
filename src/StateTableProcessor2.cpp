@@ -1,5 +1,5 @@
 /*
- *
+ *o
  * (C) Copyright IBM Corp.  and others 1998-2013 - All Rights Reserved
  *
  */
@@ -63,6 +63,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     }
     
     beginStateTable();
+
+    LE_TRACE_LOG("format %d", format);
+
     switch (format) {
         case ltfSimpleArray: {
 #ifdef TEST_FORMAT
@@ -96,14 +99,15 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 #endif
             break;
         }
+
         case ltfSegmentSingle: {
-          LEReferenceTo<SegmentSingleLookupTable> lookupTable2(classTable, success);
-          if(LE_FAILURE(success)) break;
+            LEReferenceTo<SegmentSingleLookupTable> lookupTable2(classTable, success);
+            if (LE_FAILURE(success)) break;
             while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
                 if (LE_FAILURE(success)) break;
                 if (LE_STATE_PATIENCE_DECR()) {
-                  LE_DEBUG_BAD_FONT("patience exceeded  - state table not moving")
-                  break; // patience exceeded.
+                    LE_DEBUG_BAD_FONT("patience exceeded  - state table not moving")
+                        break; // patience exceeded.
                 }
                 LookupValue classCode = classCodeOOB;
                 if (currGlyph == glyphCount || currGlyph == -1) {
@@ -112,52 +116,56 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                 } else {
                     LEGlyphID gid = glyphStorage[currGlyph];
                     TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(gid);
-                    
+
                     if (glyphCode == 0xFFFF) {
                         classCode = classCodeDEL;
                     } else {
-                      const LookupSegment *segment = 
-                        lookupTable2->lookupSegment(lookupTable2, lookupTable2->segments, gid, success);
+                        const LookupSegment *segment =
+                            lookupTable2->lookupSegment(lookupTable2, lookupTable2->segments, gid, success);
                         if (segment != NULL && LE_SUCCESS(success)) {
                             classCode = SWAPW(segment->value);
                         }
                     }
-                }                
-                EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses,success));
+                }
+                EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
                 LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
+                LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses; current glyph %d", classCode, nClasses, entryTableIndex, currentState, glyphStorage[currGlyph]);
                 currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
+                LE_TRACE_LOG("new state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
                 LE_STATE_PATIENCE_INCR(currGlyph);
             }
             break;
         }
+
         case ltfSegmentArray: {
           //printf("Lookup Table Format4: specific interpretation needed!\n");
             break;
         }
+
         case ltfSingleTable: {
             LEReferenceTo<SingleTableLookupTable> lookupTable6(classTable, success);
             while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
                 if (LE_FAILURE(success)) break;
                 if (LE_STATE_PATIENCE_DECR()) {
-                  LE_DEBUG_BAD_FONT("patience exceeded - state table not moving")
-                  break; // patience exceeded.
+                    LE_DEBUG_BAD_FONT("patience exceeded - state table not moving")
+                        break; // patience exceeded.
                 }
                 LookupValue classCode = classCodeOOB;
                 if (currGlyph == glyphCount || currGlyph == -1) {
                     // XXX: How do we handle EOT vs. EOL?
                     classCode = classCodeEOT;
                 } else if(currGlyph > glyphCount) {
-                  // note if > glyphCount, we've run off the end (bad font)
-                  currGlyph = glyphCount;
-                  classCode = classCodeEOT;
+                    // note if > glyphCount, we've run off the end (bad font)
+                    currGlyph = glyphCount;
+                    classCode = classCodeEOT;
                 } else {
                     LEGlyphID gid = glyphStorage[currGlyph];
                     TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(gid);
-                    
+
                     if (glyphCode == 0xFFFF) {
                         classCode = classCodeDEL;
                     } else {
-                      const LookupSingle *segment = lookupTable6->lookupSingle(lookupTable6, lookupTable6->entries, gid, success);
+                        const LookupSingle *segment = lookupTable6->lookupSingle(lookupTable6, lookupTable6->entries, gid, success);
                         if (segment != NULL) {
                             classCode = SWAPW(segment->value);
                         }
@@ -165,11 +173,13 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                 }
                 EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
                 LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
+                LE_TRACE_LOG("process state entry: current state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
                 currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
                 LE_STATE_PATIENCE_INCR(currGlyph);
             }
             break;
         }
+
         case ltfTrimmedArray: {
             LEReferenceTo<TrimmedArrayLookupTable> lookupTable8(classTable, success);
             if (LE_FAILURE(success)) break;
@@ -181,7 +191,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                   LE_DEBUG_BAD_FONT("patience exceeded - state table not moving")
                   break; // patience exceeded.
                 }
-                       
+
                 LookupValue classCode = classCodeOOB;
                 if (currGlyph == glyphCount || currGlyph == -1) {
                     // XXX: How do we handle EOT vs. EOL?

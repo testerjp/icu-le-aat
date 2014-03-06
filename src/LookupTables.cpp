@@ -49,9 +49,8 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
         }
     }
 
-    if (SWAPW(entry->firstGlyph) <= ttGlyph) {
+    if (SWAPW(entry->firstGlyph) <= ttGlyph && ttGlyph <= SWAPW(entry->lastGlyph))
         return entry.getAlias();
-    }
 
     return NULL;
 }

@@ -65,7 +65,6 @@ protected:
     le_int16 m;
 
     const LEReferenceTo<LigatureSubstitutionHeader2> ligatureSubstitutionHeader;
-
 };
 
 U_NAMESPACE_END

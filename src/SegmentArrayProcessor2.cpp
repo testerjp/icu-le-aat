@@ -22,10 +22,10 @@ SegmentArrayProcessor2::SegmentArrayProcessor2()
 }
 
 SegmentArrayProcessor2::SegmentArrayProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-  : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
+    : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
 {
-  const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
-  segmentArrayLookupTable = LEReferenceTo<SegmentArrayLookupTable>(morphSubtableHeader,  success, &header->table); // don't parent to 'header' as it is on the stack
+    const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
+    segmentArrayLookupTable = LEReferenceTo<SegmentArrayLookupTable>(morphSubtableHeader,  success, &header->table); // don't parent to 'header' as it is on the stack
 }
 
 SegmentArrayProcessor2::~SegmentArrayProcessor2()
@@ -44,16 +44,16 @@ void SegmentArrayProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &
 
         if (lookupSegment != NULL)  {
             TTGlyphID firstGlyph = SWAPW(lookupSegment->firstGlyph);
-            le_int16  offset = SWAPW(lookupSegment->value);
+            le_int16  offset     = SWAPW(lookupSegment->value);
 
             if (offset != 0) {
-              TTGlyphID  *glyphArray = (TTGlyphID *) ((char *) subtableHeader.getAliasRAW() + offset);
+                TTGlyphID  *glyphArray = (TTGlyphID *) ((char *) subtableHeader.getAliasRAW() + offset);
                 TTGlyphID   newGlyph   = SWAPW(glyphArray[LE_GET_GLYPH(thisGlyph) - firstGlyph]);
-                
+
                 glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
-            } 
+            }
         }
     }
 }
- 
+
 U_NAMESPACE_END

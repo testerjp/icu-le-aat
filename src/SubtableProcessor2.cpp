@@ -16,13 +16,14 @@ SubtableProcessor2::SubtableProcessor2()
 }
 
 SubtableProcessor2::SubtableProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-  : subtableHeader(morphSubtableHeader, success), length(0), coverage(0), subtableFeatures(0L)
+    : length(0), coverage(0), subtableFeatures(0L),
+      subtableHeader(morphSubtableHeader, success)
 {
-  if(LE_FAILURE(success)) return;
+    if (LE_FAILURE(success)) return;
 
-  length = SWAPL(subtableHeader->length);
-  coverage = SWAPL(subtableHeader->coverage);
-  subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
+    length           = SWAPL(subtableHeader->length);
+    coverage         = SWAPL(subtableHeader->coverage);
+    subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
 }
 
 SubtableProcessor2::~SubtableProcessor2()

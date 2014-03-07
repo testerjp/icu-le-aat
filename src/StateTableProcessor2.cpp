@@ -21,10 +21,11 @@ StateTableProcessor2::StateTableProcessor2()
 }
 
 StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : SubtableProcessor2(morphSubtableHeader, success), stateTableHeader(morphSubtableHeader, success),
-    stHeader(stateTableHeader, success, (const StateTableHeader2*)&stateTableHeader->stHeader),
-    nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0), classTable(), format(0),
-    stateArray()
+    : SubtableProcessor2(morphSubtableHeader, success),
+      dir(1), format(0), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
+      classTable(), stateArray(),
+      stateTableHeader(morphSubtableHeader, success),
+      stHeader(stateTableHeader, success, (const StateTableHeader2*)&stateTableHeader->stHeader)
 {
     if (LE_FAILURE(success)) return;
 
@@ -45,7 +46,6 @@ StateTableProcessor2::~StateTableProcessor2()
 
 void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) return;
     // Start at state 0
     // XXX: How do we know when to start at state 1?
     le_uint16 currentState = 0;
@@ -54,7 +54,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     LE_STATE_PATIENCE_INIT();
 
     le_int32 currGlyph = 0;
-    if ((coverage & scfReverse2) != 0) {  // process glyphs in descending order
+    if ((coverage & scfReverse2) != 0) { // process glyphs in descending order
         currGlyph = glyphCount - 1;
         dir = -1;
     } else {

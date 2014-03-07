@@ -205,9 +205,10 @@ void KernTable::process(LEGlyphStorage& storage, LEErrorCode &success)
 
     le_uint32 key    = storage[0]; // no need to mask off high bits
     float     adjust = 0;
+    le_int32  glyph;
 
-    for (int i = 1, e = storage.getGlyphCount(); LE_SUCCESS(success) && i < e; ++i) {
-        key = key << 16 | (storage[i] & 0xffff);
+    for (glyph = 1; LE_SUCCESS(success) && glyph < storage.getGlyphCount(); ++glyph) { // FIXME: is start index valid?
+        key = key << 16 | (storage[glyph] & 0xffff);
 
         // argh, to do a binary search, we need to have the pair list in sorted order
         // but it is not in sorted order on win32 platforms because of the endianness difference
@@ -243,7 +244,7 @@ void KernTable::process(LEGlyphStorage& storage, LEErrorCode &success)
                 p = tp;
             }
         }
-        storage.adjustPosition(i, adjust, 0, success);
+        storage.adjustPosition(glyph, adjust, 0, success);
     }
     storage.adjustPosition(storage.getGlyphCount(), adjust, 0, success);
 }

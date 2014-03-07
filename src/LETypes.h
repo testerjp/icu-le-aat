@@ -281,17 +281,6 @@ typedef struct LEPoint LEPoint;
 #endif
 
 /**
- * \def LE_DEBUG_BAD_FONT
- * @internal
- */
-#if LE_ASSERT_BAD_FONT
-#include <stdio.h>
-#define LE_DEBUG_BAD_FONT(x) fprintf(stderr,"%s:%d: BAD FONT: %s\n", __FILE__, __LINE__, (x));
-#else
-#define LE_DEBUG_BAD_FONT(x)
-#endif
-
-/**
  * \def
  * @internal
  */

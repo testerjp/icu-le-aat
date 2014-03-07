@@ -50,9 +50,9 @@ void SegmentArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
               LEReferenceToArrayOf<TTGlyphID> glyphArray(subtableHeader, success, offset, LE_UNBOUNDED_ARRAY);
               TTGlyphID   newGlyph   = SWAPW(glyphArray(LE_GET_GLYPH(thisGlyph) - firstGlyph, success));
               glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
-            } 
+            }
         }
     }
 }
- 
+
 U_NAMESPACE_END

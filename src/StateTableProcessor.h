@@ -38,7 +38,7 @@ protected:
 
     StateTableProcessor();
 
-    le_int16 stateSize;
+    le_int16 stateSize; // size of row, that is number of class
     ByteOffset classTableOffset;
     ByteOffset stateArrayOffset;
     ByteOffset entryTableOffset;

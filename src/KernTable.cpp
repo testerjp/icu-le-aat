@@ -188,7 +188,7 @@ KernTable::KernTable(const LETableReference& base, LEErrorCode &success)
 
 /*
  * Process the glyph positions.  The positions array has two floats for each
-g * glyph, plus a trailing pair to mark the end of the last glyph.
+ * glyph, plus a trailing pair to mark the end of the last glyph.
  */
 void KernTable::process(LEGlyphStorage& storage, LEErrorCode &success)
 {

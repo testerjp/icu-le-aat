@@ -78,6 +78,9 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
             return 0; // force start of text state
         }
 
+        le_int32 ligatureGlyphs[nComponents];
+        le_int32 n = -1;
+
         le_int32 componentIndex = 0;
         LigatureActionEntry action;
 
@@ -106,37 +109,40 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
 
             LE_TRACE_LOG("action = %x; offset = %d; component index = %d; ", action, offset, componentIndex);
 
-            if (action & lafLast || action & lafStore)  {
+            if (action & (lafLast | lafStore))  {
                 TTGlyphID ligatureGlyph      = SWAPW(ligatureTable(componentIndex, success)); // FIXME: check index and gid boundary
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
+                ligatureGlyphs[++n]          = componentGlyph;
+                componentIndex               = 0;
 
                 LE_TRACE_LOG("replace with %d", ligatureGlyph);
-
-                if (action & lafStore)  {
-                    if (nComponents <= m++) {
-                        LE_TRACE_LOG("stack overflow");
-                        currGlyph += dir;
-                        m          = -1;
-                        return 0; // force start of text state
-                    }
-                    componentStack[m] = ligatureGlyph;
-                    LE_TRACE_LOG("push[%d]", m);
-                }
             } else {
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], 0xFFFF);
+
                 LE_TRACE_LOG("replace with deleted");
             }
 
             if (!(action & lafLast))
                 actionEntry.addObject(success);
         } while (!(action & lafLast));
+
+        while (0 <= n) {
+            if (nComponents <= m++) {
+                LE_TRACE_LOG("stack overflow");
+                currGlyph += dir;
+                m          = -1;
+                return 0; // force start of text state
+            }
+            componentStack[m] = ligatureGlyphs[n--];
+            LE_TRACE_LOG("push[%d]", m);
+        }
     }
 
     if (!(flags & lsfDontAdvance))
         currGlyph += dir;
 
-    if (nextStateIndex == 0 || nextStateIndex == 1) // undocumented
-        m = -1;
+    if (nextStateIndex == 0 || nextStateIndex == 1)
+         m = -1; // undocumented
 
     return nextStateIndex;
 }

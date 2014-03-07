@@ -39,17 +39,6 @@ KernTable::KernTable(const LETableReference& base, LEErrorCode &success)
         return;
 
     LEReferenceTo<KernTableHeader> header(fTable, success);
-#if DEBUG
-    // dump first 32 bytes of header
-    for (int i = 0; i < 64; ++i) {
-        fprintf(stderr, "%0.2x ", ((const char*)header.getAlias())[i]&0xff);
-        if (((i+1)&0xf) == 0) {
-            fprintf(stderr, "\n");
-        } else if (((i+1)&0x7) == 0) {
-            fprintf(stderr, "  ");
-        }
-    }
-#endif
     if (LE_FAILURE(success)) return;
 
     if (header.isEmpty())

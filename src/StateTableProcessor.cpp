@@ -26,12 +26,12 @@ StateTableProcessor::StateTableProcessor(const LEReferenceTo<MorphSubtableHeader
 {
     if (LE_FAILURE(success)) return;
 
-    stateSize        = SWAPW(stateTableHeader->stHeader.stateSize);
-    classTableOffset = SWAPW(stateTableHeader->stHeader.classTableOffset);
-    stateArrayOffset = SWAPW(stateTableHeader->stHeader.stateArrayOffset);
-    entryTableOffset = SWAPW(stateTableHeader->stHeader.entryTableOffset);
+    stateSize        = SWAPW(stHeader->stateSize);
+    classTableOffset = SWAPW(stHeader->classTableOffset);
+    stateArrayOffset = SWAPW(stHeader->stateArrayOffset);
+    entryTableOffset = SWAPW(stHeader->entryTableOffset);
 
-    classTable       = LEReferenceTo<ClassTable>(stateTableHeader, success, ((char *) &stateTableHeader->stHeader + classTableOffset));
+    classTable       = LEReferenceTo<ClassTable>(stHeader, success, classTableOffset);
 
     if (LE_FAILURE(success)) return;
 

@@ -18,13 +18,11 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IndicRearrangementProcessor)
 
-  IndicRearrangementProcessor::IndicRearrangementProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-  : StateTableProcessor(morphSubtableHeader, success), 
-  indicRearrangementSubtableHeader(morphSubtableHeader, success),
-  entryTable(stateTableHeader, success, (const IndicRearrangementStateEntry*)(&stateTableHeader->stHeader),
-             entryTableOffset, LE_UNBOUNDED_ARRAY),
-  int16Table(stateTableHeader, success, (const le_int16*)entryTable.getAlias(), 0, LE_UNBOUNDED_ARRAY)
-  
+IndicRearrangementProcessor::IndicRearrangementProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
+    : StateTableProcessor(morphSubtableHeader, success),
+      indicRearrangementSubtableHeader(morphSubtableHeader, success),
+      entryTable(stateTableHeader, success, (const IndicRearrangementStateEntry*)(&stateTableHeader->stHeader), entryTableOffset, LE_UNBOUNDED_ARRAY),
+      int16Table(stateTableHeader, success, (const le_int16 *)entryTable.getAlias(), 0, LE_UNBOUNDED_ARRAY)
 {
 }
 
@@ -35,15 +33,16 @@ IndicRearrangementProcessor::~IndicRearrangementProcessor()
 void IndicRearrangementProcessor::beginStateTable()
 {
     firstGlyph = 0;
-    lastGlyph = 0;
+    lastGlyph  = 0;
 }
 
 ByteOffset IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index)
 {
-  LEErrorCode success = LE_NO_ERROR; // todo- make a param?
-  const IndicRearrangementStateEntry *entry = entryTable.getAlias(index,success);
-    ByteOffset newState = SWAPW(entry->newStateOffset);
-    IndicRearrangementFlags flags = (IndicRearrangementFlags) SWAPW(entry->flags);
+    LEErrorCode success = LE_NO_ERROR; // todo- make a param?
+
+    const IndicRearrangementStateEntry *entry    = entryTable.getAlias(index,success);
+    ByteOffset                          newState = SWAPW(entry->newStateOffset);
+    IndicRearrangementFlags             flags    = (IndicRearrangementFlags) SWAPW(entry->flags);
 
     if (flags & irfMarkFirst) {
         firstGlyph = currGlyph;
@@ -121,7 +120,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
         glyphStorage.setCharIndex(firstGlyph, id, success);
         glyphStorage.setCharIndex(lastGlyph,  ia, success);
         break;
-        
+
     case irvxAB:
         a = glyphStorage[firstGlyph];
         b = glyphStorage[firstGlyph + 1];
@@ -177,13 +176,13 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
             glyphStorage.setCharIndex(x + 2, ix, success);
             x -= 1;
         }
-        
+
         glyphStorage[firstGlyph] = c;
         glyphStorage[firstGlyph + 1] = d;
 
         glyphStorage.setCharIndex(firstGlyph, ic, success);
         glyphStorage.setCharIndex(firstGlyph + 1, id, success);
-        break; 
+        break;
 
     case irvDCx:
         c = glyphStorage[lastGlyph - 1];
@@ -198,13 +197,13 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
             glyphStorage.setCharIndex(x + 2, ix, success);
             x -= 1;
         }
-        
+
         glyphStorage[firstGlyph] = d;
         glyphStorage[firstGlyph + 1] = c;
 
         glyphStorage.setCharIndex(firstGlyph, id, success);
         glyphStorage.setCharIndex(firstGlyph + 1, ic, success);
-        break; 
+        break;
 
     case irvCDxA:
         a = glyphStorage[firstGlyph];
@@ -221,7 +220,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
             glyphStorage.setCharIndex(x + 1, ix, success);
             x -= 1;
         }
-        
+
         glyphStorage[firstGlyph] = c;
         glyphStorage[firstGlyph + 1] = d;
         glyphStorage[lastGlyph] = a;
@@ -229,7 +228,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
         glyphStorage.setCharIndex(firstGlyph, ic, success);
         glyphStorage.setCharIndex(firstGlyph + 1, id, success);
         glyphStorage.setCharIndex(lastGlyph, ia, success);
-        break; 
+        break;
 
     case irvDCxA:
         a = glyphStorage[firstGlyph];
@@ -246,7 +245,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
             glyphStorage.setCharIndex(x + 1, ix, success);
             x -= 1;
         }
-        
+
         glyphStorage[firstGlyph] = d;
         glyphStorage[firstGlyph + 1] = c;
         glyphStorage[lastGlyph] = a;
@@ -254,7 +253,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
         glyphStorage.setCharIndex(firstGlyph, id, success);
         glyphStorage.setCharIndex(firstGlyph + 1, ic, success);
         glyphStorage.setCharIndex(lastGlyph, ia, success);
-        break; 
+        break;
 
     case irvDxAB:
         a = glyphStorage[firstGlyph];
@@ -393,7 +392,7 @@ void IndicRearrangementProcessor::doRearrangementAction(LEGlyphStorage &glyphSto
         glyphStorage.setCharIndex(lastGlyph - 1, ib, success);
         glyphStorage.setCharIndex(lastGlyph, ia, success);
         break;
-    
+
     default:
         break;
     }

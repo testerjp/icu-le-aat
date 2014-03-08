@@ -47,9 +47,8 @@ void SegmentArrayProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &
             le_int16  offset     = SWAPW(lookupSegment->value);
 
             if (offset != 0) {
-                TTGlyphID  *glyphArray = (TTGlyphID *) ((char *) subtableHeader.getAliasRAW() + offset);
-                TTGlyphID   newGlyph   = SWAPW(glyphArray[LE_GET_GLYPH(thisGlyph) - firstGlyph]);
-
+                LEReferenceToArrayOf<TTGlyphID> glyphArray(segmentArrayLookupTable, success, offset, LE_UNBOUNDED_ARRAY);
+                TTGlyphID newGlyph  = SWAPW(glyphArray(LE_GET_GLYPH(thisGlyph) - firstGlyph, success));
                 glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
             }
         }

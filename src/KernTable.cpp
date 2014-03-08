@@ -55,7 +55,7 @@ static void kerningPairs(LEReferenceTo<KernSubtableKerningPairs> subtableHeader,
 
         le_uint32 probe = searchRange;
 
-        while (probe > sizeof(KerningPair) && LE_SUCCESS(success)) {
+        while (sizeof(KerningPair) < probe) {
             probe >>= 1;
             tpRef = LEReferenceTo<KerningPair>(pairs, success, p, probe);
             if (LE_FAILURE(success)) break;
@@ -63,7 +63,7 @@ static void kerningPairs(LEReferenceTo<KernSubtableKerningPairs> subtableHeader,
             tp = tpRef.getAlias();
             le_uint32 tkey = SWAP_KEY(tp);
 
-            if (tkey <= key && LE_SUCCESS(success)) {
+            if (tkey <= key) {
                 if (tkey == key) {
                     le_int16 value = SWAPW(tp->value);
                     adjust        += font->xUnitsToPoints(value);

@@ -25,7 +25,7 @@ StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<MorphSubtableHead
       dir(1), format(0), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
       classTable(), stateArray(),
       stateTableHeader(morphSubtableHeader, success),
-      stHeader(stateTableHeader, success, (const StateTableHeader2*)&stateTableHeader->stHeader)
+      stHeader(stateTableHeader, success, (const StateTableHeader2 *)&stateTableHeader->stHeader)
 {
     if (LE_FAILURE(success)) return;
 

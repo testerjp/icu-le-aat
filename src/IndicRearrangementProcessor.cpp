@@ -21,7 +21,7 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IndicRearrangementProcessor)
 IndicRearrangementProcessor::IndicRearrangementProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
     : StateTableProcessor(morphSubtableHeader, success),
       indicRearrangementSubtableHeader(morphSubtableHeader, success),
-      entryTable(stateTableHeader, success, (const IndicRearrangementStateEntry*)(&stateTableHeader->stHeader), entryTableOffset, LE_UNBOUNDED_ARRAY)
+      entryTable(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
 {
 }
 

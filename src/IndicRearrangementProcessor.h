@@ -56,7 +56,6 @@ protected:
 
     LEReferenceTo<IndicRearrangementSubtableHeader> indicRearrangementSubtableHeader;
     LEReferenceToArrayOf<IndicRearrangementStateEntry> entryTable;
-    LEReferenceToArrayOf<le_int16> int16Table;
 
 };
 

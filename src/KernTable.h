@@ -10,70 +10,85 @@
 
 #include "LETypes.h"
 #include "LETableReference.h"
+#include "OpenTypeTables.h"
 
 U_NAMESPACE_BEGIN
 
-/**
- * Windows type 0 kerning table support only for now.
- */
-
-struct PairInfo {
-    le_uint16 left;  // left glyph of kern pair
-    le_uint16 right; // right glyph of kern pair
-    le_int16  value; // fword, kern value in funits
+enum KernFormat
+{
+    kfKerningPairs      = 0,
+    kfContextualKerning = 1,
+    kfKerningValue      = 2,
+    kfKerningIndices    = 3,
 };
-#define KERN_PAIRINFO_SIZE 6
-LE_CORRECT_SIZE(PairInfo, KERN_PAIRINFO_SIZE)
 
-#define SWAP_KEY(p) (((le_uint32) SWAPW((p)->left) << 16) | SWAPW((p)->right))
+enum KernCoverageFlags
+{
+    kcfHorizontal  = 0x1,
+    kcfMinimum     = 0x2,
+    kcfCrossStream = 0x4,
+    kcfOverride    = 0x8,
+    kcfFormatMask  = 0xFF00,
+    kcfFormatShift = 8,
+};
 
-struct Subtable_0 {
+enum KernCoverageFlags2
+{
+    kcf2Vertical    = 0x800,
+    kcf2CrossStream = 0x400,
+    kcf2Variation   = 0x200,
+    kcf2FormatMask  = 0x00FF,
+    kcf2FormatShift = 0,
+};
+
+struct KerningPair {
+    le_uint16 left;
+    le_uint16 right;
+    le_int16  value;
+};
+
+struct KernSubtableKerningPairs {
     le_uint16 nPairs;
     le_uint16 searchRange;
     le_uint16 entrySelector;
     le_uint16 rangeShift;
 };
-#define KERN_SUBTABLE_0_HEADER_SIZE 8
-LE_CORRECT_SIZE(Subtable_0, KERN_SUBTABLE_0_HEADER_SIZE)
 
-struct SubtableHeader {
+struct KernSubtableHeader {
     le_uint16 version;
     le_uint16 length;
     le_uint16 coverage;
 };
-#define KERN_SUBTABLE_HEADER_SIZE 6
-LE_CORRECT_SIZE(SubtableHeader, KERN_SUBTABLE_HEADER_SIZE)
 
 struct KernTableHeader {
     le_uint16 version;
     le_uint16 nTables;
 };
-#define KERN_TABLE_HEADER_SIZE 4
-LE_CORRECT_SIZE(KernTableHeader, KERN_TABLE_HEADER_SIZE)
 
-#define COVERAGE_HORIZONTAL 0x1
-#define COVERAGE_MINIMUM    0x2
-#define COVERAGE_CROSS      0x4
-#define COVERAGE_OVERRIDE   0x8
+struct KernSubtableHeader2 {
+    le_uint32 length;
+    le_uint16 coverage;
+    le_uint16 tupleIndex;
+};
+
+struct KernTableHeader2 {
+    fixed32   version;
+    le_uint32 nTables;
+};
 
 class U_LAYOUT_API KernTable
 {
-private:
-    le_uint16 coverage;
-    le_uint16 nPairs;
-
-    LEReferenceToArrayOf<PairInfo> pairs;
-
-    const LETableReference &fTable;
-
-    le_uint16 searchRange;
-    le_uint16 entrySelector;
-    le_uint16 rangeShift;
-
 public:
     KernTable(const LETableReference &table, LEErrorCode &success);
 
+    inline fixed32 getVersion() const { return version; }
     void process(LEGlyphStorage& storage, LEErrorCode &success);
+
+private:
+    fixed32   version;
+    le_uint32 nTables;
+
+    const LETableReference &fReference;
 };
 
 U_NAMESPACE_END

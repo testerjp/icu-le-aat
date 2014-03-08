@@ -1,4 +1,3 @@
-
 /*
  *
  * (C) Copyright IBM Corp. 1998-2013 - All Rights Reserved
@@ -69,7 +68,7 @@ le_int32 ThaiLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 offse
 
     LEUnicode *outChars;
     le_int32 glyphCount;
-    
+
     // This is enough room for the worst-case expansion
     // (it says here...)
     outChars = LE_NEW_ARRAY(LEUnicode, count * 2);
@@ -98,21 +97,22 @@ le_int32 ThaiLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 offse
 
 // This is the same as LayoutEngline::adjustGlyphPositions() except that it doesn't call adjustMarkGlyphs
 void ThaiLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool  /*reverse*/,
-                                        LEGlyphStorage &glyphStorage, LEErrorCode &success)
+                                            LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (chars == NULL || offset < 0 || count < 0) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
         return;
     }
 
-    if (fTypoFlags & LE_Kerning_FEATURE_FLAG) { /* kerning enabled */
-      LETableReference kernTable(fFontInstance, LE_KERN_TABLE_TAG, success);
-      KernTable kt(kernTable, success);
-      kt.process(glyphStorage, success);
+    if (fTypoFlags & LE_Kerning_FEATURE_FLAG) {
+        LETableReference kernTable(fFontInstance, LE_KERN_TABLE_TAG, success);
+        if (LE_SUCCESS(success)) {
+            KernTable kt(kernTable, success);
+            kt.process(glyphStorage, success);
+        }
     }
 
     // default is no adjustments

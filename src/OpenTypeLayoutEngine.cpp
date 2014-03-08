@@ -1,4 +1,3 @@
-
 /*
  *
  * (C) Copyright IBM Corp. and others 1998-2013 - All Rights Reserved
@@ -71,7 +70,7 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(OpenTypeLayoutEngine)
 #define loclFeatureMask 0x01000000UL
 #define caltFeatureMask 0x00800000UL
 
-#define dligFeatureMask 0x00400000UL 
+#define dligFeatureMask 0x00400000UL
 #define rligFeatureMask 0x00200000UL
 #define hligFeatureMask 0x00100000UL
 #define smcpFeatureMask 0x00080000UL
@@ -92,12 +91,12 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(OpenTypeLayoutEngine)
 #define ss07FeatureMask 0x00000010UL
 
 #define minimalFeatures     (ccmpFeatureMask | markFeatureMask | mkmkFeatureMask | loclFeatureMask | caltFeatureMask)
- 
+
 static const FeatureMap featureMap[] =
 {
     {ccmpFeatureTag, ccmpFeatureMask},
     {ligaFeatureTag, ligaFeatureMask},
-    {cligFeatureTag, cligFeatureMask}, 
+    {cligFeatureTag, cligFeatureMask},
     {kernFeatureTag, kernFeatureMask},
     {paltFeatureTag, paltFeatureMask},
     {markFeatureTag, markFeatureMask},
@@ -126,21 +125,21 @@ static const FeatureMap featureMap[] =
 static const le_int32 featureMapCount = LE_ARRAY_SIZE(featureMap);
 
 OpenTypeLayoutEngine::OpenTypeLayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode,
-                     le_int32 typoFlags, const LEReferenceTo<GlyphSubstitutionTableHeader> &gsubTable, LEErrorCode &success)
+                                           le_int32 typoFlags, const LEReferenceTo<GlyphSubstitutionTableHeader> &gsubTable, LEErrorCode &success)
     : LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success), fFeatureMask(minimalFeatures),
       fFeatureMap(featureMap), fFeatureMapCount(featureMapCount), fFeatureOrder(FALSE),
-      fGSUBTable(gsubTable), 
+      fGSUBTable(gsubTable),
       fGDEFTable(fontInstance, LE_GDEF_TABLE_TAG, success),
-      fGPOSTable(fontInstance, LE_GPOS_TABLE_TAG, success), fSubstitutionFilter(NULL)
+    fGPOSTable(fontInstance, LE_GPOS_TABLE_TAG, success), fSubstitutionFilter(NULL)
 {
     applyTypoFlags();
 
     setScriptAndLanguageTags();
 
-// JK patch, 2008-05-30 - see Sinhala bug report and LKLUG font
-//    if (gposTable != NULL && gposTable->coversScriptAndLanguage(fScriptTag, fLangSysTag)) {
+    // JK patch, 2008-05-30 - see Sinhala bug report and LKLUG font
+    //    if (gposTable != NULL && gposTable->coversScriptAndLanguage(fScriptTag, fLangSysTag)) {
     if (!fGPOSTable.isEmpty()&& !fGPOSTable->coversScript(fGPOSTable, fScriptTag, success)) {
-      fGPOSTable.clear(); // already loaded
+        fGPOSTable.clear(); // already loaded
     }
 }
 
@@ -148,44 +147,46 @@ void OpenTypeLayoutEngine::applyTypoFlags() {
     const le_int32& typoFlags = fTypoFlags;
     const LEFontInstance *fontInstance = fFontInstance;
 
-    switch (typoFlags & (LE_SS01_FEATURE_FLAG 
+    switch (typoFlags & (LE_SS01_FEATURE_FLAG
                          | LE_SS02_FEATURE_FLAG
                          | LE_SS03_FEATURE_FLAG
                          | LE_SS04_FEATURE_FLAG
                          | LE_SS05_FEATURE_FLAG
                          | LE_SS06_FEATURE_FLAG
                          | LE_SS07_FEATURE_FLAG)) {
-        case LE_SS01_FEATURE_FLAG:
-            fFeatureMask |= ss01FeatureMask;
-            break;
-        case LE_SS02_FEATURE_FLAG:
-            fFeatureMask |= ss02FeatureMask;
-            break;
-        case LE_SS03_FEATURE_FLAG:
-            fFeatureMask |= ss03FeatureMask;
-            break;
-        case LE_SS04_FEATURE_FLAG:
-            fFeatureMask |= ss04FeatureMask;
-            break;
-        case LE_SS05_FEATURE_FLAG:
-            fFeatureMask |= ss05FeatureMask;
-            break;
-        case LE_SS06_FEATURE_FLAG:
-            fFeatureMask |= ss06FeatureMask;
-            break;
-        case LE_SS07_FEATURE_FLAG:
-            fFeatureMask |= ss07FeatureMask;
-            break;
+    case LE_SS01_FEATURE_FLAG:
+        fFeatureMask |= ss01FeatureMask;
+        break;
+    case LE_SS02_FEATURE_FLAG:
+        fFeatureMask |= ss02FeatureMask;
+        break;
+    case LE_SS03_FEATURE_FLAG:
+        fFeatureMask |= ss03FeatureMask;
+        break;
+    case LE_SS04_FEATURE_FLAG:
+        fFeatureMask |= ss04FeatureMask;
+        break;
+    case LE_SS05_FEATURE_FLAG:
+        fFeatureMask |= ss05FeatureMask;
+        break;
+    case LE_SS06_FEATURE_FLAG:
+        fFeatureMask |= ss06FeatureMask;
+        break;
+    case LE_SS07_FEATURE_FLAG:
+        fFeatureMask |= ss07FeatureMask;
+        break;
     }
 
     if (typoFlags & LE_Kerning_FEATURE_FLAG) {
-      fFeatureMask |= (kernFeatureMask | paltFeatureMask); 
-      // Convenience.
+        // Convenience.
+        fFeatureMask |= (kernFeatureMask | paltFeatureMask);
     }
+
     if (typoFlags & LE_Ligatures_FEATURE_FLAG) {
-      fFeatureMask |= (ligaFeatureMask | cligFeatureMask);  
-      // Convenience TODO: should add: .. dligFeatureMask | rligFeatureMask ?
+        // Convenience TODO: should add: .. dligFeatureMask | rligFeatureMask ?
+        fFeatureMask |= (ligaFeatureMask | cligFeatureMask);
     }
+
     if (typoFlags & LE_CLIG_FEATURE_FLAG) fFeatureMask |= cligFeatureMask;
     if (typoFlags & LE_DLIG_FEATURE_FLAG) fFeatureMask |= dligFeatureMask;
     if (typoFlags & LE_HLIG_FEATURE_FLAG) fFeatureMask |= hligFeatureMask;
@@ -200,13 +201,13 @@ void OpenTypeLayoutEngine::applyTypoFlags() {
     if (typoFlags & LE_SALT_FEATURE_FLAG) fFeatureMask |= saltFeatureMask;
     if (typoFlags & LE_RUBY_FEATURE_FLAG) fFeatureMask |= rubyFeatureMask;
     if (typoFlags & LE_NALT_FEATURE_FLAG) {
-      // Mutually exclusive with ALL other features. http://www.microsoft.com/typography/otspec/features_ko.htm
-      fFeatureMask = naltFeatureMask; 
+        // Mutually exclusive with ALL other features. http://www.microsoft.com/typography/otspec/features_ko.htm
+        fFeatureMask = naltFeatureMask;
     }
 
     if (typoFlags & LE_CHAR_FILTER_FEATURE_FLAG) {
-      // This isn't a font feature, but requests a Char Substitution Filter
-      fSubstitutionFilter = new CharSubstitutionFilter(fontInstance);
+        // This isn't a font feature, but requests a Char Substitution Filter
+        fSubstitutionFilter = new CharSubstitutionFilter(fontInstance);
     }
 
 }
@@ -221,12 +222,12 @@ void OpenTypeLayoutEngine::reset()
 }
 
 OpenTypeLayoutEngine::OpenTypeLayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode,
-                       le_int32 typoFlags, LEErrorCode &success)
+                                           le_int32 typoFlags, LEErrorCode &success)
     : LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success), fFeatureOrder(FALSE),
       fGSUBTable(), fGDEFTable(), fGPOSTable(), fSubstitutionFilter(NULL)
 {
-  applyTypoFlags();
-  setScriptAndLanguageTags();
+    applyTypoFlags();
+    setScriptAndLanguageTags();
 }
 
 OpenTypeLayoutEngine::~OpenTypeLayoutEngine()
@@ -249,42 +250,40 @@ LETag OpenTypeLayoutEngine::getScriptTag(le_int32 scriptCode)
 
 LETag OpenTypeLayoutEngine::getV2ScriptTag(le_int32 scriptCode)
 {
-	switch (scriptCode) { 
-		case bengScriptCode :    return bng2ScriptTag;
-		case devaScriptCode :    return dev2ScriptTag;
-		case gujrScriptCode :    return gjr2ScriptTag;
-		case guruScriptCode :    return gur2ScriptTag;
-		case kndaScriptCode :    return knd2ScriptTag;
-		case mlymScriptCode :    return mlm2ScriptTag;
-		case oryaScriptCode :    return ory2ScriptTag;
-		case tamlScriptCode :    return tml2ScriptTag;
-		case teluScriptCode :    return tel2ScriptTag;
-		default:                 return nullScriptTag;
+	switch (scriptCode) {
+    case bengScriptCode: return bng2ScriptTag;
+    case devaScriptCode: return dev2ScriptTag;
+    case gujrScriptCode: return gjr2ScriptTag;
+    case guruScriptCode: return gur2ScriptTag;
+    case kndaScriptCode: return knd2ScriptTag;
+    case mlymScriptCode: return mlm2ScriptTag;
+    case oryaScriptCode: return ory2ScriptTag;
+    case tamlScriptCode: return tml2ScriptTag;
+    case teluScriptCode: return tel2ScriptTag;
+    default:             return nullScriptTag;
 	}
 }
 
 LETag OpenTypeLayoutEngine::getLangSysTag(le_int32 languageCode)
 {
-    if (languageCode < 0 || languageCode >= languageCodeCount) {
+    if (languageCode < 0 || languageCode >= languageCodeCount)
         return 0xFFFFFFFF;
-    }
 
     return languageTags[languageCode];
 }
 
 void OpenTypeLayoutEngine::setScriptAndLanguageTags()
 {
-    fScriptTag  = getScriptTag(fScriptCode);
+    fScriptTag   = getScriptTag(fScriptCode);
     fScriptTagV2 = getV2ScriptTag(fScriptCode);
-    fLangSysTag = getLangSysTag(fLanguageCode);
+    fLangSysTag  = getLangSysTag(fLanguageCode);
 }
 
 le_int32 OpenTypeLayoutEngine::characterProcessing(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft,
-                LEUnicode *&outChars, LEGlyphStorage &glyphStorage, LEErrorCode &success)
+                                                   LEUnicode *&outChars, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if (offset < 0 || count < 0 || max < 0 || offset >= max || offset + count > max) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -312,16 +311,14 @@ le_int32 OpenTypeLayoutEngine::characterProcessing(const LEUnicode chars[], le_i
         CanonShaping::reorderMarks(&chars[offset], count, rightToLeft, outChars, glyphStorage);
     }
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     glyphStorage.allocateGlyphArray(count, rightToLeft, success);
     glyphStorage.allocateAuxData(success);
 
-    for (le_int32 i = 0; i < count; i += 1) {
+    for (le_int32 i = 0; i < count; i += 1)
         glyphStorage.setAuxData(i, fFeatureMask, success);
-    }
 
     return count;
 }
@@ -331,9 +328,8 @@ le_int32 OpenTypeLayoutEngine::characterProcessing(const LEUnicode chars[], le_i
 le_int32 OpenTypeLayoutEngine::glyphProcessing(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft,
                                                LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if (chars == NULL || offset < 0 || count < 0 || max < 0 || offset >= max || offset + count > max) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -342,55 +338,54 @@ le_int32 OpenTypeLayoutEngine::glyphProcessing(const LEUnicode chars[], le_int32
 
     mapCharsToGlyphs(chars, offset, count, rightToLeft, rightToLeft, glyphStorage, success);
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
-    
+
     if (fGSUBTable.isValid()) {
-      if (fScriptTagV2 != nullScriptTag && fGSUBTable->coversScriptAndLanguage(fGSUBTable, fScriptTagV2, fLangSysTag, success)) { 
-          count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTagV2, fLangSysTag, fGDEFTable, fSubstitutionFilter,
-                                    fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
+        if (fScriptTagV2 != nullScriptTag && fGSUBTable->coversScriptAndLanguage(fGSUBTable, fScriptTagV2, fLangSysTag, success)) { 
+            count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTagV2, fLangSysTag, fGDEFTable, fSubstitutionFilter,
+                                        fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
 
         } else {
-          count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTag, fLangSysTag, fGDEFTable, fSubstitutionFilter,
-                                    fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
+            count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTag, fLangSysTag, fGDEFTable, fSubstitutionFilter,
+                                        fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
         }
     }
 
     return count;
 }
+
 // Input: characters, tags
 // Output: glyphs, char indices
 le_int32 OpenTypeLayoutEngine::glyphSubstitution(le_int32 count, le_int32 max, le_bool rightToLeft,
-                                               LEGlyphStorage &glyphStorage, LEErrorCode &success)
+                                                 LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if ( count < 0 || max < 0 ) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
-   
+
     if (fGSUBTable.isValid()) {
-       if (fScriptTagV2 != nullScriptTag && fGSUBTable->coversScriptAndLanguage(fGSUBTable,fScriptTagV2,fLangSysTag,success)) { 
-          count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTagV2, fLangSysTag, fGDEFTable, fSubstitutionFilter,
-                                    fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
+        if (fScriptTagV2 != nullScriptTag && fGSUBTable->coversScriptAndLanguage(fGSUBTable,fScriptTagV2,fLangSysTag,success)) { 
+            count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTagV2, fLangSysTag, fGDEFTable, fSubstitutionFilter,
+                                        fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
 
         } else {
-          count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTag, fLangSysTag, fGDEFTable, fSubstitutionFilter,
-                                    fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
+            count = fGSUBTable->process(fGSUBTable, glyphStorage, rightToLeft, fScriptTag, fLangSysTag, fGDEFTable, fSubstitutionFilter,
+                                        fFeatureMap, fFeatureMapCount, fFeatureOrder, success);
         }
     }
 
     return count;
 }
+
 le_int32 OpenTypeLayoutEngine::glyphPostProcessing(LEGlyphStorage &tempGlyphStorage, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     glyphStorage.adoptGlyphArray(tempGlyphStorage);
     glyphStorage.adoptCharIndicesArray(tempGlyphStorage);
@@ -402,13 +397,12 @@ le_int32 OpenTypeLayoutEngine::glyphPostProcessing(LEGlyphStorage &tempGlyphStor
 
 le_int32 OpenTypeLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    LEUnicode *outChars = NULL;
-    LEGlyphStorage fakeGlyphStorage;
-    le_int32 outCharCount, outGlyphCount;
+    LEUnicode      *outChars = NULL;
+    LEGlyphStorage  fakeGlyphStorage;
+    le_int32        outCharCount, outGlyphCount;
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if (chars == NULL || offset < 0 || count < 0 || max < 0 || offset >= max || offset + count > max) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -417,12 +411,11 @@ le_int32 OpenTypeLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 o
 
     outCharCount = characterProcessing(chars, offset, count, max, rightToLeft, outChars, fakeGlyphStorage, success);
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if (outChars != NULL) {
-        // le_int32 fakeGlyphCount = 
+        // le_int32 fakeGlyphCount =
         glyphProcessing(outChars, 0, outCharCount, outCharCount, rightToLeft, fakeGlyphStorage, success);
         LE_DELETE_ARRAY(outChars); // FIXME: a subclass may have allocated this, in which case this delete might not work...
         //adjustGlyphs(outChars, 0, outCharCount, rightToLeft, fakeGlyphs, fakeGlyphCount);
@@ -432,9 +425,8 @@ le_int32 OpenTypeLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 o
         //adjustGlyphs(chars, offset, count, rightToLeft, fakeGlyphs, fakeGlyphCount);
     }
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     outGlyphCount = glyphPostProcessing(fakeGlyphStorage, glyphStorage, success);
 
@@ -445,9 +437,8 @@ le_int32 OpenTypeLayoutEngine::computeGlyphs(const LEUnicode chars[], le_int32 o
 void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool reverse,
                                                 LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (chars == NULL || offset < 0 || count < 0) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -455,9 +446,8 @@ void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int3
     }
 
     le_int32 glyphCount = glyphStorage.getGlyphCount();
-    if (glyphCount == 0) {
+    if (glyphCount == 0)
         return;
-    }
 
     if (!fGPOSTable.isEmpty()) {
         GlyphPositionAdjustments *adjustments = new GlyphPositionAdjustments(glyphCount);
@@ -481,21 +471,21 @@ void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int3
             adjustments->setBaseOffset(i, -1);
         }
 #endif
-
         if (!fGPOSTable.isEmpty()) {
-            if (fScriptTagV2 != nullScriptTag && 
-                fGPOSTable->coversScriptAndLanguage(fGPOSTable, fScriptTagV2,fLangSysTag,success)) { 
-              fGPOSTable->process(fGPOSTable, glyphStorage, adjustments, reverse, fScriptTagV2, fLangSysTag, 
-                                  fGDEFTable, success, fFontInstance, fFeatureMap, fFeatureMapCount, fFeatureOrder);
- 
+            if (fScriptTagV2 != nullScriptTag &&
+                fGPOSTable->coversScriptAndLanguage(fGPOSTable, fScriptTagV2,fLangSysTag,success)) {
+                fGPOSTable->process(fGPOSTable, glyphStorage, adjustments, reverse, fScriptTagV2, fLangSysTag,
+                                    fGDEFTable, success, fFontInstance, fFeatureMap, fFeatureMapCount, fFeatureOrder);
             } else {
-              fGPOSTable->process(fGPOSTable, glyphStorage, adjustments, reverse, fScriptTag, fLangSysTag, 
-                                  fGDEFTable, success, fFontInstance, fFeatureMap, fFeatureMapCount, fFeatureOrder);
+                fGPOSTable->process(fGPOSTable, glyphStorage, adjustments, reverse, fScriptTag, fLangSysTag,
+                                    fGDEFTable, success, fFontInstance, fFeatureMap, fFeatureMapCount, fFeatureOrder);
             }
-        } else if (fTypoFlags & LE_Kerning_FEATURE_FLAG) { /* kerning enabled */
-          LETableReference kernTable(fFontInstance, LE_KERN_TABLE_TAG, success);
-          KernTable kt(kernTable, success);
-          kt.process(glyphStorage, success);
+        } else if (fTypoFlags & LE_Kerning_FEATURE_FLAG) {
+            LETableReference kernTable(fFontInstance, LE_KERN_TABLE_TAG, success);
+            if (LE_SUCCESS(success)) {
+                KernTable kt(kernTable, success);
+                kt.process(glyphStorage, success);
+            }
         }
 
         float xAdjust = 0, yAdjust = 0;
@@ -505,8 +495,6 @@ void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int3
             float yAdvance   = adjustments->getYAdvance(i);
             float xPlacement = 0;
             float yPlacement = 0;
-
-
 #if 0
             // This is where separate kerning adjustments
             // should get applied.
@@ -532,10 +520,10 @@ void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int3
         delete adjustments;
     } else {
         // if there was no GPOS table, maybe there's non-OpenType kerning we can use
-        LayoutEngine::adjustGlyphPositions(chars, offset, count, reverse, glyphStorage, success);        
+        LayoutEngine::adjustGlyphPositions(chars, offset, count, reverse, glyphStorage, success);
     }
 
-    LEGlyphID zwnj  = fFontInstance->mapCharToGlyph(0x200C);
+    LEGlyphID zwnj = fFontInstance->mapCharToGlyph(0x200C);
 
     if (zwnj != 0x0000) {
         for (le_int32 g = 0; g < glyphCount; g += 1) {

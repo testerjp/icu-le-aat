@@ -302,7 +302,7 @@ typedef struct LEPoint LEPoint;
         fprintf(dst, "\n");                             \
     } while (0)
 #else
-#define LE_TRACE_LOG
+#define LE_TRACE_LOG(...)
 #endif
 
 /**

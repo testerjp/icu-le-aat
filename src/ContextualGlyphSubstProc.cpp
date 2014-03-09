@@ -25,9 +25,8 @@ ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const
 {
     contextualGlyphSubstitutionHeader.orphan();
     substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset);
-
     entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
-    int16Table = LEReferenceToArrayOf<le_int16>(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
+    int16Table = LEReferenceToArrayOf<le_int16>(stHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
 }
 
 ContextualGlyphSubstitutionProcessor::~ContextualGlyphSubstitutionProcessor()

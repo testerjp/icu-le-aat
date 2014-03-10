@@ -32,7 +32,7 @@ void SegmentSingleProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;
 
-    for (glyph = 0; glyph < glyphCount && LE_SUCCESS(success); glyph += 1) {
+    for (glyph = 0; LE_SUCCESS(success) && glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         const LookupSegment *lookupSegment = segmentSingleLookupTable->lookupSegment(segmentSingleLookupTable, segments, thisGlyph, success);
 

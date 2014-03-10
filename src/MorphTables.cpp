@@ -91,9 +91,13 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
     case mstReservedUnused:
         break;
 
-    case mstNonContextualGlyphSubstitution:
-        processor = NonContextualGlyphSubstitutionProcessor::createInstance(base, success); // FIXME: need not specify a direction?
+    case mstNonContextualGlyphSubstitution: {
+        LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(base, success);
+        LEReferenceTo<LookupTable>                          lookupTable(header, success, &header->table);
+        le_int16 format = SWAPW(lookupTable->format);
+        processor = NonContextualGlyphSubstitutionProcessor::createInstance(format, lookupTable, success); // FIXME: need not specify a direction?
         break;
+    }
 
     /*
     case mstContextualGlyphInsertion:

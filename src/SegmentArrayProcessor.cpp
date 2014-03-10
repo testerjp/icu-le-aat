@@ -5,12 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "SubtableProcessor.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc.h"
-#include "SegmentArrayProcessor.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SegmentArrayProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,7 +32,7 @@ void SegmentArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;
 
-    for (glyph = 0; glyph < glyphCount; glyph += 1) {
+    for (glyph = 0; LE_SUCCESS(success) && glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         const LookupSegment *lookupSegment = segmentArrayLookupTable->lookupSegment(segmentArrayLookupTable, segments, thisGlyph, success);
 

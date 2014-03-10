@@ -137,13 +137,8 @@ GXLayoutEngine2.o \
 IndicRearrangementProcessor2.o \
 LigatureSubstProc2.o \
 MorphTables2.o \
-NonContextualGlyphSubstProc2.o \
-SegmentArrayProcessor2.o \
-SegmentSingleProcessor2.o \
-SimpleArrayProcessor2.o \
-SingleTableProcessor2.o \
-StateTableProcessor2.o \
-TrimmedArrayProcessor2.o
+StateTableProcessor2.o
+
 
 ## Header files to install
 HEADERS= $(srcdir)/LayoutEngine.h $(srcdir)/LE*.h $(srcdir)/loengine.h

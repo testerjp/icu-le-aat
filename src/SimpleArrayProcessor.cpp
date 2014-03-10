@@ -33,11 +33,11 @@ void SimpleArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     LEReferenceToArrayOf<LookupValue> valueArray(simpleArrayLookupTable, success, (const LookupValue*)&simpleArrayLookupTable->valueArray, LE_UNBOUNDED_ARRAY);
 
-    for (glyph = 0; LE_SUCCESS(success) && (glyph < glyphCount); glyph += 1) {
+    for (glyph = 0; LE_SUCCESS(success) && glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         if (LE_GET_GLYPH(thisGlyph) < 0xFFFF) {
-          TTGlyphID newGlyph  = SWAPW(valueArray.getObject(LE_GET_GLYPH(thisGlyph),success));
-          glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
+            TTGlyphID newGlyph  = SWAPW(valueArray.getObject(LE_GET_GLYPH(thisGlyph),success));
+            glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }
 }

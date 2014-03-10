@@ -23,36 +23,32 @@ NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcesso
 {
 }
 
-SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
+SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(le_int16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
 {
-    LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
-
-    if (LE_FAILURE(success)) return NULL;
-
-    switch (SWAPW(header->table.format)) {
+    switch (format) {
     case ltfSimpleArray: {
-        LEReferenceTo<SimpleArrayLookupTable> lookupTable(header, success, &header->table);
-        return new SimpleArrayProcessor(lookupTable, success);
+        LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(lookupTable, success);
+        return new SimpleArrayProcessor(simpleArrayLookupTable, success);
     }
 
     case ltfSegmentSingle: {
-        LEReferenceTo<SegmentSingleLookupTable> lookupTable(header, success, &header->table);
-        return new SegmentSingleProcessor(lookupTable, success);
+        LEReferenceTo<SegmentSingleLookupTable> segmentSingleLookupTable(lookupTable, success);
+        return new SegmentSingleProcessor(segmentSingleLookupTable, success);
     }
 
     case ltfSegmentArray: {
-        LEReferenceTo<SegmentArrayLookupTable> lookupTable(header, success, &header->table);
-        return new SegmentArrayProcessor(lookupTable, success);
+        LEReferenceTo<SegmentArrayLookupTable> segmentArrayLookupTable(lookupTable, success);
+        return new SegmentArrayProcessor(segmentArrayLookupTable, success);
     }
 
     case ltfSingleTable: {
-        LEReferenceTo<SingleTableLookupTable> lookupTable(header, success, &header->table);
-        return new SingleTableProcessor(lookupTable, success);
+        LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(lookupTable, success);
+        return new SingleTableProcessor(singleTableLookupTable, success);
     }
 
     case ltfTrimmedArray: {
-        LEReferenceTo<TrimmedArrayLookupTable> lookupTable(header, success, &header->table);
-        return new TrimmedArrayProcessor(lookupTable, success);
+        LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(lookupTable, success);
+        return new TrimmedArrayProcessor(trimmedArrayLookupTable, success);
     }
 
     default:

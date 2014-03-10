@@ -40,12 +40,12 @@ void TrimmedArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
 
     LEReferenceToArrayOf<LookupValue> valueArray = LEReferenceToArrayOf<LookupValue>(trimmedArrayLookupTable, success, &trimmedArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
 
-    for (glyph = 0; glyph < glyphCount; glyph += 1) {
+    for (glyph = 0; LE_SUCCESS(success) && glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         TTGlyphID ttGlyph   = (TTGlyphID) LE_GET_GLYPH(thisGlyph);
 
         if ((ttGlyph > firstGlyph) && (ttGlyph < lastGlyph)) {
-            TTGlyphID newGlyph  = SWAPW(trimmedArrayLookupTable->valueArray[ttGlyph - firstGlyph]);
+            TTGlyphID newGlyph  = SWAPW(valueArray(ttGlyph - firstGlyph, success));
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }

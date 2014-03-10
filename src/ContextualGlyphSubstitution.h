@@ -19,14 +19,14 @@
 
 U_NAMESPACE_BEGIN
 
-struct ContextualGlyphSubstitutionHeader : MorphStateTableHeader
+struct ContextualGlyphSubstitutionHeader : StateTableHeader
 {
     ByteOffset  substitutionTableOffset;
 };
 
-struct ContextualGlyphHeader2 : MorphStateTableHeader2
+struct ContextualGlyphSubstitutionHeader2 : StateTableHeader2
 {
-    le_uint32  perGlyphTableOffset; // no more substitution tables
+    le_uint32  perGlyphTableOffset;
 };
 
 enum ContextualGlyphSubstitutionFlags
@@ -42,11 +42,12 @@ struct ContextualGlyphSubstitutionStateEntry : StateEntry
     WordOffset currOffset;
 };
 
-struct ContextualGlyphStateEntry2 : StateEntry2
+struct ContextualGlyphSubstitutionStateEntry2 : StateEntry2
 {
     le_uint16 markIndex;
     le_uint16 currIndex;
 };
 
 U_NAMESPACE_END
+
 #endif

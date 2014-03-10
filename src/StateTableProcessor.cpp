@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "StateTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,19 +15,17 @@ StateTableProcessor::StateTableProcessor()
 {
 }
 
-StateTableProcessor::StateTableProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-    : SubtableProcessor(morphSubtableHeader, success),
-      stateTableHeader(morphSubtableHeader, success),
-      stHeader(stateTableHeader, success, (const StateTableHeader*)&stateTableHeader->stHeader)
+StateTableProcessor::StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
+    : stateTableHeader(header)
 {
     if (LE_FAILURE(success)) return;
 
-    stateSize        = SWAPW(stHeader->stateSize);
-    classTableOffset = SWAPW(stHeader->classTableOffset);
-    stateArrayOffset = SWAPW(stHeader->stateArrayOffset);
-    entryTableOffset = SWAPW(stHeader->entryTableOffset);
+    stateSize        = SWAPW(stateTableHeader->stateSize);
+    classTableOffset = SWAPW(stateTableHeader->classTableOffset);
+    stateArrayOffset = SWAPW(stateTableHeader->stateArrayOffset);
+    entryTableOffset = SWAPW(stateTableHeader->entryTableOffset);
 
-    classTable       = LEReferenceTo<ClassTable>(stHeader, success, classTableOffset);
+    classTable       = LEReferenceTo<ClassTable>(stateTableHeader, success, classTableOffset);
 
     if (LE_FAILURE(success)) return;
 
@@ -72,7 +66,7 @@ void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &suc
             }
         }
 
-        LEReferenceToArrayOf<EntryTableIndex> stateArray(stHeader, success, currentState, LE_UNBOUNDED_ARRAY);
+        LEReferenceToArrayOf<EntryTableIndex> stateArray(stateTableHeader, success, currentState, LE_UNBOUNDED_ARRAY);
         EntryTableIndex entryTableIndex = stateArray.getObject((le_uint8)classCode, success);
         LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
         currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex);

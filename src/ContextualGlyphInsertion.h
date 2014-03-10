@@ -20,11 +20,11 @@
 
 U_NAMESPACE_BEGIN
 
-struct ContextualGlyphInsertionHeader : MorphStateTableHeader
+struct ContextualGlyphInsertionHeader : StateTableHeader
 {
 };
 
-struct ContextualGlyphInsertionHeader2 : MorphStateTableHeader2
+struct ContextualGlyphInsertionHeader2 : StateTableHeader2
 {
     le_uint32 insertionTableOffset;
 };

@@ -60,17 +60,26 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
     SubtableProcessor *processor = NULL;
 
     switch (SWAPW(coverage) & scfTypeMask) {
-    case mstIndicRearrangement:
-        processor = new IndicRearrangementProcessor(base, success);
+    case mstIndicRearrangement: {
+        LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
+        LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
+        processor = new IndicRearrangementProcessor(header, success);
         break;
+    }
 
-    case mstContextualGlyphSubstitution:
-        processor = new ContextualGlyphSubstitutionProcessor(base, success);
+    case mstContextualGlyphSubstitution: {
+        LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
+        LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
+        processor = new ContextualGlyphSubstitutionProcessor(header, success);
         break;
+    }
 
-    case mstLigatureSubstitution:
-        processor = new LigatureSubstitutionProcessor(base, success);
+    case mstLigatureSubstitution: {
+        LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
+        LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
+        processor = new LigatureSubstitutionProcessor(header, success);
         break;
+    }
 
     case mstReservedUnused:
         break;

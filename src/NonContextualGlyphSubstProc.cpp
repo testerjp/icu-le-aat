@@ -5,25 +5,17 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "NonContextualGlyphSubst.h"
+#include "LESwaps.h"
 #include "NonContextualGlyphSubstProc.h"
 #include "SimpleArrayProcessor.h"
 #include "SegmentSingleProcessor.h"
 #include "SegmentArrayProcessor.h"
 #include "SingleTableProcessor.h"
 #include "TrimmedArrayProcessor.h"
-#include "LESwaps.h"
 
 U_NAMESPACE_BEGIN
 
 NonContextualGlyphSubstitutionProcessor::NonContextualGlyphSubstitutionProcessor()
-{
-}
-
-NonContextualGlyphSubstitutionProcessor::NonContextualGlyphSubstitutionProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-  : SubtableProcessor(morphSubtableHeader, success)
 {
 }
 
@@ -33,25 +25,35 @@ NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcesso
 
 SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
 {
-  LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
+    LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
 
-  if(LE_FAILURE(success)) return NULL;
+    if (LE_FAILURE(success)) return NULL;
 
-  switch (SWAPW(header->table.format)) {
-    case ltfSimpleArray:
-      return new SimpleArrayProcessor(morphSubtableHeader, success);
+    switch (SWAPW(header->table.format)) {
+    case ltfSimpleArray: {
+        LEReferenceTo<SimpleArrayLookupTable> lookupTable(header, success, &header->table);
+        return new SimpleArrayProcessor(lookupTable, success);
+    }
 
-    case ltfSegmentSingle:
-      return new SegmentSingleProcessor(morphSubtableHeader, success);
+    case ltfSegmentSingle: {
+        LEReferenceTo<SegmentSingleLookupTable> lookupTable(header, success, &header->table);
+        return new SegmentSingleProcessor(lookupTable, success);
+    }
 
-    case ltfSegmentArray:
-      return new SegmentArrayProcessor(morphSubtableHeader, success);
+    case ltfSegmentArray: {
+        LEReferenceTo<SegmentArrayLookupTable> lookupTable(header, success, &header->table);
+        return new SegmentArrayProcessor(lookupTable, success);
+    }
 
-    case ltfSingleTable:
-      return new SingleTableProcessor(morphSubtableHeader, success);
+    case ltfSingleTable: {
+        LEReferenceTo<SingleTableLookupTable> lookupTable(header, success, &header->table);
+        return new SingleTableProcessor(lookupTable, success);
+    }
 
-    case ltfTrimmedArray:
-      return new TrimmedArrayProcessor(morphSubtableHeader, success);
+    case ltfTrimmedArray: {
+        LEReferenceTo<TrimmedArrayLookupTable> lookupTable(header, success, &header->table);
+        return new TrimmedArrayProcessor(lookupTable, success);
+    }
 
     default:
         return NULL;

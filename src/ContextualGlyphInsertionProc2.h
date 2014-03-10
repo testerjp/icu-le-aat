@@ -13,11 +13,8 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor2.h"
-#include "StateTableProcessor2.h"
-#include "ContextualGlyphInsertionProc2.h"
 #include "ContextualGlyphInsertion.h"
+#include "StateTableProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -28,12 +25,12 @@ class ContextualGlyphInsertionProcessor2 : public StateTableProcessor2
 public:
     virtual void beginStateTable();
 
-    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, 
+    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage,
                                         le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success);
 
     virtual void endStateTable();
 
-    ContextualGlyphInsertionProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success);
+    ContextualGlyphInsertionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
     virtual ~ContextualGlyphInsertionProcessor2();
 
     /**
@@ -61,21 +58,16 @@ private:
      * @param isKashidaLike Kashida like (vs Split Vowel like). No effect currently.
      * @param isBefore if true, insert extra glyphs before the marked glyph
      */
-    void doInsertion(LEGlyphStorage &glyphStorage,
-                              le_int16 atGlyph,
-                              le_int16 &index,
-                              le_int16 count,
-                              le_bool isKashidaLike,
-                              le_bool isBefore,
-                              LEErrorCode &success);
-
+    void doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_int16 &index, le_int16 count, le_bool isKashidaLike, le_bool isBefore, LEErrorCode &success);
 
 protected:
     le_int32 markGlyph;
-    LEReferenceToArrayOf<le_uint16> insertionTable;
+
+    LEReferenceTo<ContextualGlyphInsertionHeader2> contextualGlyphInsertionHeader;
     LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2> entryTable;
-    LEReferenceTo<ContextualGlyphInsertionHeader2> contextualGlyphHeader;
+    LEReferenceToArrayOf<le_uint16> insertionTable;
 };
 
 U_NAMESPACE_END
+
 #endif

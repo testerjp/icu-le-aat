@@ -20,11 +20,11 @@
 
 U_NAMESPACE_BEGIN
 
-struct IndicRearrangementSubtableHeader : MorphStateTableHeader
+struct IndicRearrangementSubtableHeader : StateTableHeader
 {
 };
 
-struct IndicRearrangementSubtableHeader2 : MorphStateTableHeader2
+struct IndicRearrangementSubtableHeader2 : StateTableHeader2
 {
 };
 

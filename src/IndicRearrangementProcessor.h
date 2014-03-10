@@ -13,10 +13,8 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
 #include "IndicRearrangement.h"
+#include "StateTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,7 +31,7 @@ public:
 
     void doRearrangementAction(LEGlyphStorage &glyphStorage, IndicRearrangementVerb verb) const;
 
-    IndicRearrangementProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    IndicRearrangementProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
     virtual ~IndicRearrangementProcessor();
 
     /**
@@ -56,8 +54,8 @@ protected:
 
     LEReferenceTo<IndicRearrangementSubtableHeader> indicRearrangementSubtableHeader;
     LEReferenceToArrayOf<IndicRearrangementStateEntry> entryTable;
-
 };
 
 U_NAMESPACE_END
+
 #endif

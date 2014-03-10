@@ -21,9 +21,8 @@ U_NAMESPACE_BEGIN
 class LEGlyphStorage;
 
 typedef le_uint32 FeatureFlags;
-
-typedef le_int16 FeatureType;
-typedef le_int16 FeatureSetting;
+typedef le_int16  FeatureType;
+typedef le_int16  FeatureSetting;
 
 struct FeatureTableEntry
 {
@@ -35,11 +34,11 @@ struct FeatureTableEntry
 
 struct ChainHeader
 {
-    FeatureFlags        defaultFlags;
-    le_uint32           chainLength;
-    le_int16           nFeatureEntries;
-    le_int16           nSubtables;
-    FeatureTableEntry   featureTable[ANY_NUMBER];
+    FeatureFlags      defaultFlags;
+    le_uint32         chainLength;
+    le_int16          nFeatureEntries;
+    le_int16          nSubtables;
+    FeatureTableEntry featureTable[ANY_NUMBER];
 };
 LE_VAR_ARRAY(ChainHeader, featureTable)
 
@@ -53,7 +52,7 @@ struct MorphTableHeader
 };
 LE_VAR_ARRAY(MorphTableHeader, chains)
 
-typedef le_int16 SubtableCoverage;
+typedef le_int16  SubtableCoverage;
 typedef le_uint32 SubtableCoverage2;
 
 enum SubtableCoverageFlags
@@ -77,28 +76,28 @@ enum MorphSubtableType
 
 struct MorphSubtableHeader
 {
-    le_int16           length;
+    le_int16            length;
     SubtableCoverage    coverage;
     FeatureFlags        subtableFeatures;
 
-  void process(const LEReferenceTo<MorphSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
+    void process(const LEReferenceTo<MorphSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 
 enum SubtableCoverageFlags2
 {
-    scfVertical2 = 0x80000000,
-    scfReverse2  = 0x40000000,
-    scfIgnoreVt2 = 0x20000000,
-    scfReserved2 = 0x1FFFFF00,
-    scfTypeMask2 = 0x000000FF
+    scf2Vertical = 0x80000000,
+    scf2Reverse  = 0x40000000,
+    scf2IgnoreVt = 0x20000000,
+    scf2Reserved = 0x1FFFFF00,
+    scf2TypeMask = 0x000000FF
 };
 
 struct MorphSubtableHeader2
 {
     le_uint32           length;
-    SubtableCoverage2    coverage;
+    SubtableCoverage2   coverage;
     FeatureFlags        subtableFeatures;
-    
+
     void process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 
@@ -114,10 +113,10 @@ LE_VAR_ARRAY(ChainHeader2, featureTable)
 
 struct MorphTableHeader2
 {
-    le_int32    version;
-    le_uint32   nChains;
+    le_int32     version;
+    le_uint32    nChains;
     ChainHeader2 chains[ANY_NUMBER];
-    
+
     void process(const LEReferenceTo<MorphTableHeader2> &base, LEGlyphStorage &glyphStorage, le_int32 typoFlags, LEErrorCode &success) const;
 };
 LE_VAR_ARRAY(MorphTableHeader2, chains)
@@ -127,7 +126,7 @@ LE_VAR_ARRAY(MorphTableHeader2, chains)
  * source: https://developer.apple.com/fonts/registry/
  * (plus addition from ATS/SFNTLayoutTypes.h)
  */
- 
+
 enum {
 
    allTypographicFeaturesType = 0,

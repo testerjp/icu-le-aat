@@ -30,7 +30,6 @@ public:
 
 protected:
     NonContextualGlyphSubstitutionProcessor2();
-    NonContextualGlyphSubstitutionProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success);
 
     virtual ~NonContextualGlyphSubstitutionProcessor2();
 
@@ -40,4 +39,5 @@ private:
 };
 
 U_NAMESPACE_END
+
 #endif

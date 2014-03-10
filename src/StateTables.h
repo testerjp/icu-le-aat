@@ -13,36 +13,34 @@
  */
 
 #include "LETypes.h"
+#include "LETableReference.h"
 #include "LayoutTables.h"
 
 U_NAMESPACE_BEGIN
 
-
-
-
-/* 
- * State table loop detection. 
+/*
+ * State table loop detection.
  * Detects if too many ( LE_STATE_PATIENCE_COUNT ) state changes occur without moving the glyph index 'g'.
- * 
+ *
  * Usage (pseudocode):
  *
  * {
- *   LE_STATE_PATIENCE_INIT();
+ *     LE_STATE_PATIENCE_INIT();
  *
- *   int g=0; // the glyph index - expect it to be moving
- * 
- *   for(;;) {
- *     if(LE_STATE_PATIENCE_DECR()) { // decrements the patience counter
- *        // ran out of patience, get out.
- *        break;
- *     }
- *     
+ *     int g = 0; // the glyph index - expect it to be moving
+ *
+ *     for(;;) {
+ *         if (LE_STATE_PATIENCE_DECR()) { // decrements the patience counter
+ *             // ran out of patience, get out.
+ *             break;
+ *         }
+ *
  *     LE_STATE_PATIENCE_CURR(int, g); // store the 'current'
- *     state = newState(state,g);
- *     g+= <something, could be zero>;
- *     LE_STATE_PATIENCE_INCR(g);  // if g has moved, increment the patience counter. Otherwise leave it.
- *   }
- * 
+ *     state = newState(state, g);
+ *     g += <something, could be zero>;
+ *     LE_STATE_PATIENCE_INCR(g); // if g has moved, increment the patience counter. Otherwise leave it.
+ * }
+ *
  */
 
 #define LE_STATE_PATIENCE_COUNT 4096 /**< give up if a state table doesn't move the glyph after this many iterations */
@@ -50,7 +48,6 @@ U_NAMESPACE_BEGIN
 #define LE_STATE_PATIENCE_DECR()  --le_patience_count==0
 #define LE_STATE_PATIENCE_CURR(type,x)  type le_patience_curr=(x)
 #define LE_STATE_PATIENCE_INCR(x)    if((x)!=le_patience_curr) ++le_patience_count;
-
 
 struct StateTableHeader
 {
@@ -60,7 +57,7 @@ struct StateTableHeader
     ByteOffset entryTableOffset;
 };
 
-struct StateTableHeader2 
+struct StateTableHeader2
 {
     le_uint32 nClasses;
     le_uint32 classTableOffset;
@@ -113,5 +110,5 @@ struct StateEntry2 // same struct different interpretation
 };
 
 U_NAMESPACE_END
-#endif
 
+#endif

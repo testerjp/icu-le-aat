@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor2.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc2.h"
-#include "SegmentSingleProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SegmentSingleProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,11 +17,9 @@ SegmentSingleProcessor2::SegmentSingleProcessor2()
 {
 }
 
-SegmentSingleProcessor2::SegmentSingleProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
+SegmentSingleProcessor2::SegmentSingleProcessor2(const LEReferenceTo<SegmentSingleLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : segmentSingleLookupTable(lookupTable)
 {
-    const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
-    segmentSingleLookupTable = LEReferenceTo<SegmentSingleLookupTable>(morphSubtableHeader, success, &header->table);
 }
 
 SegmentSingleProcessor2::~SegmentSingleProcessor2()
@@ -44,8 +38,7 @@ void SegmentSingleProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode 
 
         if (lookupSegment != NULL && LE_SUCCESS(success)) {
             TTGlyphID   newGlyph  = (TTGlyphID) LE_GET_GLYPH(thisGlyph) + SWAPW(lookupSegment->value);
-
-            glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
+            glyphStorage[glyph]   = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }
 }

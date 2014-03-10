@@ -5,23 +5,18 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
-#include "IndicRearrangementProcessor.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "IndicRearrangementProcessor.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IndicRearrangementProcessor)
 
-IndicRearrangementProcessor::IndicRearrangementProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-    : StateTableProcessor(morphSubtableHeader, success),
-      indicRearrangementSubtableHeader(morphSubtableHeader, success),
-      entryTable(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
+IndicRearrangementProcessor::IndicRearrangementProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
+    : StateTableProcessor(header, success),
+      indicRearrangementSubtableHeader(header, success),
+      entryTable(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
 {
 }
 

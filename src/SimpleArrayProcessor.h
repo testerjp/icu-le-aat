@@ -13,7 +13,6 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
 #include "SubtableProcessor.h"
 #include "NonContextualGlyphSubst.h"
 #include "NonContextualGlyphSubstProc.h"
@@ -27,7 +26,7 @@ class SimpleArrayProcessor : public NonContextualGlyphSubstitutionProcessor
 public:
     virtual void process(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    SimpleArrayProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    SimpleArrayProcessor(const LEReferenceTo<SimpleArrayLookupTable> &lookupTable, LEErrorCode &success);
 
     virtual ~SimpleArrayProcessor();
 
@@ -50,9 +49,8 @@ private:
 
 protected:
     LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable;
-
 };
 
 U_NAMESPACE_END
-#endif
 
+#endif

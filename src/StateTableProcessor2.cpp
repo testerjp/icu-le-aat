@@ -5,14 +5,10 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor2.h"
-#include "StateTableProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
 #include "LookupTables.h"
+#include "StateTableProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -20,24 +16,21 @@ StateTableProcessor2::StateTableProcessor2()
 {
 }
 
-StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : SubtableProcessor2(morphSubtableHeader, success),
-      dir(1), format(0), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
-      classTable(), stateArray(),
-      stateTableHeader(morphSubtableHeader, success),
-      stHeader(stateTableHeader, success, (const StateTableHeader2 *)&stateTableHeader->stHeader)
+StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 direction, LEErrorCode &success)
+    : dir(direction), format(0), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
+      stateTableHeader(header)
 {
     if (LE_FAILURE(success)) return;
 
-    nClasses         = SWAPL(stHeader->nClasses);
-    classTableOffset = SWAPL(stHeader->classTableOffset);
-    stateArrayOffset = SWAPL(stHeader->stateArrayOffset);
-    entryTableOffset = SWAPL(stHeader->entryTableOffset);
+    nClasses         = SWAPL(stateTableHeader->nClasses);
+    classTableOffset = SWAPL(stateTableHeader->classTableOffset);
+    stateArrayOffset = SWAPL(stateTableHeader->stateArrayOffset);
+    entryTableOffset = SWAPL(stateTableHeader->entryTableOffset);
 
-    classTable       = LEReferenceTo<LookupTable>(stHeader, success, classTableOffset);
+    classTable       = LEReferenceTo<LookupTable>(stateTableHeader, success, classTableOffset);
     format           = SWAPW(classTable->format);
 
-    stateArray       = LEReferenceToArrayOf<EntryTableIndex2>(stHeader, success, stateArrayOffset, LE_UNBOUNDED_ARRAY);
+    stateArray       = LEReferenceToArrayOf<EntryTableIndex2>(stateTableHeader, success, stateArrayOffset, LE_UNBOUNDED_ARRAY);
 }
 
 StateTableProcessor2::~StateTableProcessor2()
@@ -54,12 +47,10 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     LE_STATE_PATIENCE_INIT();
 
     le_int32 currGlyph = 0;
-    if ((coverage & scfReverse2) != 0) { // process glyphs in descending order
+    if (dir == -1) // process glyphs in descending order
         currGlyph = glyphCount - 1;
-        dir = -1;
-    } else {
+    else
         dir = 1;
-    }
 
     beginStateTable();
 

@@ -13,8 +13,7 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "MorphStateTables.h"
+#include "StateTables.h"
 #include "SubtableProcessor.h"
 
 U_NAMESPACE_BEGIN
@@ -33,7 +32,7 @@ public:
     virtual void endStateTable() = 0;
 
 protected:
-    StateTableProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
     virtual ~StateTableProcessor();
 
     StateTableProcessor();
@@ -43,12 +42,11 @@ protected:
     ByteOffset stateArrayOffset;
     ByteOffset entryTableOffset;
 
-    LEReferenceTo<ClassTable> classTable;
     TTGlyphID firstGlyph;
     TTGlyphID lastGlyph;
 
-    LEReferenceTo<MorphStateTableHeader> stateTableHeader;
-    LEReferenceTo<StateTableHeader> stHeader; // for convenience
+    LEReferenceTo<StateTableHeader> stateTableHeader;
+    LEReferenceTo<ClassTable> classTable;
 
 private:
     StateTableProcessor(const StateTableProcessor &other); // forbid copying of this class

@@ -13,10 +13,8 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
 #include "LigatureSubstitution.h"
+#include "StateTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,7 +31,7 @@ public:
 
     virtual void endStateTable();
 
-    LigatureSubstitutionProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
     virtual ~LigatureSubstitutionProcessor();
 
     /**
@@ -58,14 +56,14 @@ protected:
     ByteOffset componentTableOffset;
     ByteOffset ligatureTableOffset;
 
-    LEReferenceToArrayOf<LigatureSubstitutionStateEntry> entryTable;
-
     le_int32 componentStack[nComponents];
     le_int16 m;
 
     LEReferenceTo<LigatureSubstitutionHeader> ligatureSubstitutionHeader;
+    LEReferenceToArrayOf<LigatureSubstitutionStateEntry> entryTable;
 
 };
 
 U_NAMESPACE_END
+
 #endif

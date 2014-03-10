@@ -13,10 +13,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor2.h"
 #include "LookupTables.h"
+#include "StateTables.h"
+#include "SubtableProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -34,7 +33,7 @@ public:
     virtual void endStateTable() = 0;
 
 protected:
-    StateTableProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success);
+    StateTableProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
     virtual ~StateTableProcessor2();
 
     StateTableProcessor2();
@@ -46,10 +45,9 @@ protected:
     le_uint32 stateArrayOffset;
     le_uint32 entryTableOffset;
 
+    LEReferenceTo<StateTableHeader2> stateTableHeader;
     LEReferenceTo<LookupTable> classTable;
     LEReferenceToArrayOf<EntryTableIndex2> stateArray;
-    LEReferenceTo<MorphStateTableHeader2> stateTableHeader;
-    LEReferenceTo<StateTableHeader2> stHeader; // for convenience
 
 private:
     StateTableProcessor2(const StateTableProcessor2 &other); // forbid copying of this class
@@ -57,4 +55,5 @@ private:
 };
 
 U_NAMESPACE_END
+
 #endif

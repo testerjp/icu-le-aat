@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor2.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc2.h"
-#include "TrimmedArrayProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "TrimmedArrayProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,15 +17,14 @@ TrimmedArrayProcessor2::TrimmedArrayProcessor2()
 {
 }
 
-TrimmedArrayProcessor2::TrimmedArrayProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-  : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
+TrimmedArrayProcessor2::TrimmedArrayProcessor2(const LEReferenceTo<TrimmedArrayLookupTable> &lookupTable, LEErrorCode &success)
+    : firstGlyph(0), lastGlyph(0),
+      trimmedArrayLookupTable(lookupTable)
 {
-    const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
+    if (LE_FAILURE(success)) return;
 
-    trimmedArrayLookupTable = LEReferenceTo<TrimmedArrayLookupTable>(morphSubtableHeader, success, &header->table);
     firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
-    lastGlyph = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
-    valueArray = LEReferenceToArrayOf<LookupValue>(morphSubtableHeader, success, &trimmedArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
+    lastGlyph  = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
 }
 
 TrimmedArrayProcessor2::~TrimmedArrayProcessor2()
@@ -38,20 +33,22 @@ TrimmedArrayProcessor2::~TrimmedArrayProcessor2()
 
 void TrimmedArrayProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if(LE_FAILURE(success)) return;
+    if (LE_FAILURE(success)) return;
+
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;
+
+    LEReferenceToArrayOf<LookupValue> valueArray = LEReferenceToArrayOf<LookupValue>(trimmedArrayLookupTable, success, &trimmedArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
 
     for (glyph = 0; glyph < glyphCount; glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         TTGlyphID ttGlyph = (TTGlyphID) LE_GET_GLYPH(thisGlyph);
 
         if ((ttGlyph > firstGlyph) && (ttGlyph < lastGlyph)) {
-            TTGlyphID newGlyph = SWAPW(valueArray(ttGlyph - firstGlyph, success));
-
+            TTGlyphID newGlyph  = SWAPW(valueArray(ttGlyph - firstGlyph, success));
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }
-} 
+}
 
 U_NAMESPACE_END

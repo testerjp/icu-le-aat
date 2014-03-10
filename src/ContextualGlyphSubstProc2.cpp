@@ -5,26 +5,24 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor2.h"
-#include "StateTableProcessor2.h"
-#include "ContextualGlyphSubstProc2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "ContextualGlyphSubstProc2.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualGlyphSubstitutionProcessor2)
 
-ContextualGlyphSubstitutionProcessor2::ContextualGlyphSubstitutionProcessor2(
-                                  const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : StateTableProcessor2(morphSubtableHeader, success), contextualGlyphHeader(morphSubtableHeader, success)
+ContextualGlyphSubstitutionProcessor2::ContextualGlyphSubstitutionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
+    : StateTableProcessor2(header, dir, success),
+      markGlyph(0),
+      contextualGlyphSubstitutionHeader(header, success)
 {
-    le_uint32 perGlyphTableOffset = SWAPL(contextualGlyphHeader->perGlyphTableOffset);
-    perGlyphTable = LEReferenceToArrayOf<le_uint32> (stHeader, success, perGlyphTableOffset, LE_UNBOUNDED_ARRAY);
-    entryTable    = LEReferenceToArrayOf<ContextualGlyphStateEntry2>(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    if (LE_FAILURE(success)) return;
+
+    le_uint32 perGlyphTableOffset = SWAPL(contextualGlyphSubstitutionHeader->perGlyphTableOffset);
+    entryTable    = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    perGlyphTable = LEReferenceToArrayOf<le_uint32>(stateTableHeader, success, perGlyphTableOffset, LE_UNBOUNDED_ARRAY);
 }
 
 ContextualGlyphSubstitutionProcessor2::~ContextualGlyphSubstitutionProcessor2()
@@ -39,7 +37,7 @@ void ContextualGlyphSubstitutionProcessor2::beginStateTable()
 le_uint16 ContextualGlyphSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph,
     EntryTableIndex2 index, LEErrorCode &success)
 {
-    const ContextualGlyphStateEntry2 *entry = entryTable.getAlias(index, success);
+    const ContextualGlyphSubstitutionStateEntry2 *entry = entryTable.getAlias(index, success);
     if (LE_FAILURE(success)) return 0;
 
     le_uint16 newState  = SWAPW(entry->newStateIndex);

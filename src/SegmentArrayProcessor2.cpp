@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor2.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc2.h"
-#include "SegmentArrayProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SegmentArrayProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,11 +17,9 @@ SegmentArrayProcessor2::SegmentArrayProcessor2()
 {
 }
 
-SegmentArrayProcessor2::SegmentArrayProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
+SegmentArrayProcessor2::SegmentArrayProcessor2(const LEReferenceTo<SegmentArrayLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : segmentArrayLookupTable(lookupTable)
 {
-    const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
-    segmentArrayLookupTable = LEReferenceTo<SegmentArrayLookupTable>(morphSubtableHeader,  success, &header->table); // don't parent to 'header' as it is on the stack
 }
 
 SegmentArrayProcessor2::~SegmentArrayProcessor2()

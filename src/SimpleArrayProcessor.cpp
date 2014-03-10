@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc.h"
-#include "SimpleArrayProcessor.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SimpleArrayProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,11 +17,9 @@ SimpleArrayProcessor::SimpleArrayProcessor()
 {
 }
 
-SimpleArrayProcessor::SimpleArrayProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-    : NonContextualGlyphSubstitutionProcessor(morphSubtableHeader, success)
+SimpleArrayProcessor::SimpleArrayProcessor(const LEReferenceTo<SimpleArrayLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : simpleArrayLookupTable(lookupTable)
 {
-    LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
-    simpleArrayLookupTable = LEReferenceTo<SimpleArrayLookupTable>(morphSubtableHeader, success, (const SimpleArrayLookupTable*)&header->table);
 }
 
 SimpleArrayProcessor::~SimpleArrayProcessor()

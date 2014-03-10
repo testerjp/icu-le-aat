@@ -5,28 +5,24 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
-#include "ContextualGlyphSubstProc.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "ContextualGlyphSubstProc.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualGlyphSubstitutionProcessor)
 
-ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-    : StateTableProcessor(morphSubtableHeader, success),
-      entryTable(),
-      contextualGlyphSubstitutionHeader(morphSubtableHeader, success)
+ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
+    : StateTableProcessor(header, success),
+      markGlyph(0),
+      contextualGlyphSubstitutionHeader(header, success)
 {
     contextualGlyphSubstitutionHeader.orphan();
+
     substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset);
-    entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
-    int16Table = LEReferenceToArrayOf<le_int16>(stHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
+    entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    int16Table = LEReferenceToArrayOf<le_int16>(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
 }
 
 ContextualGlyphSubstitutionProcessor::~ContextualGlyphSubstitutionProcessor()

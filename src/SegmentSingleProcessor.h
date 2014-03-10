@@ -27,7 +27,7 @@ class SegmentSingleProcessor : public NonContextualGlyphSubstitutionProcessor
 public:
     virtual void process(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    SegmentSingleProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    SegmentSingleProcessor(const LEReferenceTo<SegmentSingleLookupTable> &lookupTable, LEErrorCode &success);
 
     virtual ~SegmentSingleProcessor();
 
@@ -54,5 +54,5 @@ protected:
 };
 
 U_NAMESPACE_END
-#endif
 
+#endif

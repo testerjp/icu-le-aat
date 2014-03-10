@@ -5,7 +5,6 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
 #include "SubtableProcessor.h"
 #include "NonContextualGlyphSubst.h"
 #include "NonContextualGlyphSubstProc.h"
@@ -21,11 +20,9 @@ SegmentArrayProcessor::SegmentArrayProcessor()
 {
 }
 
-SegmentArrayProcessor::SegmentArrayProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-    : NonContextualGlyphSubstitutionProcessor(morphSubtableHeader, success)
+SegmentArrayProcessor::SegmentArrayProcessor(const LEReferenceTo<SegmentArrayLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : segmentArrayLookupTable(lookupTable)
 {
-    LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
-    segmentArrayLookupTable = LEReferenceTo<SegmentArrayLookupTable>(morphSubtableHeader, success, (const SegmentArrayLookupTable*)&header->table);
 }
 
 SegmentArrayProcessor::~SegmentArrayProcessor()
@@ -48,8 +45,8 @@ void SegmentArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
 
             if (offset != 0) {
                 LEReferenceToArrayOf<TTGlyphID> glyphArray(segmentArrayLookupTable, success, offset, LE_UNBOUNDED_ARRAY);
-                TTGlyphID newGlyph   = SWAPW(glyphArray(LE_GET_GLYPH(thisGlyph) - firstGlyph, success));
-                glyphStorage[glyph]  = LE_SET_GLYPH(thisGlyph, newGlyph);
+                TTGlyphID newGlyph  = SWAPW(glyphArray(LE_GET_GLYPH(thisGlyph) - firstGlyph, success));
+                glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
             }
         }
     }

@@ -29,5 +29,5 @@ struct NonContextualGlyphSubstitutionHeader2 : MorphSubtableHeader2
 };
 
 U_NAMESPACE_END
-#endif
 
+#endif

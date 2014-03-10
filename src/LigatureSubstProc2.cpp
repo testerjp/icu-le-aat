@@ -5,14 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor2.h"
-#include "StateTableProcessor2.h"
-#include "LigatureSubstProc2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "LigatureSubstProc2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -22,18 +17,17 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LigatureSubstitutionProcessor2)
 
-LigatureSubstitutionProcessor2::LigatureSubstitutionProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : StateTableProcessor2(morphSubtableHeader, success),
-      ligActionOffset(0), componentOffset(0), ligatureOffset(0), entryTable(),
-      ligatureSubstitutionHeader(morphSubtableHeader, success)
+LigatureSubstitutionProcessor2::LigatureSubstitutionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
+    : StateTableProcessor2(header, dir, success),
+      ligActionOffset(0), componentOffset(0), ligatureOffset(0), m(-1),
+      ligatureSubstitutionHeader(header, success)
 {
     if (LE_FAILURE(success)) return;
 
     ligActionOffset = SWAPL(ligatureSubstitutionHeader->ligActionOffset);
     componentOffset = SWAPL(ligatureSubstitutionHeader->componentOffset);
     ligatureOffset  = SWAPL(ligatureSubstitutionHeader->ligatureOffset);
-
-    entryTable = LEReferenceToArrayOf<LigatureSubstitutionStateEntry2>(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    entryTable      = LEReferenceToArrayOf<LigatureSubstitutionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
 }
 
 LigatureSubstitutionProcessor2::~LigatureSubstitutionProcessor2()
@@ -68,9 +62,9 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
     }
 
     if (flags & lsfPerformAction) {
-        LEReferenceTo<LigatureActionEntry> actionEntry(stHeader, success, ligActionOffset + ligActionIndex * sizeof(LigatureActionEntry));
-        LEReferenceToArrayOf<le_uint16> componentTable(stHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
-        LEReferenceToArrayOf<TTGlyphID> ligatureTable(stHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
+        LEReferenceTo<LigatureActionEntry> actionEntry(stateTableHeader, success, ligActionOffset + ligActionIndex * sizeof(LigatureActionEntry));
+        LEReferenceToArrayOf<le_uint16> componentTable(stateTableHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
+        LEReferenceToArrayOf<TTGlyphID> ligatureTable(stateTableHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
 
         if (LE_FAILURE(success)) { // FIXME
             currGlyph += dir;

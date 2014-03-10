@@ -5,25 +5,19 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "StateTables.h"
-#include "MorphStateTables.h"
-#include "SubtableProcessor2.h"
-#include "StateTableProcessor2.h"
-#include "IndicRearrangementProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "IndicRearrangementProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IndicRearrangementProcessor2)
 
-IndicRearrangementProcessor2::IndicRearrangementProcessor2(
-      const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-    : StateTableProcessor2(morphSubtableHeader, success),
+IndicRearrangementProcessor2::IndicRearrangementProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
+    : StateTableProcessor2(header, dir, success),
       firstGlyph(0), lastGlyph(0),
-      entryTable(stHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY),
-      indicRearrangementSubtableHeader(morphSubtableHeader, success)
+      indicRearrangementSubtableHeader(header, success),
+      entryTable(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
 {
 }
 
@@ -42,6 +36,7 @@ le_uint16 IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphS
 {
     const IndicRearrangementStateEntry2 *entry = entryTable.getAlias(index, success);
     if (LE_FAILURE(success)) return 0; // TODO - what to return in bad state?
+
     le_uint16 newState = SWAPW(entry->newStateIndex); // index to the new state
     IndicRearrangementFlags  flags =  (IndicRearrangementFlags) SWAPW(entry->flags);
 

@@ -20,14 +20,14 @@
 
 U_NAMESPACE_BEGIN
 
-struct LigatureSubstitutionHeader : MorphStateTableHeader
+struct LigatureSubstitutionHeader : StateTableHeader
 {
     ByteOffset ligatureActionTableOffset;
     ByteOffset componentTableOffset;
     ByteOffset ligatureTableOffset;
 };
 
-struct LigatureSubstitutionHeader2 : MorphStateTableHeader2
+struct LigatureSubstitutionHeader2 : StateTableHeader2
 {
     le_uint32 ligActionOffset;
     le_uint32 componentOffset;

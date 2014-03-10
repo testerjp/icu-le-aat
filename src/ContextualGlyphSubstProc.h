@@ -13,10 +13,8 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "StateTableProcessor.h"
 #include "ContextualGlyphSubstitution.h"
+#include "StateTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,7 +29,7 @@ public:
 
     virtual void endStateTable();
 
-    ContextualGlyphSubstitutionProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success);
+    ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
     virtual ~ContextualGlyphSubstitutionProcessor();
 
     /**
@@ -53,13 +51,13 @@ private:
 
 protected:
     ByteOffset substitutionTableOffset;
-    LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry> entryTable;
-    LEReferenceToArrayOf<le_int16> int16Table;
     le_int32 markGlyph;
 
     LEReferenceTo<ContextualGlyphSubstitutionHeader> contextualGlyphSubstitutionHeader;
-
+    LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry> entryTable;
+    LEReferenceToArrayOf<le_int16> int16Table;
 };
 
 U_NAMESPACE_END
+
 #endif

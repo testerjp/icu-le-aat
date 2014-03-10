@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor2.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc2.h"
-#include "SimpleArrayProcessor2.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SimpleArrayProcessor2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,13 +17,9 @@ SimpleArrayProcessor2::SimpleArrayProcessor2()
 {
 }
 
-SimpleArrayProcessor2::SimpleArrayProcessor2(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
-  : NonContextualGlyphSubstitutionProcessor2(morphSubtableHeader, success)
+SimpleArrayProcessor2::SimpleArrayProcessor2(const LEReferenceTo<SimpleArrayLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : simpleArrayLookupTable(lookupTable)
 {
-  const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
-
-  simpleArrayLookupTable = LEReferenceTo<SimpleArrayLookupTable>(morphSubtableHeader, success, &header->table);
-  valueArray = LEReferenceToArrayOf<LookupValue>(morphSubtableHeader, success, &simpleArrayLookupTable->valueArray[0], LE_UNBOUNDED_ARRAY);
 }
 
 SimpleArrayProcessor2::~SimpleArrayProcessor2()
@@ -36,14 +28,15 @@ SimpleArrayProcessor2::~SimpleArrayProcessor2()
 
 void SimpleArrayProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) return;
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;
 
-    for (glyph = 0; glyph < glyphCount; glyph += 1) {
+    LEReferenceToArrayOf<LookupValue> valueArray(simpleArrayLookupTable, success, (const LookupValue*)&simpleArrayLookupTable->valueArray, LE_UNBOUNDED_ARRAY);
+
+    for (glyph = 0; LE_SUCCESS(success) && (glyph < glyphCount); glyph += 1) {
         LEGlyphID thisGlyph = glyphStorage[glyph];
         if (LE_GET_GLYPH(thisGlyph) < 0xFFFF) {
-            TTGlyphID newGlyph  = SWAPW(valueArray(LE_GET_GLYPH(thisGlyph),success));
+            TTGlyphID newGlyph  = SWAPW(valueArray.getObject(LE_GET_GLYPH(thisGlyph),success));
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }
     }

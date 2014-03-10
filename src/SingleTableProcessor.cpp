@@ -5,13 +5,9 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
-#include "SubtableProcessor.h"
-#include "NonContextualGlyphSubst.h"
-#include "NonContextualGlyphSubstProc.h"
-#include "SingleTableProcessor.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "SingleTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
@@ -21,11 +17,9 @@ SingleTableProcessor::SingleTableProcessor()
 {
 }
 
-SingleTableProcessor::SingleTableProcessor(const LEReferenceTo<MorphSubtableHeader> &morphSubtableHeader, LEErrorCode &success)
-  : NonContextualGlyphSubstitutionProcessor(morphSubtableHeader, success)
+SingleTableProcessor::SingleTableProcessor(const LEReferenceTo<SingleTableLookupTable> &lookupTable, LEErrorCode & /* success */)
+    : singleTableLookupTable(lookupTable)
 {
-  LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(morphSubtableHeader, success);
-  singleTableLookupTable = LEReferenceTo<SingleTableLookupTable>(morphSubtableHeader, success, (const SingleTableLookupTable*)&header->table);
 }
 
 SingleTableProcessor::~SingleTableProcessor()
@@ -39,12 +33,12 @@ void SingleTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     le_int32 glyphCount = glyphStorage.getGlyphCount();
 
     for (glyph = 0; glyph < glyphCount; glyph += 1) {
-      const LookupSingle *lookupSingle = singleTableLookupTable->lookupSingle(singleTableLookupTable, entries, glyphStorage[glyph], success);
+        const LookupSingle *lookupSingle = singleTableLookupTable->lookupSingle(singleTableLookupTable, entries, glyphStorage[glyph], success);
 
         if (lookupSingle != NULL) {
             glyphStorage[glyph] = SWAPW(lookupSingle->value);
         }
     }
-} 
+}
 
 U_NAMESPACE_END

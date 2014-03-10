@@ -60,7 +60,9 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
 {
     SubtableProcessor *processor = NULL;
 
-    switch (SWAPW(coverage) & scfTypeMask) {
+    le_uint16 coverage = SWAPW(base->coverage);
+
+    switch (coverage & scfTypeMask) {
     case mstIndicRearrangement: {
         LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);

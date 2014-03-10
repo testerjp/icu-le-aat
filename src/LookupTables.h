@@ -93,4 +93,5 @@ struct TrimmedArrayLookupTable : LookupTable
 LE_VAR_ARRAY(TrimmedArrayLookupTable, valueArray)
 
 U_NAMESPACE_END
+
 #endif

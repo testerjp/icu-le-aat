@@ -12,7 +12,6 @@
  */
 
 #include "LETypes.h"
-#include "LayoutTables.h"
 #include "LookupTables.h"
 #include "MorphTables.h"
 

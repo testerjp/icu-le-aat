@@ -9,6 +9,7 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "MorphTables.h"
+#include "MorphStateTables.h"
 #include "SubtableProcessor.h"
 #include "IndicRearrangementProcessor.h"
 #include "ContextualGlyphSubstProc.h"

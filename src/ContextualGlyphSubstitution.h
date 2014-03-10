@@ -15,7 +15,6 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "StateTables.h"
-#include "MorphTables.h"
 
 U_NAMESPACE_BEGIN
 

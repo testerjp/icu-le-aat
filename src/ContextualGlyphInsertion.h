@@ -15,8 +15,6 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "StateTables.h"
-#include "MorphTables.h"
-#include "MorphStateTables.h"
 
 U_NAMESPACE_BEGIN
 
@@ -54,4 +52,5 @@ struct ContextualGlyphInsertionStateEntry2 : StateEntry2
 };
 
 U_NAMESPACE_END
+
 #endif

@@ -15,8 +15,6 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "StateTables.h"
-#include "MorphTables.h"
-#include "MorphStateTables.h"
 
 U_NAMESPACE_BEGIN
 
@@ -63,4 +61,5 @@ enum LigatureActionFlags
 };
 
 U_NAMESPACE_END
+
 #endif

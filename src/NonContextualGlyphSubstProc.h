@@ -13,8 +13,9 @@
  */
 
 #include "LETypes.h"
-#include "NonContextualGlyphSubst.h"
+#include "MorphTables.h"
 #include "SubtableProcessor.h"
+#include "NonContextualGlyphSubst.h"
 
 U_NAMESPACE_BEGIN
 

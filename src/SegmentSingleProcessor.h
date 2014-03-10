@@ -13,7 +13,6 @@
  */
 
 #include "LETypes.h"
-#include "MorphTables.h"
 #include "SubtableProcessor.h"
 #include "NonContextualGlyphSubst.h"
 #include "NonContextualGlyphSubstProc.h"

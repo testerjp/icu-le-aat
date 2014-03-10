@@ -48,7 +48,7 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
     le_uint16 flags          = SWAPW(entry->entryFlags);
     le_uint16 ligActionIndex = SWAPW(entry->ligActionIndex);
 
-    LE_TRACE_LOG("ligature state entry: flags = %x; ligature action index = %d; glyph = %d; glyph index = %d; ", flags, ligActionIndex, glyphStorage[currGlyph], currGlyph);
+    LE_TRACE_LOG("ligature state entry: flags = %x; ligature action index = %d; glyph = %d; glyph index = %d", flags, ligActionIndex, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph);
 
     if (flags & lsfSetComponent) {
         if (nComponents <= m++) {

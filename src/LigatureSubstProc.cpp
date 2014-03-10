@@ -49,7 +49,7 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
     le_int16   flags    = SWAPW(entry->flags);
     le_int32   dir      = 1;
 
-    LE_TRACE_LOG("glyph = %d;  newState: %d; flags = %x", glyphStorage[currGlyph], (newState - stateArrayOffset) / stateSize, flags);
+    LE_TRACE_LOG("ligature state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
 
     if (flags & lsfSetComponent) {
         if (nComponents <= m++) {

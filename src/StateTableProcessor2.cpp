@@ -87,9 +87,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses; current glyph %d", classCode, nClasses, entryTableIndex, currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; entry table index %d; current state %d", classCode, nClasses, entryTableIndex, currentState);
             currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success); // return a zero-based index instead of a byte offset
-            LE_TRACE_LOG("new state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
 
@@ -128,9 +128,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses; current glyph %d", classCode, nClasses, entryTableIndex, currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses", classCode, nClasses, entryTableIndex, currentState);
             currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
-            LE_TRACE_LOG("new state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
         break;
@@ -173,9 +173,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses; current glyph %d", classCode, nClasses, entryTableIndex, currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; eti %d; current state %d; nClasses", classCode, nClasses, entryTableIndex, currentState);
             currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
-            LE_TRACE_LOG("new state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
         break;
@@ -212,8 +212,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-            LE_TRACE_LOG("process state entry: current state %d; current glyph %d", currentState, glyphStorage[currGlyph]);
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; entry table index %d; current state %d", classCode, nClasses, entryTableIndex, currentState);
             currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
+            LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
         break;
@@ -247,7 +248,9 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
             EntryTableIndex2 entryTableIndex = SWAPW(stateArray(classCode + currentState * nClasses, success));
             LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
+            LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; entry table index %d; current state %d", classCode, nClasses, entryTableIndex, currentState);
             currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success);
+            LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
         break;

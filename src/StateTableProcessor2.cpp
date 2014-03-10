@@ -28,6 +28,9 @@ StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2
     entryTableOffset = SWAPL(stateTableHeader->entryTableOffset);
 
     classTable       = LEReferenceTo<LookupTable>(stateTableHeader, success, classTableOffset);
+
+    if (LE_FAILURE(success)) return;
+
     format           = SWAPW(classTable->format);
 
     stateArray       = LEReferenceToArrayOf<EntryTableIndex2>(stateTableHeader, success, stateArrayOffset, LE_UNBOUNDED_ARRAY);

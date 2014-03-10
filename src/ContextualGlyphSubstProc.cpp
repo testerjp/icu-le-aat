@@ -18,7 +18,9 @@ ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const
       markGlyph(0),
       contextualGlyphSubstitutionHeader(header, success)
 {
-    contextualGlyphSubstitutionHeader.orphan();
+    if (LE_FAILURE(success)) return;
+
+    contextualGlyphSubstitutionHeader.orphan(); // FIXME
 
     substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset);
     entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);

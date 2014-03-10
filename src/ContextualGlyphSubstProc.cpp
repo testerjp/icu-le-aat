@@ -61,10 +61,8 @@ ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorag
     if (flags & cgsSetMark)
         markGlyph = currGlyph;
 
-    if (!(flags & cgsDontAdvance)) {
-        // should handle reverse too!
-        currGlyph += 1;
-    }
+    if (!(flags & cgsDontAdvance))
+        currGlyph += dir;
 
     return newState;
 }

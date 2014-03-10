@@ -48,10 +48,8 @@ ByteOffset IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphS
 
     doRearrangementAction(glyphStorage, (IndicRearrangementVerb) (flags & irfVerbMask));
 
-    if (!(flags & irfDontAdvance)) {
-        // XXX: Should handle reverse too...
-        currGlyph += 1;
-    }
+    if (!(flags & irfDontAdvance))
+        currGlyph += dir;
 
     return newState;
 }

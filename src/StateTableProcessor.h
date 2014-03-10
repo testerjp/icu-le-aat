@@ -32,12 +32,13 @@ public:
     virtual void endStateTable() = 0;
 
 protected:
-    StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
+    StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
     virtual ~StateTableProcessor();
 
     StateTableProcessor();
 
-    le_int16 stateSize; // size of row, that is number of class
+    le_int32   dir;
+    le_int16   stateSize;       // size of row, that is number of class
     ByteOffset classTableOffset;
     ByteOffset stateArrayOffset;
     ByteOffset entryTableOffset;

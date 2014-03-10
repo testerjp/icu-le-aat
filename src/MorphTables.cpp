@@ -61,26 +61,30 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
     SubtableProcessor *processor = NULL;
 
     le_uint16 coverage = SWAPW(base->coverage);
+    le_int32  dir      = 1;
+
+    if (coverage & scfReverse)
+        dir = -1;
 
     switch (coverage & scfTypeMask) {
     case mstIndicRearrangement: {
         LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
-        processor = new IndicRearrangementProcessor(header, success);
+        processor = new IndicRearrangementProcessor(header, dir, success);
         break;
     }
 
     case mstContextualGlyphSubstitution: {
         LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
-        processor = new ContextualGlyphSubstitutionProcessor(header, success);
+        processor = new ContextualGlyphSubstitutionProcessor(header, dir, success);
         break;
     }
 
     case mstLigatureSubstitution: {
         LEReferenceTo<MorphStateTableHeader> morphStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>      header(morphStateTableHeader, success, &morphStateTableHeader->stHeader);
-        processor = new LigatureSubstitutionProcessor(header, success);
+        processor = new LigatureSubstitutionProcessor(header, dir, success);
         break;
     }
 
@@ -88,7 +92,7 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
         break;
 
     case mstNonContextualGlyphSubstitution:
-        processor = NonContextualGlyphSubstitutionProcessor::createInstance(base, success);
+        processor = NonContextualGlyphSubstitutionProcessor::createInstance(base, success); // FIXME: need not specify a direction?
         break;
 
     /*

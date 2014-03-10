@@ -13,8 +13,8 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualGlyphSubstitutionProcessor)
 
-ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
-    : StateTableProcessor(header, success),
+ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
+    : StateTableProcessor(header, dir, success),
       markGlyph(0),
       contextualGlyphSubstitutionHeader(header, success)
 {

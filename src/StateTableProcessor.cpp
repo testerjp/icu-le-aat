@@ -15,8 +15,8 @@ StateTableProcessor::StateTableProcessor()
 {
 }
 
-StateTableProcessor::StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
-    : stateTableHeader(header)
+StateTableProcessor::StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 direction, LEErrorCode &success)
+    : dir(direction), stateTableHeader(header)
 {
     if (LE_FAILURE(success)) return;
 
@@ -39,19 +39,22 @@ StateTableProcessor::~StateTableProcessor()
 
 void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    LE_STATE_PATIENCE_INIT();
-
     // Start at state 0
     // XXX: How do we know when to start at state 1?
     ByteOffset currentState = stateArrayOffset;
+    le_int32   glyphCount   = glyphStorage.getGlyphCount();
 
-    // XXX: reverse?
+    LE_STATE_PATIENCE_INIT();
+
     le_int32 currGlyph = 0;
-    le_int32 glyphCount = glyphStorage.getGlyphCount();
+    if (dir == -1) // process glyphs in descending order
+        currGlyph = glyphCount - 1;
+    else
+        dir = 1;
 
     beginStateTable();
 
-    while (currGlyph <= glyphCount) {
+    while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
         if (LE_STATE_PATIENCE_DECR()) break; // patience exceeded.
         ClassCode classCode = classCodeOOB;
         if (currGlyph == glyphCount) {

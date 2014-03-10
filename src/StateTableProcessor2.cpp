@@ -45,7 +45,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     // Start at state 0
     // XXX: How do we know when to start at state 1?
     le_uint16 currentState = 0;
-    le_int32 glyphCount = glyphStorage.getGlyphCount();
+    le_int32  glyphCount   = glyphStorage.getGlyphCount();
 
     LE_STATE_PATIENCE_INIT();
 

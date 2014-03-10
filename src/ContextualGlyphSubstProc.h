@@ -29,7 +29,7 @@ public:
 
     virtual void endStateTable();
 
-    ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
+    ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
     virtual ~ContextualGlyphSubstitutionProcessor();
 
     /**

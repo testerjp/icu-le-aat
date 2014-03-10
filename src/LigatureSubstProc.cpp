@@ -17,8 +17,8 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LigatureSubstitutionProcessor)
 
-LigatureSubstitutionProcessor::LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success)
-    : StateTableProcessor(header, success),
+LigatureSubstitutionProcessor::LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
+    : StateTableProcessor(header, dir, success),
       ligatureActionTableOffset(0), componentTableOffset(0), ligatureTableOffset(0), m(-1),
       ligatureSubstitutionHeader(header, success)
 {
@@ -47,7 +47,6 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
 
     ByteOffset newState = SWAPW(entry->newStateOffset);
     le_int16   flags    = SWAPW(entry->flags);
-    le_int32   dir      = 1;
 
     LE_TRACE_LOG("ligature state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
 

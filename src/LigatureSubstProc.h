@@ -31,7 +31,7 @@ public:
 
     virtual void endStateTable();
 
-    LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
+    LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
     virtual ~LigatureSubstitutionProcessor();
 
     /**

@@ -31,7 +31,7 @@ public:
 
     void doRearrangementAction(LEGlyphStorage &glyphStorage, IndicRearrangementVerb verb) const;
 
-    IndicRearrangementProcessor(const LEReferenceTo<StateTableHeader> &header, LEErrorCode &success);
+    IndicRearrangementProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
     virtual ~IndicRearrangementProcessor();
 
     /**

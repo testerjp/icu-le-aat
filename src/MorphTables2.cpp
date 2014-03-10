@@ -6,7 +6,7 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "MorphTables.h"
-#include "SubtableProcessor2.h"
+#include "SubtableProcessor.h"
 #include "IndicRearrangementProcessor2.h"
 #include "ContextualGlyphSubstProc2.h"
 #include "LigatureSubstProc2.h"
@@ -208,7 +208,7 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
 
 void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
-    SubtableProcessor2 *processor = NULL;
+    SubtableProcessor *processor = NULL;
 
     le_uint32 coverage = SWAPL(base->coverage);
     le_int32  dir      = 1;

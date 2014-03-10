@@ -15,13 +15,13 @@
 #include "LETypes.h"
 #include "LookupTables.h"
 #include "StateTables.h"
-#include "SubtableProcessor2.h"
+#include "SubtableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
 class LEGlyphStorage;
 
-class StateTableProcessor2 : public SubtableProcessor2
+class StateTableProcessor2 : public SubtableProcessor
 {
 public:
     void process(LEGlyphStorage &glyphStorage, LEErrorCode &success);

@@ -143,7 +143,6 @@ SegmentSingleProcessor2.o \
 SimpleArrayProcessor2.o \
 SingleTableProcessor2.o \
 StateTableProcessor2.o \
-SubtableProcessor2.o \
 TrimmedArrayProcessor2.o
 
 ## Header files to install

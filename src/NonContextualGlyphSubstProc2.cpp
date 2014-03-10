@@ -7,7 +7,7 @@
 #include "LETypes.h"
 #include "LESwaps.h"
 #include "MorphTables.h"
-#include "SubtableProcessor2.h"
+#include "SubtableProcessor.h"
 #include "NonContextualGlyphSubst.h"
 #include "NonContextualGlyphSubstProc2.h"
 #include "SimpleArrayProcessor2.h"
@@ -26,7 +26,7 @@ NonContextualGlyphSubstitutionProcessor2::~NonContextualGlyphSubstitutionProcess
 {
 }
 
-SubtableProcessor2 *NonContextualGlyphSubstitutionProcessor2::createInstance(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
+SubtableProcessor *NonContextualGlyphSubstitutionProcessor2::createInstance(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success)
 {
     const LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(morphSubtableHeader, success);
 

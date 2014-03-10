@@ -14,19 +14,19 @@
 
 #include "LETypes.h"
 #include "MorphTables.h"
-#include "SubtableProcessor2.h"
+#include "SubtableProcessor.h"
 #include "NonContextualGlyphSubst.h"
 
 U_NAMESPACE_BEGIN
 
 class LEGlyphStorage;
 
-class NonContextualGlyphSubstitutionProcessor2 : public SubtableProcessor2
+class NonContextualGlyphSubstitutionProcessor2 : public SubtableProcessor
 {
 public:
     virtual void process(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
-    static SubtableProcessor2 *createInstance(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success);
+    static SubtableProcessor *createInstance(const LEReferenceTo<MorphSubtableHeader2> &morphSubtableHeader, LEErrorCode &success);
 
 protected:
     NonContextualGlyphSubstitutionProcessor2();

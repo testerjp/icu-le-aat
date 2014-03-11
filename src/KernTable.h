@@ -58,6 +58,8 @@ struct KernSubtableHeader {
     le_uint16 version;
     le_uint16 length;
     le_uint16 coverage;
+
+    void process(const LEReferenceTo<KernSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 
 struct KernTableHeader {

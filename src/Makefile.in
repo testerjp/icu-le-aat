@@ -138,7 +138,8 @@ IndicRearrangementProcessor2.o \
 LigatureSubstProc2.o \
 MorphTables2.o \
 StateTableProcessor2.o \
-ContextualKerningProc.o
+ContextualKerningProc.o \
+OrderedListKerningPairsProc.o
 
 ## Header files to install
 HEADERS= $(srcdir)/LayoutEngine.h $(srcdir)/LE*.h $(srcdir)/loengine.h

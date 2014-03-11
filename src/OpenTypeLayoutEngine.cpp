@@ -23,7 +23,7 @@
 
 #include "GDEFMarkFilter.h"
 
-#include "KernTable.h"
+#include "KernTables.h"
 
 U_NAMESPACE_BEGIN
 

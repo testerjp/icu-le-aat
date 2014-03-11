@@ -9,7 +9,7 @@
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
 #include "KernStateTables.h"
-#include "KernTable.h"
+#include "KernTables.h"
 #include "SubtableProcessor.h"
 #include "ContextualKerningProc.h"
 #include "OrderedListKerningPairsProc.h"

@@ -129,7 +129,7 @@ KhmerReordering.o \
 TibetanLayoutEngine.o \
 TibetanReordering.o \
 HangulLayoutEngine.o \
-KernTable.o \
+KernTables.o \
 loengine.o \
 ContextualGlyphInsertionProc2.o \
 ContextualGlyphSubstProc2.o \

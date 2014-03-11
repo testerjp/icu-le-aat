@@ -22,7 +22,7 @@
 
 #include "GlyphDefinitionTables.h"
 #include "GlyphSubstitutionTables.h"
-#include "KernTable.h"
+#include "KernTables.h"
 #include "MorphTables.h"
 #include "OpenTypeUtilities.h"
 

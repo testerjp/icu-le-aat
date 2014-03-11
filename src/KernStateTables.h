@@ -7,7 +7,7 @@
  */
 
 #include "LETypes.h"
-#include "KernTable.h"
+#include "KernTables.h"
 #include "StateTables.h"
 
 U_NAMESPACE_BEGIN

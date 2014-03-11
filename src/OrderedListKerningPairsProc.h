@@ -9,7 +9,7 @@
 #include "LETypes.h"
 #include "LETableReference.h"
 #include "SubtableProcessor.h"
-#include "KernTable.h"
+#include "KernTables.h"
 
 U_NAMESPACE_BEGIN
 

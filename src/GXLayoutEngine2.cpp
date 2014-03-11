@@ -8,7 +8,7 @@
 #include "LayoutEngine.h"
 #include "GXLayoutEngine2.h"
 #include "LEGlyphStorage.h"
-#include "KernTable.h"
+#include "KernTables.h"
 #include "MorphTables.h"
 
 U_NAMESPACE_BEGIN

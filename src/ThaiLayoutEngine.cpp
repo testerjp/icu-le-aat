@@ -10,7 +10,7 @@
 #include "ScriptAndLanguageTags.h"
 #include "LEGlyphStorage.h"
 
-#include "KernTable.h"
+#include "KernTables.h"
 
 #include "ThaiShaping.h"
 

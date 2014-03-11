@@ -25,7 +25,7 @@ IndicRearrangementProcessor2::~IndicRearrangementProcessor2()
 {
 }
 
-void IndicRearrangementProcessor2::beginStateTable()
+void IndicRearrangementProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     firstGlyph = 0;
     lastGlyph  = 0;
@@ -57,7 +57,7 @@ le_uint16 IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphS
     return newState; // index to new state
 }
 
-void IndicRearrangementProcessor2::endStateTable()
+void IndicRearrangementProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

@@ -31,7 +31,7 @@ ContextualGlyphInsertionProcessor2::~ContextualGlyphInsertionProcessor2()
 {
 }
 
-void ContextualGlyphInsertionProcessor2::beginStateTable()
+void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     markGlyph = 0;
 }
@@ -101,7 +101,7 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
     return newState;
 }
 
-void ContextualGlyphInsertionProcessor2::endStateTable()
+void ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

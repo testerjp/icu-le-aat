@@ -23,11 +23,11 @@ class LEGlyphStorage;
 class IndicRearrangementProcessor2 : public StateTableProcessor2
 {
 public:
-    virtual void beginStateTable();
+    virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success);
 
-    virtual void endStateTable();
+    virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     void doRearrangementAction(LEGlyphStorage &glyphStorage, IndicRearrangementVerb verb) const;
 

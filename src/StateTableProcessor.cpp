@@ -52,7 +52,10 @@ void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &suc
     else
         dir = 1;
 
-    beginStateTable();
+    beginStateTable(glyphStorage,  success);
+
+    if (LE_FAILURE(success))
+        return;
 
     while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
         if (LE_STATE_PATIENCE_DECR()) break; // patience exceeded.
@@ -76,7 +79,7 @@ void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &suc
         LE_STATE_PATIENCE_INCR(currGlyph);
     }
 
-    endStateTable();
+    endStateTable(glyphStorage, success);
 }
 
 U_NAMESPACE_END

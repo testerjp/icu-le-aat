@@ -23,11 +23,11 @@ class LEGlyphStorage;
 class ContextualGlyphSubstitutionProcessor2 : public StateTableProcessor2
 {
 public:
-    virtual void beginStateTable();
+    virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success);
 
-    virtual void endStateTable();
+    virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     ContextualGlyphSubstitutionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
     virtual ~ContextualGlyphSubstitutionProcessor2();

@@ -31,7 +31,7 @@ ContextualGlyphSubstitutionProcessor::~ContextualGlyphSubstitutionProcessor()
 {
 }
 
-void ContextualGlyphSubstitutionProcessor::beginStateTable()
+void ContextualGlyphSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     markGlyph = 0;
 }
@@ -67,7 +67,7 @@ ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorag
     return newState;
 }
 
-void ContextualGlyphSubstitutionProcessor::endStateTable()
+void ContextualGlyphSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

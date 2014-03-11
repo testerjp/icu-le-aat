@@ -24,7 +24,7 @@ IndicRearrangementProcessor::~IndicRearrangementProcessor()
 {
 }
 
-void IndicRearrangementProcessor::beginStateTable()
+void IndicRearrangementProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     firstGlyph = 0;
     lastGlyph  = 0;
@@ -54,7 +54,7 @@ ByteOffset IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphS
     return newState;
 }
 
-void IndicRearrangementProcessor::endStateTable()
+void IndicRearrangementProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

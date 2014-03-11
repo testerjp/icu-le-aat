@@ -6,9 +6,12 @@
  */
 
 #include "LETypes.h"
-#include "KernTable.h"
 #include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "KernStateTables.h"
+#include "KernTable.h"
+#include "SubtableProcessor.h"
+#include "ContextualKerningProc.h"
 #include "OpenTypeUtilities.h"
 
 #define SWAP_KEY(p) (((le_uint32) SWAPW((p)->left) << 16) | SWAPW((p)->right))
@@ -85,30 +88,38 @@ static void kerningPairs(LEReferenceTo<KernSubtableKerningPairs> subtableHeader,
  * TODO: respect header flags
  */
 KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
-    : version(0), nTables(0), fReference(base)
+    : version(0), nTables(0), table(base)
 {
-    LEReferenceTo<KernTableHeader> header(base, success);
+    LEReferenceTo<KernTableHeader> kernTableHeader(table, success);
 
-    if (LE_FAILURE(success)) return;
-
-    if (!header.getAlias()) // FIXME: LEReferenceTo(const LEFontInstance *font.. may return NULL
+    if (LE_FAILURE(success))
         return;
 
-    version = SWAPW(header->version);
+    if (!kernTableHeader.getAlias()) // FIXME: LEReferenceTo(const LEFontInstance *font.. may return NULL
+        return;
+
+    version = SWAPW(kernTableHeader->version);
 
     if (!version)
-        nTables = SWAPW(header->nTables);
+        nTables = SWAPW(kernTableHeader->nTables);
 
     if (version == 1) {
-        LEReferenceTo<KernTableHeader2> header(base, success);
-        nTables = SWAPL(header->nTables);
+        LEReferenceTo<KernTableHeader2> kernTableHeader(table, success);
+
+        if (LE_FAILURE(success))
+            return;
+
+        nTables = SWAPL(kernTableHeader->nTables);
     }
 }
 
-void KernTable::process(LEGlyphStorage &storage, LEErrorCode &success)
+void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (!version && nTables) {
-        LEReferenceTo<KernSubtableHeader> subtableHeader(fReference, success, sizeof(KernTableHeader));
+        LEReferenceTo<KernSubtableHeader> subtableHeader(table, success, sizeof(KernTableHeader));
+
+        if (LE_FAILURE(success))
+            return;
 
         le_uint32 subtable;
 
@@ -121,7 +132,11 @@ void KernTable::process(LEGlyphStorage &storage, LEErrorCode &success)
                 switch (format) {
                 case kfKerningPairs: {
                     LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(subtableHeader, success, sizeof(KernSubtableHeader));
-                    kerningPairs(subtableKerningPairs, storage, fReference.getFont(), success);
+
+                    if (LE_FAILURE(success))
+                        return;
+
+                    kerningPairs(subtableKerningPairs, glyphStorage, subtableKerningPairs.getFont(), success);
                 }
                 }
             }
@@ -130,7 +145,10 @@ void KernTable::process(LEGlyphStorage &storage, LEErrorCode &success)
     }
 
     if (version == 1 && nTables) {
-        LEReferenceTo<KernSubtableHeader2> subtableHeader(fReference, success, sizeof(KernTableHeader2));
+        LEReferenceTo<KernSubtableHeader2> subtableHeader(table, success, sizeof(KernTableHeader2));
+
+        if (LE_FAILURE(success))
+            return;
 
         le_uint32 subtable;
 
@@ -138,17 +156,45 @@ void KernTable::process(LEGlyphStorage &storage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (!(coverage & kcf2Vertical)) {
-                le_uint16 format = (coverage & kcf2FormatMask) >> kcf2FormatShift;
-                switch (format) {
-                case kfKerningPairs: {
-                    LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(subtableHeader, success, sizeof(KernSubtableHeader2));
-                    kerningPairs(subtableKerningPairs, storage, fReference.getFont(), success);
-                }
-                }
+            if (!(coverage & kcf2Vertical) && LE_SUCCESS(success)) {
+                LE_TRACE_LOG("kern subtable %d", subtable);
+                subtableHeader->process(subtableHeader, glyphStorage, success);
             }
             subtableHeader.addOffset(length, success);
         }
+    }
+}
+
+void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+{
+    le_uint16 coverage = SWAPW(base->coverage);
+    le_uint16 format   = (coverage & kcf2FormatMask) >> kcf2FormatShift;
+
+    switch (format) {
+    case kfKerningPairs: {
+        LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(base, success, sizeof(KernSubtableHeader2));
+
+        if (LE_FAILURE(success))
+            return;
+
+        kerningPairs(subtableKerningPairs, glyphStorage, base.getFont(), success);
+    }
+
+    case kfContextualKerning: {
+        LEReferenceTo<KernStateTableHeader> kernStateTableHeader(base, success);
+        LEReferenceTo<StateTableHeader>     header(kernStateTableHeader, success, &kernStateTableHeader->stHeader);
+
+        if (LE_FAILURE(success))
+            return;
+
+        SubtableProcessor *processor = new ContextualKerningProcessor(header, 1, success);
+        if (processor != NULL) {
+            if (LE_SUCCESS(success))
+                processor->process(glyphStorage, success);
+
+            delete processor;
+        }
+    }
     }
 }
 

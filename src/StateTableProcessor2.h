@@ -26,11 +26,11 @@ class StateTableProcessor2 : public SubtableProcessor
 public:
     void process(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    virtual void beginStateTable() = 0;
+    virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
     virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success) = 0;
 
-    virtual void endStateTable() = 0;
+    virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
 protected:
     StateTableProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);

@@ -55,7 +55,10 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     else
         dir = 1;
 
-    beginStateTable();
+    beginStateTable(glyphStorage, success);
+
+    if (LE_FAILURE(success))
+        return;
 
     switch (format) {
     case ltfSimpleArray: {
@@ -260,7 +263,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
         break;
     }
 
-    endStateTable();
+    endStateTable(glyphStorage, success);
 }
 
 U_NAMESPACE_END

@@ -1,11 +1,5 @@
-/*
- *
- * (C) Copyright IBM Corp. 1998-2013 - All Rights Reserved
- *
- */
-
-#ifndef __INDICREARRANGEMENTPROCESSOR_H
-#define __INDICREARRANGEMENTPROCESSOR_H
+#ifndef __CONTEXTUALKERNINGPROCESSOR_H
+#define __CONTEXTUALKERNINGPROCESSOR_H
 
 /**
  * \file
@@ -13,14 +7,14 @@
  */
 
 #include "LETypes.h"
-#include "IndicRearrangement.h"
+#include "ContextualKerning.h"
 #include "StateTableProcessor.h"
 
 U_NAMESPACE_BEGIN
 
-class LEGlyphStorage;
+#define nComponents 8
 
-class IndicRearrangementProcessor : public StateTableProcessor
+class ContextualKerningProcessor : public StateTableProcessor
 {
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
@@ -29,10 +23,8 @@ public:
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    void doRearrangementAction(LEGlyphStorage &glyphStorage, IndicRearrangementVerb verb) const;
-
-    IndicRearrangementProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
-    virtual ~IndicRearrangementProcessor();
+    ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
+    virtual ~ContextualKerningProcessor();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
@@ -49,13 +41,15 @@ public:
     static UClassID getStaticClassID();
 
 protected:
-    le_int32 firstGlyph;
-    le_int32 lastGlyph;
+    le_int32 kerningStack[nComponents];
+    le_int16 sp;
 
-    LEReferenceTo<IndicRearrangementSubtableHeader> indicRearrangementSubtableHeader;
-    LEReferenceToArrayOf<IndicRearrangementStateEntry> entryTable;
+    le_int16 *kerningValues;
+
+    LEReferenceTo<ContextualKerningHeader> contextualKerningHeader;
+    LEReferenceToArrayOf<ContextualKerningStateEntry> entryTable;
 };
 
 U_NAMESPACE_END
 
-#endif
+#endif // __CONTEXTUALKERNINGPROCESSOR_H

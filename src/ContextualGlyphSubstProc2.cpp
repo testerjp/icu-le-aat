@@ -29,7 +29,7 @@ ContextualGlyphSubstitutionProcessor2::~ContextualGlyphSubstitutionProcessor2()
 {
 }
 
-void ContextualGlyphSubstitutionProcessor2::beginStateTable()
+void ContextualGlyphSubstitutionProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     markGlyph = 0;
 }
@@ -134,7 +134,7 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
     return newGlyph;
 }
 
-void ContextualGlyphSubstitutionProcessor2::endStateTable()
+void ContextualGlyphSubstitutionProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

@@ -69,6 +69,8 @@ struct KernSubtableHeader2 {
     le_uint32 length;
     le_uint16 coverage;
     le_uint16 tupleIndex;
+
+    void process(const LEReferenceTo<KernSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 
 struct KernTableHeader2 {
@@ -88,7 +90,7 @@ private:
     fixed32   version;
     le_uint32 nTables;
 
-    const LETableReference &fReference;
+    LETableReference table;
 };
 
 U_NAMESPACE_END

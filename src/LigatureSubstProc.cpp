@@ -35,7 +35,7 @@ LigatureSubstitutionProcessor::~LigatureSubstitutionProcessor()
 {
 }
 
-void LigatureSubstitutionProcessor::beginStateTable()
+void LigatureSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     m = -1;
 }
@@ -145,7 +145,7 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
     return newState;
 }
 
-void LigatureSubstitutionProcessor::endStateTable()
+void LigatureSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

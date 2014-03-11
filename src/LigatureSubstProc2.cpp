@@ -34,7 +34,7 @@ LigatureSubstitutionProcessor2::~LigatureSubstitutionProcessor2()
 {
 }
 
-void LigatureSubstitutionProcessor2::beginStateTable()
+void LigatureSubstitutionProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     m = -1;
 }
@@ -141,7 +141,7 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
     return nextStateIndex;
 }
 
-void LigatureSubstitutionProcessor2::endStateTable()
+void LigatureSubstitutionProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

@@ -111,7 +111,7 @@ void ContextualKerningProcessor::endStateTable(LEGlyphStorage &glyphStorage, LEE
 
     const LEFontInstance *font = stateTableHeader.getFont();
 
-    if (font && 0) {
+    if (font) {
         le_int32 glyph;
         float    adjust = 0.0;
 

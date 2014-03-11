@@ -55,7 +55,7 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
             LE_TRACE_LOG("stack overflow");
             currGlyph += dir;
             m          = -1;
-            return stateArrayOffset; // force start of text state
+            return stateArrayOffset;
         }
         componentStack[m] = currGlyph;
         LE_TRACE_LOG("push[%d]", m);
@@ -67,10 +67,10 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
         LEReferenceTo<LigatureActionEntry> actionEntry(stateTableHeader, success, actionOffset);
         LEReferenceToArrayOf<le_int16> componentTable(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY);
 
-        if (LE_FAILURE(success)) { // FIXME
+        if (LE_FAILURE(success)) {
             currGlyph += dir;
             m          = -1;
-            return stateArrayOffset; // force start of text state
+            return stateArrayOffset;
         }
 
         le_int32 ligatureGlyphs[nComponents];
@@ -83,18 +83,19 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
             if (m == -1) {
                 LE_TRACE_LOG("stack underflow");
                 currGlyph += dir;
-                return stateArrayOffset; // force start of text state
+                m          = -1;
+                return stateArrayOffset;
             }
 
             le_int32 componentGlyph = componentStack[m--];
 
             LE_TRACE_LOG("pop[%d] %d", m + 1, componentGlyph);
 
-            if (glyphStorage.getGlyphCount() < componentGlyph) { // FIXME <= ?
+            if (!(0 <= componentGlyph && componentGlyph < glyphStorage.getGlyphCount())) {
                 LE_TRACE_LOG("preposterous componentGlyph");
                 currGlyph += dir;
                 m          = -1;
-                return stateArrayOffset; // force start of text state
+                return stateArrayOffset;
             }
 
             action = SWAPL(*actionEntry.getAlias());
@@ -106,6 +107,13 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
 
             if (action & (lafLast | lafStore))  {
                 LEReferenceTo<TTGlyphID> ligatureEntry(stateTableHeader, success, ligatureOffset);
+
+                if (LE_FAILURE(success)) {
+                    currGlyph += dir;
+                    m          = -1;
+                    return stateArrayOffset;
+                }
+
                 TTGlyphID ligatureGlyph      = SWAPW(*ligatureEntry.getAlias());
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
                 ligatureGlyphs[++n]          = componentGlyph;
@@ -127,7 +135,7 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
                 LE_TRACE_LOG("stack overflow");
                 currGlyph += dir;
                 m          = -1;
-                return 0; // force start of text state
+                return 0;
             }
             componentStack[m] = ligatureGlyphs[n--];
             LE_TRACE_LOG("push[%d]", m);

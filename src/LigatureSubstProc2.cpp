@@ -55,7 +55,7 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
             LE_TRACE_LOG("stack overflow");
             currGlyph += dir;
             m          = -1;
-            return 0; // force start of text state
+            return 0;
         }
         componentStack[m] = currGlyph;
         LE_TRACE_LOG("push[%d]", m);
@@ -66,10 +66,10 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
         LEReferenceToArrayOf<le_uint16> componentTable(stateTableHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
         LEReferenceToArrayOf<TTGlyphID> ligatureTable(stateTableHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
 
-        if (LE_FAILURE(success)) { // FIXME
+        if (LE_FAILURE(success)) {
             currGlyph += dir;
             m          = -1;
-            return 0; // force start of text state
+            return 0;
         }
 
         le_int32 ligatureGlyphs[nComponents];
@@ -82,18 +82,19 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
             if (m == -1) {
                 LE_TRACE_LOG("stack underflow");
                 currGlyph += dir;
-                return 0; // force start of text state
+                m          = -1;
+                return 0;
             }
 
             le_int32 componentGlyph = componentStack[m--];
 
             LE_TRACE_LOG("pop[%d]; %d", m + 1, componentGlyph);
 
-            if (glyphStorage.getGlyphCount() < componentGlyph) { // FIXME <= ?
+            if (!(0 <= componentGlyph && componentGlyph < glyphStorage.getGlyphCount())) {
                 LE_TRACE_LOG("preposterous componentGlyph");
                 currGlyph += dir;
                 m          = -1;
-                return 0; // force start of text state
+                return 0;
             }
 
             action = SWAPL(*actionEntry.getAlias());
@@ -125,7 +126,7 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
                 LE_TRACE_LOG("stack overflow");
                 currGlyph += dir;
                 m          = -1;
-                return 0; // force start of text state
+                return 0;
             }
             componentStack[m] = ligatureGlyphs[n--];
             LE_TRACE_LOG("push[%d]", m);

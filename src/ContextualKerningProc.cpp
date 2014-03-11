@@ -48,7 +48,7 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
             LE_TRACE_LOG("stack overflow");
             currGlyph += dir;
             sp         = -1;
-            return stateArrayOffset; // force set status for start of text state
+            return stateArrayOffset;
         }
         kerningStack[sp] = currGlyph;
         LE_TRACE_LOG("push[%d]", sp);
@@ -62,7 +62,7 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
         if (LE_FAILURE(success)) {
             currGlyph += dir;
             sp         = -1;
-            return stateArrayOffset; // force set status for start of text state
+            return stateArrayOffset;
         }
 
         le_int16 action;
@@ -71,7 +71,8 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
             if (sp == -1) {
                 LE_TRACE_LOG("stack underflow");
                 currGlyph += dir;
-                return stateArrayOffset; // force set status for start of text state
+                sp         = -1;
+                return stateArrayOffset;
             }
 
             le_int32 kerningGlyph = kerningStack[sp--];
@@ -82,7 +83,7 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
                 LE_TRACE_LOG("preposterous componentGlyph");
                 currGlyph += dir;
                 sp         = -1;
-                return stateArrayOffset; // force set status for start of text state
+                return stateArrayOffset;
             }
 
             action                      = SWAPW(*actionEntry.getAlias());

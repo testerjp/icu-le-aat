@@ -35,7 +35,7 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
     le_uint32 chain;
 
     for (chain = 0; LE_SUCCESS(success) && (chain < chainCount); chain++) {
-        if (chain>0) {
+        if (chain > 0) {
             le_uint32 chainLength = SWAPL(chainHeader->chainLength);
             chainHeader.addOffset(chainLength, success); // Don't increment the first time
         }
@@ -63,7 +63,7 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
 
                 switch (featureType) {
                 case ligaturesType:
-                    if ((typoFlags & LE_Ligatures_FEATURE_ENUM ) && (featureSetting ^ 0x1)){
+                    if ((typoFlags & LE_Ligatures_FEATURE_FLAG) && ((featureSetting & 0x1) ^ 0x1)) {
                         flag &= disableFlags;
                         flag |= enableFlags;
                     } else {
@@ -94,7 +94,7 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
                     break;
 
                 case smartSwashType:
-                    if ((typoFlags & LE_SWSH_FEATURE_FLAG) && (featureSetting ^ 0x1)){
+                    if ((typoFlags & LE_SWSH_FEATURE_FLAG) && ((featureSetting & 0x1) ^ 0x1)) {
                         flag &= disableFlags;
                         flag |= enableFlags;
                     }

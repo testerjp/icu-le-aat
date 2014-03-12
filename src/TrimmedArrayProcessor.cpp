@@ -21,7 +21,8 @@ TrimmedArrayProcessor::TrimmedArrayProcessor(const LEReferenceTo<TrimmedArrayLoo
     : firstGlyph(0), lastGlyph(0),
       trimmedArrayLookupTable(lookupTable)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
     lastGlyph  = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
@@ -33,7 +34,8 @@ TrimmedArrayProcessor::~TrimmedArrayProcessor()
 
 void TrimmedArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;

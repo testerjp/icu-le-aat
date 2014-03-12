@@ -66,6 +66,8 @@ struct IndicRearrangementStateEntry2 : StateEntry2
 {
 };
 
+extern void doRearrangementAction(LEGlyphStorage &glyphStorage, le_int32 firstGlyph, le_int32 lastGlyph, IndicRearrangementVerb verb, LEErrorCode &success);
+
 U_NAMESPACE_END
 
 #endif

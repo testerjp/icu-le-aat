@@ -22,7 +22,8 @@ LigatureSubstitutionProcessor2::LigatureSubstitutionProcessor2(const LEReference
       ligActionOffset(0), componentOffset(0), ligatureOffset(0), m(-1),
       ligatureSubstitutionHeader(header, success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     ligActionOffset = SWAPL(ligatureSubstitutionHeader->ligActionOffset);
     componentOffset = SWAPL(ligatureSubstitutionHeader->componentOffset);
@@ -41,11 +42,16 @@ void LigatureSubstitutionProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCo
 
 le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
 {
-    const LigatureSubstitutionStateEntry2 *entry = entryTable.getAlias(index, success);
-    if (LE_FAILURE(success)) return 0;
+    if (LE_FAILURE(success))
+        return 0;
 
-    le_uint16 nextStateIndex = SWAPW(entry->nextStateIndex);
-    le_uint16 flags          = SWAPW(entry->entryFlags);
+    const LigatureSubstitutionStateEntry2 *entry = entryTable.getAlias(index, success);
+
+    if (LE_FAILURE(success))
+        return 0;
+
+    le_uint16 newState       = SWAPW(entry->newStateIndex);
+    le_uint16 flags          = SWAPW(entry->flags);
     le_uint16 ligActionIndex = SWAPW(entry->ligActionIndex);
 
     LE_TRACE_LOG("ligature state entry: flags = %x; ligature action index = %d; glyph = %d; glyph index = %d", flags, ligActionIndex, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph);
@@ -136,10 +142,10 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
     if (!(flags & lsfDontAdvance))
         currGlyph += dir;
 
-    if (nextStateIndex == 0 || nextStateIndex == 1)
+    if (newState == 0 || newState == 1)
          m = -1; // undocumented
 
-    return nextStateIndex;
+    return newState;
 }
 
 void LigatureSubstitutionProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)

@@ -20,7 +20,8 @@ StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2
     : dir(direction), format(0), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
       stateTableHeader(header)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     nClasses         = SWAPL(stateTableHeader->nClasses);
     classTableOffset = SWAPL(stateTableHeader->classTableOffset);
@@ -29,7 +30,8 @@ StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2
 
     classTable       = LEReferenceTo<LookupTable>(stateTableHeader, success, classTableOffset);
 
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     format           = SWAPW(classTable->format);
 
@@ -42,6 +44,9 @@ StateTableProcessor2::~StateTableProcessor2()
 
 void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     // Start at state 0
     // XXX: How do we know when to start at state 1?
     le_uint16 currentState = 0;
@@ -57,21 +62,13 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     beginStateTable(glyphStorage, success);
 
-    if (LE_FAILURE(success))
-        return;
-
     switch (format) {
     case ltfSimpleArray: {
         LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(classTable, success);
-        if (LE_FAILURE(success)) break;
 
-        while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
-            if (LE_FAILURE(success)) break;
-
-            if (LE_STATE_PATIENCE_DECR()) {
-                LE_TRACE_LOG("patience exceeded - state table not moving");
-                break; // patience exceeded.
-            }
+        while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
+            if (LE_STATE_PATIENCE_DECR())
+                break;
 
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {
@@ -95,21 +92,15 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
             LE_TRACE_LOG("new state %d", currentState);
             LE_STATE_PATIENCE_INCR(currGlyph);
         }
-
         break;
     }
 
     case ltfSegmentSingle: {
         LEReferenceTo<SegmentSingleLookupTable> segmentSignleLookupTable(classTable, success);
-        if (LE_FAILURE(success)) break;
 
-        while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
-            if (LE_FAILURE(success)) break;
-
-            if (LE_STATE_PATIENCE_DECR()) {
-                LE_TRACE_LOG("patience exceeded  - state table not moving");
-                break; // patience exceeded.
-            }
+        while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
+            if (LE_STATE_PATIENCE_DECR())
+                break;
 
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {
@@ -141,15 +132,10 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     case ltfSegmentArray: {
         LEReferenceTo<SegmentArrayLookupTable> segmentArrayLookupTable(classTable, success);
-        if (LE_FAILURE(success)) break;
 
-        while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
-            if (LE_FAILURE(success)) break;
-
-            if (LE_STATE_PATIENCE_DECR()) {
-                LE_TRACE_LOG("patience exceeded  - state table not moving");
-                break; // patience exceeded.
-            }
+        while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
+            if (LE_STATE_PATIENCE_DECR())
+                break;
 
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {
@@ -186,12 +172,11 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     case ltfSingleTable: {
         LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(classTable, success);
-        while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
-            if (LE_FAILURE(success)) break;
-            if (LE_STATE_PATIENCE_DECR()) {
-                LE_TRACE_LOG("patience exceeded - state table not moving");
-                break; // patience exceeded.
-            }
+
+        while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
+            if (LE_STATE_PATIENCE_DECR())
+                break;
+
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {
                 // XXX: How do we handle EOT vs. EOL?
@@ -225,16 +210,13 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
 
     case ltfTrimmedArray: {
         LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(classTable, success);
-        if (LE_FAILURE(success)) break;
 
         TTGlyphID firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
         TTGlyphID lastGlyph  = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
 
-        while ((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && currGlyph >= -1)) {
-            if (LE_STATE_PATIENCE_DECR()) {
-                LE_TRACE_LOG("patience exceeded - state table not moving");
-                break; // patience exceeded.
-            }
+        while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
+            if (LE_STATE_PATIENCE_DECR())
+                break;
 
             LookupValue classCode = classCodeOOB;
             if (currGlyph == glyphCount || currGlyph == -1) {

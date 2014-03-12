@@ -34,7 +34,13 @@ OrderedListKerningPairsProcessor::~OrderedListKerningPairsProcessor()
  */
 void OrderedListKerningPairsProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     const LEFontInstance *font = subtableHeader.getFont();
+
+    if (!font)
+        return;
 
     le_uint32 key    = glyphStorage[0]; // no need to mask off high bits
     float     adjust = 0;

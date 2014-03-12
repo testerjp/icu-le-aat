@@ -44,10 +44,8 @@ struct LigatureSubstitutionStateEntry : StateEntry
 {
 };
 
-struct LigatureSubstitutionStateEntry2
+struct LigatureSubstitutionStateEntry2 : StateEntry2
 {
-    le_uint16 nextStateIndex;
-    le_uint16 entryFlags;
     le_uint16 ligActionIndex;
 };
 

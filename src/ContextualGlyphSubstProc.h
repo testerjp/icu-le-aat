@@ -25,7 +25,7 @@ class ContextualGlyphSubstitutionProcessor : public StateTableProcessor
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    virtual ByteOffset processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index);
+    virtual ByteOffset processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
@@ -50,7 +50,6 @@ private:
     ContextualGlyphSubstitutionProcessor();
 
 protected:
-    ByteOffset substitutionTableOffset;
     le_int32 markGlyph;
 
     LEReferenceTo<ContextualGlyphSubstitutionHeader> contextualGlyphSubstitutionHeader;

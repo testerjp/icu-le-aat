@@ -49,7 +49,6 @@ void MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &gly
                 LE_TRACE_LOG("subtable %d", subtable);
                 subtableHeader->process(subtableHeader, glyphStorage, success);
             }
-
             subtableHeader.addOffset(length, success);
         }
         chainHeader.addOffset(chainLength, success);
@@ -110,9 +109,7 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
     }
 
     if (processor != NULL) {
-        if (LE_SUCCESS(success)) {
-            processor->process(glyphStorage, success);
-        }
+        processor->process(glyphStorage, success);
         delete processor;
     }
 }

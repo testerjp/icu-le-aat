@@ -28,6 +28,9 @@ SingleTableProcessor::~SingleTableProcessor()
 
 void SingleTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     const LookupSingle *entries = singleTableLookupTable->entries;
     le_int32 glyph;
     le_int32 glyphCount = glyphStorage.getGlyphCount();

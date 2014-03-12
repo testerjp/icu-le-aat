@@ -25,7 +25,7 @@ struct ContextualGlyphSubstitutionHeader : StateTableHeader
 
 struct ContextualGlyphSubstitutionHeader2 : StateTableHeader2
 {
-    le_uint32  perGlyphTableOffset;
+    le_uint32  substitutionTableOffset;
 };
 
 enum ContextualGlyphSubstitutionFlags

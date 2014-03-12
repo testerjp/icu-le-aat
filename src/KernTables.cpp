@@ -29,6 +29,9 @@ U_NAMESPACE_BEGIN
 KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
     : version(0), nTables(0), table(base)
 {
+    if (LE_FAILURE(success))
+        return;
+
     LEReferenceTo<KernTableHeader> kernTableHeader(table, success);
 
     if (LE_FAILURE(success))
@@ -54,6 +57,9 @@ KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
 
 void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     if (!nTables)
         return;
 
@@ -70,7 +76,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (coverage & kcfHorizontal && LE_SUCCESS(success))
+            if (coverage & kcfHorizontal)
                 subtableHeader->process(subtableHeader, glyphStorage, success);
 
             subtableHeader.addOffset(length, success);
@@ -81,7 +87,6 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
     case 1: {
         LEReferenceTo<KernSubtableHeader2> subtableHeader(table, success, sizeof(KernTableHeader2));
 
-
         if (LE_FAILURE(success))
             return;
 
@@ -91,7 +96,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (!(coverage & kcf2Vertical) && LE_SUCCESS(success))
+            if (!(coverage & kcf2Vertical))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
 
             subtableHeader.addOffset(length, success);
@@ -111,20 +116,13 @@ void KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, 
     switch (format) {
     case kfKerningPairs: {
         LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(base, success, sizeof(KernSubtableHeader2));
-
-        if (LE_FAILURE(success))
-            return;
-
         processor = new OrderedListKerningPairsProcessor(subtableKerningPairs, success);
-
         break;
     }
     }
 
     if (processor != NULL) {
-        if (LE_SUCCESS(success))
-            processor->process(glyphStorage, success);
-
+        processor->process(glyphStorage, success);
         delete processor;
     }
 }
@@ -139,32 +137,20 @@ void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base
     switch (format) {
     case kfKerningPairs: {
         LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(base, success, sizeof(KernSubtableHeader2));
-
-        if (LE_FAILURE(success))
-            return;
-
         processor = new OrderedListKerningPairsProcessor(subtableKerningPairs, success);
-
         break;
     }
 
     case kfContextualKerning: {
         LEReferenceTo<KernStateTableHeader> kernStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>     header(kernStateTableHeader, success, &kernStateTableHeader->stHeader);
-
-        if (LE_FAILURE(success))
-            return;
-
         processor = new ContextualKerningProcessor(header, 1, success);
-
         break;
     }
     }
 
     if (processor != NULL) {
-        if (LE_SUCCESS(success))
-            processor->process(glyphStorage, success);
-
+        processor->process(glyphStorage, success);
         delete processor;
     }
 }

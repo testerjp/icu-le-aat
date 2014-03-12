@@ -29,8 +29,6 @@ public:
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    void doRearrangementAction(LEGlyphStorage &glyphStorage, IndicRearrangementVerb verb) const;
-
     IndicRearrangementProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
     virtual ~IndicRearrangementProcessor2();
 

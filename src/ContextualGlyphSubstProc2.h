@@ -51,13 +51,13 @@ private:
     TTGlyphID lookup(le_uint32 offset, LEGlyphID gid, LEErrorCode &success);
 
 protected:
-    le_int16 perGlyphTableFormat;
     le_int32 markGlyph;
 
     LEReferenceTo<ContextualGlyphSubstitutionHeader2> contextualGlyphSubstitutionHeader;
-    LEReferenceToArrayOf<le_uint32> perGlyphTable;
     LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry2> entryTable;
+    LEReferenceToArrayOf<le_uint32> substitutionTable;
 };
 
 U_NAMESPACE_END
+
 #endif

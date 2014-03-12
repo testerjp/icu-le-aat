@@ -18,11 +18,10 @@ ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const
       markGlyph(0),
       contextualGlyphSubstitutionHeader(header, success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
-    contextualGlyphSubstitutionHeader.orphan(); // FIXME
-
-    substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset);
+    // ByteOffset substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset); // unused
     entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
     int16Table = LEReferenceToArrayOf<le_int16>(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
 }
@@ -36,26 +35,33 @@ void ContextualGlyphSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEE
     markGlyph = 0;
 }
 
-ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index)
+ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
-    LEErrorCode success = LE_NO_ERROR;
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
+
     const ContextualGlyphSubstitutionStateEntry *entry = entryTable.getAlias(index, success);
 
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
+
     ByteOffset newState   = SWAPW(entry->newStateOffset);
-    le_int16   flags      = SWAPW(entry->flags);
+    le_uint16  flags      = SWAPW(entry->flags);
     WordOffset markOffset = SWAPW(entry->markOffset);
     WordOffset currOffset = SWAPW(entry->currOffset);
 
-    if (markOffset != 0 && LE_SUCCESS(success)) {
-        LEGlyphID mGlyph        = glyphStorage[markGlyph];
-        TTGlyphID newGlyph      = SWAPW(int16Table.getObject(markOffset + LE_GET_GLYPH(mGlyph), success)); // whew.
-        glyphStorage[markGlyph] = LE_SET_GLYPH(mGlyph, newGlyph);
+    if (markOffset != 0) {
+        LEGlyphID mGlyph   = glyphStorage[markGlyph];
+        TTGlyphID newGlyph = SWAPW(int16Table.getObject(markOffset + LE_GET_GLYPH(mGlyph), success));
+        if (LE_SUCCESS(success))
+            glyphStorage[markGlyph] = LE_SET_GLYPH(mGlyph, newGlyph);
     }
 
     if (currOffset != 0) {
-        LEGlyphID thisGlyph     = glyphStorage[currGlyph];
-        TTGlyphID newGlyph      = SWAPW(int16Table.getObject(currOffset + LE_GET_GLYPH(thisGlyph), success)); // whew.
-        glyphStorage[currGlyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
+        LEGlyphID thisGlyph = glyphStorage[currGlyph];
+        TTGlyphID newGlyph  = SWAPW(int16Table.getObject(currOffset + LE_GET_GLYPH(thisGlyph), success));
+        if (LE_SUCCESS(success))
+            glyphStorage[currGlyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
     }
 
     if (flags & cgsSetMark)

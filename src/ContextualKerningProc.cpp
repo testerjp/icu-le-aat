@@ -12,7 +12,8 @@ ContextualKerningProcessor::ContextualKerningProcessor(const LEReferenceTo<State
       sp(-1), kerningValues(0),
       contextualKerningHeader(header, success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     entryTable = LEReferenceToArrayOf<ContextualKerningStateEntry>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
 }
@@ -21,8 +22,11 @@ ContextualKerningProcessor::~ContextualKerningProcessor()
 {
 }
 
-void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode & /* success */)
+void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     sp = -1;
 
     kerningValues = LE_NEW_ARRAY(le_int16, glyphStorage.getGlyphCount());
@@ -33,10 +37,15 @@ void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, L
         kerningValues[glyph] = 0;
 }
 
-ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index)
+ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
-    LEErrorCode success = LE_NO_ERROR;
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
+
     const ContextualKerningStateEntry *entry = entryTable.getAlias(index, success);
+
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
 
     ByteOffset newState = SWAPW(entry->newStateOffset);
     le_uint16  flags    = SWAPW(entry->flags);

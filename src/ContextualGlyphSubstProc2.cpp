@@ -18,11 +18,12 @@ ContextualGlyphSubstitutionProcessor2::ContextualGlyphSubstitutionProcessor2(con
       markGlyph(0),
       contextualGlyphSubstitutionHeader(header, success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
-    le_uint32 perGlyphTableOffset = SWAPL(contextualGlyphSubstitutionHeader->perGlyphTableOffset);
-    entryTable    = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
-    perGlyphTable = LEReferenceToArrayOf<le_uint32>(stateTableHeader, success, perGlyphTableOffset, LE_UNBOUNDED_ARRAY);
+    le_uint32 substitutionTableOffset = SWAPL(contextualGlyphSubstitutionHeader->substitutionTableOffset);
+    entryTable        = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    substitutionTable = LEReferenceToArrayOf<le_uint32>(stateTableHeader, success, substitutionTableOffset, LE_UNBOUNDED_ARRAY);
 }
 
 ContextualGlyphSubstitutionProcessor2::~ContextualGlyphSubstitutionProcessor2()
@@ -37,23 +38,28 @@ void ContextualGlyphSubstitutionProcessor2::beginStateTable(LEGlyphStorage &, LE
 le_uint16 ContextualGlyphSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph,
     EntryTableIndex2 index, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return 0;
+
     const ContextualGlyphSubstitutionStateEntry2 *entry = entryTable.getAlias(index, success);
-    if (LE_FAILURE(success)) return 0;
+
+    if (LE_FAILURE(success))
+        return 0;
 
     le_uint16 newState  = SWAPW(entry->newStateIndex);
     le_uint16 flags     = SWAPW(entry->flags);
-    le_int16  markIndex = SWAPW(entry->markIndex);
-    le_int16  currIndex = SWAPW(entry->currIndex);
+    le_uint16 markIndex = SWAPW(entry->markIndex);
+    le_uint16 currIndex = SWAPW(entry->currIndex);
 
-    if (markIndex != -1) {
-        le_uint32 offset        = SWAPL(perGlyphTable(markIndex, success));
+    if (markIndex != 0xFFFF) {
+        le_uint32 offset        = SWAPL(substitutionTable(markIndex, success));
         LEGlyphID mGlyph        = glyphStorage[markGlyph];
         TTGlyphID newGlyph      = lookup(offset, mGlyph, success);
         glyphStorage[markGlyph] = LE_SET_GLYPH(mGlyph, newGlyph);
     }
 
-    if (currIndex != -1) {
-        le_uint32 offset        = SWAPL(perGlyphTable(currIndex, success));
+    if (currIndex != 0xFFFF) {
+        le_uint32 offset        = SWAPL(substitutionTable(currIndex, success));
         LEGlyphID thisGlyph     = glyphStorage[currGlyph];
         TTGlyphID newGlyph      = lookup(offset, thisGlyph, success);
         glyphStorage[currGlyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
@@ -74,7 +80,7 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
 {
     TTGlyphID newGlyph = 0xFFFF;
 
-    LEReferenceTo<LookupTable> lookupTable(perGlyphTable, success, offset);
+    LEReferenceTo<LookupTable> lookupTable(substitutionTable, success, offset);
     if (LE_FAILURE(success)) return newGlyph;
 
     le_int16 format = SWAPW(lookupTable->format);

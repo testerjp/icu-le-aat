@@ -25,6 +25,9 @@ NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcesso
 
 SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(le_int16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return NULL;
+
     switch (format) {
     case ltfSimpleArray: {
         LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(lookupTable, success);

@@ -40,13 +40,18 @@ void LigatureSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCod
     m = -1;
 }
 
-ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index)
+ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
-    LEErrorCode success = LE_NO_ERROR;
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
+
     const LigatureSubstitutionStateEntry *entry = entryTable.getAlias(index, success);
 
+    if (LE_FAILURE(success))
+        return stateArrayOffset;
+
     ByteOffset newState = SWAPW(entry->newStateOffset);
-    le_int16   flags    = SWAPW(entry->flags);
+    le_uint16  flags    = SWAPW(entry->flags);
 
     LE_TRACE_LOG("ligature state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
 

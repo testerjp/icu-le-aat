@@ -28,6 +28,9 @@ SimpleArrayProcessor::~SimpleArrayProcessor()
 
 void SimpleArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
+    if (LE_FAILURE(success))
+        return;
+
     le_int32 glyphCount = glyphStorage.getGlyphCount();
     le_int32 glyph;
 

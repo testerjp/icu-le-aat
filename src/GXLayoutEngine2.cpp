@@ -26,7 +26,6 @@ GXLayoutEngine2::~GXLayoutEngine2()
     reset();
 }
 
-// apply 'morx' table
 le_int32 GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
@@ -46,7 +45,6 @@ le_int32 GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset
     return count;
 }
 
-// apply positional tables
 void GXLayoutEngine2::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool /* reverse */,
                                            LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
@@ -66,7 +64,6 @@ void GXLayoutEngine2::adjustGlyphPositions(const LEUnicode chars[], le_int32 off
         }
     }
 
-    // default is no adjustments
     return;
 }
 

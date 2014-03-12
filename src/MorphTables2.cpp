@@ -21,7 +21,8 @@ U_NAMESPACE_BEGIN
 void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LEGlyphStorage &glyphStorage,
                                 le_int32 typoFlags, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     le_uint32 chainCount = SWAPL(this->nChains);
     LEReferenceTo<ChainHeader2> chainHeader(base, success, &chains[0]);

@@ -24,7 +24,7 @@ struct ContextualGlyphInsertionHeader : StateTableHeader
 
 struct ContextualGlyphInsertionHeader2 : StateTableHeader2
 {
-    le_uint32 insertionTableOffset;
+    le_uint32 insertionActionOffset;
 };
 
 enum ContextualGlyphInsertionFlags
@@ -36,19 +36,21 @@ enum ContextualGlyphInsertionFlags
     cgiCurrentInsertBefore      = 0x0800,
     cgiMarkInsertBefore         = 0x0400,
     cgiCurrentInsertCountMask   = 0x03E0,
-    cgiMarkedInsertCountMask    = 0x001F
+    cgiMarkedInsertCountMask    = 0x001F,
+    cgiCurrentInsertCountShift  = 5,
+    cgiMarkedInsertCountShift   = 0,
 };
 
 struct ContextualGlyphInsertionStateEntry : StateEntry
 {
-    ByteOffset currentInsertionListOffset;
-    ByteOffset markedInsertionListOffset;
+    ByteOffset currentInsertListOffset;
+    ByteOffset markedInsertListOffset;
 };
 
 struct ContextualGlyphInsertionStateEntry2 : StateEntry2
 {
-    le_uint16 currentInsertionListIndex;
-    le_uint16 markedInsertionListIndex;
+    le_uint16 currentInsertIndex;
+    le_uint16 markedInsertIndex;
 };
 
 U_NAMESPACE_END

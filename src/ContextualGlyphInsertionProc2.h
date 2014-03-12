@@ -65,7 +65,7 @@ protected:
 
     LEReferenceTo<ContextualGlyphInsertionHeader2> contextualGlyphInsertionHeader;
     LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2> entryTable;
-    LEReferenceToArrayOf<le_uint16> insertionTable;
+    LEReferenceToArrayOf<le_uint16> insertionAction;
 };
 
 U_NAMESPACE_END

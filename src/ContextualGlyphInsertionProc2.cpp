@@ -23,9 +23,9 @@ ContextualGlyphInsertionProcessor2::ContextualGlyphInsertionProcessor2(const LER
     if (!contextualGlyphInsertionHeader.isValid())
         return;
 
-    le_uint32 insertionTableOffset = SWAPL(contextualGlyphInsertionHeader->insertionTableOffset);
-    entryTable     = LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
-    insertionTable = LEReferenceToArrayOf<le_uint16>(stateTableHeader, success, insertionTableOffset, LE_UNBOUNDED_ARRAY);
+    le_uint32 insertionActionOffset = SWAPL(contextualGlyphInsertionHeader->insertionActionOffset);
+    entryTable      = LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
+    insertionAction = LEReferenceToArrayOf<le_uint16>(stateTableHeader, success, insertionActionOffset, LE_UNBOUNDED_ARRAY);
 }
 
 ContextualGlyphInsertionProcessor2::~ContextualGlyphInsertionProcessor2()
@@ -39,6 +39,9 @@ void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &, LEErr
 
 void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_int16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)
 {
+    if (!count)
+        return;
+
     LEGlyphID *insertGlyphs = glyphStorage.insertGlyphs(atGlyph, count + 1, success);
 
     if (LE_FAILURE(success))
@@ -61,7 +64,7 @@ void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorag
     }
 
     while(count--) {
-        insertGlyphs[targetIndex++] = insertionTable.getObject(index++, success);
+        insertGlyphs[targetIndex++] = insertionAction.getObject(index++, success);
     }
 
     glyphStorage.applyInsertions();
@@ -79,18 +82,18 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
 
     le_uint16 newState  = SWAPW(entry->newStateIndex);
     le_uint16 flags     = SWAPW(entry->flags);
-    le_uint16 markIndex = SWAPW(entry->markedInsertionListIndex);
-    le_uint16 currIndex = SWAPW(entry->currentInsertionListIndex);
+    le_uint16 markIndex = SWAPW(entry->markedInsertIndex);
+    le_uint16 currIndex = SWAPW(entry->currentInsertIndex);
 
     if (markIndex != 0xFFFF) {
-        le_int16 count         = (flags & cgiMarkedInsertCountMask) >> 5;
+        le_int16 count         = (flags & cgiMarkedInsertCountMask) >> cgiMarkedInsertCountShift;
         le_bool  isKashidaLike = (flags & cgiMarkedIsKashidaLike);
         le_bool  isBefore      = (flags & cgiMarkInsertBefore);
         doInsertion(glyphStorage, markGlyph, markIndex, count, isKashidaLike, isBefore, success);
     }
 
     if (currIndex != 0xFFFF) {
-        le_int16 count         = (flags & cgiCurrentInsertCountMask);
+        le_int16 count         = (flags & cgiCurrentInsertCountMask) >> cgiCurrentInsertCountShift;
         le_bool  isKashidaLike = (flags & cgiCurrentIsKashidaLike);
         le_bool  isBefore      = (flags & cgiCurrentInsertBefore);
         doInsertion(glyphStorage, currGlyph, currIndex, count, isKashidaLike, isBefore, success);

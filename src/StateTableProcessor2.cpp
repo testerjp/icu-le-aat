@@ -212,7 +212,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
         LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(classTable, success);
 
         TTGlyphID firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
-        TTGlyphID lastGlyph  = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
+        TTGlyphID glyphCount = SWAPW(trimmedArrayLookupTable->glyphCount);
 
         while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
             if (LE_STATE_PATIENCE_DECR())
@@ -226,7 +226,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                 TTGlyphID glyphCode = (TTGlyphID) LE_GET_GLYPH(glyphStorage[currGlyph]);
                 if (glyphCode == 0xFFFF) {
                     classCode = classCodeDEL;
-                } else if ((glyphCode >= firstGlyph) && (glyphCode < lastGlyph)) {
+                } else if (firstGlyph <= glyphCode && glyphCode < firstGlyph + glyphCount) {
                     classCode = SWAPW(trimmedArrayLookupTable->valueArray[glyphCode - firstGlyph]);
                 }
             }

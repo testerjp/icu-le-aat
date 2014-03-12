@@ -48,9 +48,9 @@ private:
 
 protected:
     TTGlyphID firstGlyph;
-    TTGlyphID lastGlyph;
-    LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable;
+    TTGlyphID glyphCount;
 
+    LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable;
 };
 
 U_NAMESPACE_END

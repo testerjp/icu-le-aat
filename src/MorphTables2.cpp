@@ -247,7 +247,7 @@ void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &ba
         LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(base, success);
         LEReferenceTo<LookupTable>                           lookupTable(header, success, &header->table);
         le_int16 format = SWAPW(lookupTable->format);
-        processor = NonContextualGlyphSubstitutionProcessor2::createInstance(format, lookupTable, success); // FIXME: need not specify a direction?
+        processor = NonContextualGlyphSubstitutionProcessor2::createInstance(format, lookupTable, success);
         break;
     }
 

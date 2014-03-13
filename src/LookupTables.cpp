@@ -33,16 +33,20 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
     LEReferenceTo<LookupSegment> entry(base, success, segments);
     LEReferenceTo<LookupSegment> trial(entry, success, extra);
 
-    if (LE_FAILURE(success)) return NULL;
+    if (LE_FAILURE(success))
+        return NULL;
 
     if (SWAPW(trial->firstGlyph) <= ttGlyph) {
         entry = trial;
     }
 
-    while (probe > unity && LE_SUCCESS(success)) {
+    while (probe > unity) {
         probe >>= 1;
         trial = entry; // copy
         trial.addOffset(probe, success);
+
+        if (LE_FAILURE(success))
+            return NULL;
 
         if (SWAPW(trial->firstGlyph) <= ttGlyph) {
             entry = trial;

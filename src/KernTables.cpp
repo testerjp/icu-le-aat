@@ -115,8 +115,8 @@ void KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, 
 
     switch (format) {
     case kfKerningPairs: {
-        LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(base, success, sizeof(KernSubtableHeader2));
-        processor = new OrderedListKerningPairsProcessor(subtableKerningPairs, success);
+        LEReferenceTo<OrderedListKerningPairsHeader> header(base, success, sizeof(KernSubtableHeader));
+        processor = new OrderedListKerningPairsProcessor(header, success);
         break;
     }
     }
@@ -136,8 +136,8 @@ void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base
 
     switch (format) {
     case kfKerningPairs: {
-        LEReferenceTo<KernSubtableKerningPairs> subtableKerningPairs(base, success, sizeof(KernSubtableHeader2));
-        processor = new OrderedListKerningPairsProcessor(subtableKerningPairs, success);
+        LEReferenceTo<OrderedListKerningPairsHeader> header(base, success, sizeof(KernSubtableHeader2));
+        processor = new OrderedListKerningPairsProcessor(header, success);
         break;
     }
 

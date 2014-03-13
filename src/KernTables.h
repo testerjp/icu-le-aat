@@ -41,19 +41,6 @@ enum KernCoverageFlags2
     kcf2FormatShift = 0,
 };
 
-struct KerningPair {
-    le_uint16 left;
-    le_uint16 right;
-    le_int16  value;
-};
-
-struct KernSubtableKerningPairs {
-    le_uint16 nPairs;
-    le_uint16 searchRange;
-    le_uint16 entrySelector;
-    le_uint16 rangeShift;
-};
-
 struct KernSubtableHeader {
     le_uint16 version;
     le_uint16 length;

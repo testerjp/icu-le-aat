@@ -32,12 +32,12 @@ KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
     if (LE_FAILURE(success))
         return;
 
+    if (!base.isValid()) // LEReferenceTo(const LEFontInstance *, ... may return NULL
+        return;
+
     LEReferenceTo<KernTableHeader> kernTableHeader(table, success);
 
     if (LE_FAILURE(success))
-        return;
-
-    if (!kernTableHeader.getAlias()) // FIXME: LEReferenceTo(const LEFontInstance *font.. may return NULL
         return;
 
     version = SWAPW(kernTableHeader->version);

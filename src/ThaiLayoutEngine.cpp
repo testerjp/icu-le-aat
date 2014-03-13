@@ -109,7 +109,7 @@ void ThaiLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int32 of
 
     if (fTypoFlags & LE_Kerning_FEATURE_FLAG) {
         LETableReference kernTable(fFontInstance, LE_KERN_TABLE_TAG, success);
-        if (LE_SUCCESS(success)) {
+        if (kernTable.isValid()) {
             KernTable kt(kernTable, success);
             kt.process(glyphStorage, success);
         }

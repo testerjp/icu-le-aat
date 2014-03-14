@@ -51,10 +51,10 @@ U_NAMESPACE_BEGIN
 
 struct StateTableHeader
 {
-    le_int16 stateSize;
-    ByteOffset classTableOffset;
-    ByteOffset stateArrayOffset;
-    ByteOffset entryTableOffset;
+    le_uint16 stateSize;
+    le_uint16 classTableOffset;
+    le_uint16 stateArrayOffset;
+    le_uint16 entryTableOffset;
 };
 
 struct StateTableHeader2
@@ -75,13 +75,11 @@ enum ClassCodes
     classCodeMAX = 0xFF
 };
 
-typedef le_uint8 ClassCode;
-
 struct ClassTable
 {
     TTGlyphID firstGlyph;
     le_uint16 nGlyphs;
-    ClassCode classArray[ANY_NUMBER];
+    le_uint8  classArray[ANY_NUMBER];
 };
 LE_VAR_ARRAY(ClassTable, classArray)
 
@@ -97,16 +95,16 @@ typedef le_uint8 EntryTableIndex;
 
 struct StateEntry
 {
-    ByteOffset  newStateOffset;
-    le_uint16   flags;
+    le_uint16 newStateOffset;
+    le_uint16 flags;
 };
 
 typedef le_uint16 EntryTableIndex2;
 
 struct StateEntry2 // same struct different interpretation
 {
-    le_uint16    newStateIndex;
-    le_uint16    flags;
+    le_uint16 newStateIndex;
+    le_uint16 flags;
 };
 
 U_NAMESPACE_END

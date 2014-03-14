@@ -20,12 +20,12 @@ U_NAMESPACE_BEGIN
 
 struct ContextualGlyphSubstitutionHeader : StateTableHeader
 {
-    ByteOffset  substitutionTableOffset;
+    le_uint16 substitutionTableOffset;
 };
 
 struct ContextualGlyphSubstitutionHeader2 : StateTableHeader2
 {
-    le_uint32  substitutionTableOffset;
+    le_uint32 substitutionTableOffset;
 };
 
 enum ContextualGlyphSubstitutionFlags
@@ -37,8 +37,8 @@ enum ContextualGlyphSubstitutionFlags
 
 struct ContextualGlyphSubstitutionStateEntry : StateEntry
 {
-    WordOffset markOffset;
-    WordOffset currOffset;
+    le_uint16 markOffset;
+    le_uint16 currOffset;
 };
 
 struct ContextualGlyphSubstitutionStateEntry2 : StateEntry2

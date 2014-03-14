@@ -20,9 +20,9 @@ U_NAMESPACE_BEGIN
 
 struct LigatureSubstitutionHeader : StateTableHeader
 {
-    ByteOffset ligatureActionTableOffset;
-    ByteOffset componentTableOffset;
-    ByteOffset ligatureTableOffset;
+    le_uint16 ligatureActionTableOffset;
+    le_uint16 componentTableOffset;
+    le_uint16 ligatureTableOffset;
 };
 
 struct LigatureSubstitutionHeader2 : StateTableHeader2

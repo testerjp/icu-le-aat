@@ -25,7 +25,7 @@ class IndicRearrangementProcessor : public StateTableProcessor
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    virtual ByteOffset processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
+    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 

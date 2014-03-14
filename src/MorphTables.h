@@ -15,45 +15,39 @@
 #include "LETypes.h"
 #include "LayoutTables.h"
 #include "LETableReference.h"
+#include "OpenTypeTables.h"
 
 U_NAMESPACE_BEGIN
 
 class LEGlyphStorage;
 
-typedef le_uint32 FeatureFlags;
-typedef le_int16  FeatureType;
-typedef le_int16  FeatureSetting;
-
 struct FeatureTableEntry
 {
-    FeatureType     featureType;
-    FeatureSetting  featureSetting;
-    FeatureFlags    enableFlags;
-    FeatureFlags    disableFlags;
+    le_uint16 featureType;
+    le_uint16 featureSetting;
+    le_uint32 enableFlags;
+    le_uint32 disableFlags;
 };
 
 struct ChainHeader
 {
-    FeatureFlags      defaultFlags;
+    le_uint32         defaultFlags;
     le_uint32         chainLength;
-    le_int16          nFeatureEntries;
-    le_int16          nSubtables;
+    le_uint16         nFeatureEntries;
+    le_uint16         nSubtables;
     FeatureTableEntry featureTable[ANY_NUMBER];
 };
 LE_VAR_ARRAY(ChainHeader, featureTable)
 
 struct MorphTableHeader
 {
-    le_int32    version;
+    fixed32     version;
     le_uint32   nChains;
     ChainHeader chains[ANY_NUMBER];
 
-  void process(const LETableReference& base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
+    void process(const LETableReference& base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 LE_VAR_ARRAY(MorphTableHeader, chains)
-
-typedef le_int16  SubtableCoverage;
-typedef le_uint32 SubtableCoverage2;
 
 enum SubtableCoverageFlags
 {
@@ -76,9 +70,9 @@ enum MorphSubtableType
 
 struct MorphSubtableHeader
 {
-    le_int16            length;
-    SubtableCoverage    coverage;
-    FeatureFlags        subtableFeatures;
+    le_uint16 length;
+    le_uint16 coverage;
+    le_uint32 subtableFeatures;
 
     void process(const LEReferenceTo<MorphSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
@@ -94,26 +88,26 @@ enum SubtableCoverageFlags2
 
 struct MorphSubtableHeader2
 {
-    le_uint32           length;
-    SubtableCoverage2   coverage;
-    FeatureFlags        subtableFeatures;
+    le_uint32 length;
+    le_uint32 coverage;
+    le_uint32 subtableFeatures;
 
     void process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const;
 };
 
 struct ChainHeader2
 {
-    FeatureFlags        defaultFlags;
-    le_uint32           chainLength;
-    le_uint32           nFeatureEntries;
-    le_uint32           nSubtables;
-    FeatureTableEntry   featureTable[ANY_NUMBER];
+    le_uint32         defaultFlags;
+    le_uint32         chainLength;
+    le_uint32         nFeatureEntries;
+    le_uint32         nSubtables;
+    FeatureTableEntry featureTable[ANY_NUMBER];
 };
 LE_VAR_ARRAY(ChainHeader2, featureTable)
 
 struct MorphTableHeader2
 {
-    le_int32     version;
+    fixed32      version;
     le_uint32    nChains;
     ChainHeader2 chains[ANY_NUMBER];
 

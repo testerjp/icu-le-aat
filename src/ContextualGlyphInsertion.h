@@ -43,8 +43,8 @@ enum ContextualGlyphInsertionFlags
 
 struct ContextualGlyphInsertionStateEntry : StateEntry
 {
-    ByteOffset currentInsertListOffset;
-    ByteOffset markedInsertListOffset;
+    le_uint16 currentInsertListOffset;
+    le_uint16 markedInsertListOffset;
 };
 
 struct ContextualGlyphInsertionStateEntry2 : StateEntry2

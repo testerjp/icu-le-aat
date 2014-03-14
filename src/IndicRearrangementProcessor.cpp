@@ -30,7 +30,7 @@ void IndicRearrangementProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode 
     lastGlyph  = 0;
 }
 
-ByteOffset IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16 IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -40,8 +40,8 @@ ByteOffset IndicRearrangementProcessor::processStateEntry(LEGlyphStorage &glyphS
     if (LE_FAILURE(success))
         return stateArrayOffset;
 
-    ByteOffset newState = SWAPW(entry->newStateOffset);
-    le_uint16  flags    = SWAPW(entry->flags);
+    le_uint16 newState = SWAPW(entry->newStateOffset);
+    le_uint16 flags    = SWAPW(entry->flags);
 
     if (flags & irfMarkFirst) {
         firstGlyph = currGlyph;

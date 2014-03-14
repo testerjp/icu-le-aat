@@ -25,7 +25,7 @@ class NonContextualGlyphSubstitutionProcessor : public SubtableProcessor
 public:
     virtual void process(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
-    static SubtableProcessor *createInstance(le_int16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success);
+    static SubtableProcessor *createInstance(le_uint16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success);
 
 protected:
     NonContextualGlyphSubstitutionProcessor();

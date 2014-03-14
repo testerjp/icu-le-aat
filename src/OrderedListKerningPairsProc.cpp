@@ -32,9 +32,9 @@ OrderedListKerningPairsProcessor::~OrderedListKerningPairsProcessor()
 
 const KerningPair *OrderedListKerningPairsProcessor::search(le_uint32 key, LEErrorCode &success) const
 {
-    le_int16 unity = sizeof(KerningPair);
-    le_int16 probe = searchRange;
-    le_int16 extra = rangeShift;
+    le_uint16 unity = sizeof(KerningPair);
+    le_uint16 probe = searchRange;
+    le_uint16 extra = rangeShift;
     LEReferenceTo<KerningPair> entry(pairs, success);
     LEReferenceTo<KerningPair> trial(entry, success, extra);
 

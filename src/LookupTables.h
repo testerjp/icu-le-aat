@@ -31,7 +31,7 @@ typedef le_int16 LookupValue;
 
 struct LookupTable
 {
-    le_int16 format;
+    le_uint16 format;
 };
 
 struct LookupSegment
@@ -49,11 +49,11 @@ struct LookupSingle
 
 struct BinarySearchLookupTable : LookupTable
 {
-    le_int16 unitSize;
-    le_int16 nUnits;
-    le_int16 searchRange;
-    le_int16 entrySelector;
-    le_int16 rangeShift;
+    le_uint16 unitSize;
+    le_uint16 nUnits;
+    le_uint16 searchRange;
+    le_uint16 entrySelector;
+    le_uint16 rangeShift;
 
     const LookupSegment *lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const;
 

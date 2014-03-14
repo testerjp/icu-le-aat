@@ -37,7 +37,7 @@ void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, L
         kerningValues[glyph] = 0;
 }
 
-ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -47,8 +47,8 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
     if (LE_FAILURE(success))
         return stateArrayOffset;
 
-    ByteOffset newState = SWAPW(entry->newStateOffset);
-    le_uint16  flags    = SWAPW(entry->flags);
+    le_uint16 newState = SWAPW(entry->newStateOffset);
+    le_uint16 flags    = SWAPW(entry->flags);
 
     LE_TRACE_LOG("kerning state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
 
@@ -63,7 +63,7 @@ ByteOffset ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSt
         LE_TRACE_LOG("push[%d]", sp);
     }
 
-    ByteOffset valueOffset = flags & ckfValueOffsetMask;
+    le_uint16 valueOffset = flags & ckfValueOffsetMask;
 
     if (valueOffset) {
         LEReferenceTo<le_uint16> actionEntry(stateTableHeader, success, valueOffset);

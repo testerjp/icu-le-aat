@@ -29,20 +29,20 @@ void MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &gly
     le_uint32 chain;
 
     for (chain = 0; LE_SUCCESS(success) && (chain < chainCount); chain += 1) {
-        FeatureFlags defaultFlags    = SWAPL(chainHeader->defaultFlags);
-        le_uint32    chainLength     = SWAPL(chainHeader->chainLength);
-        le_int16     nFeatureEntries = SWAPW(chainHeader->nFeatureEntries);
-        le_int16     nSubtables      = SWAPW(chainHeader->nSubtables);
+        le_uint32 defaultFlags    = SWAPL(chainHeader->defaultFlags);
+        le_uint32 chainLength     = SWAPL(chainHeader->chainLength);
+        le_uint16 nFeatureEntries = SWAPW(chainHeader->nFeatureEntries);
+        le_uint16 nSubtables      = SWAPW(chainHeader->nSubtables);
 
         LEReferenceTo<MorphSubtableHeader> subtableHeader =
             LEReferenceTo<MorphSubtableHeader>(chainHeader,success, &(chainHeader->featureTable[nFeatureEntries]));
 
-        le_int16 subtable;
+        le_uint16 subtable;
 
         for (subtable = 0; LE_SUCCESS(success) && (subtable < nSubtables); subtable += 1) {
-            le_int16         length           = SWAPW(subtableHeader->length);
-            SubtableCoverage coverage         = SWAPW(subtableHeader->coverage);
-            FeatureFlags     subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
+            le_uint16 length           = SWAPW(subtableHeader->length);
+            le_uint16 coverage         = SWAPW(subtableHeader->coverage);
+            le_uint32 subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
 
             // should check coverage more carefully...
             if ((coverage & scfVertical) == 0 && (subtableFeatures & defaultFlags) != 0  && LE_SUCCESS(success)) {
@@ -93,7 +93,7 @@ void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base
     case mstNonContextualGlyphSubstitution: {
         LEReferenceTo<NonContextualGlyphSubstitutionHeader> header(base, success);
         LEReferenceTo<LookupTable>                          lookupTable(header, success, &header->table);
-        le_int16 format = SWAPW(lookupTable->format);
+        le_uint16 format = SWAPW(lookupTable->format);
         processor = NonContextualGlyphSubstitutionProcessor::createInstance(format, lookupTable, success);
         break;
     }

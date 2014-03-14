@@ -27,7 +27,7 @@ class LigatureSubstitutionProcessor : public StateTableProcessor
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    virtual ByteOffset processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
+    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
@@ -52,9 +52,9 @@ private:
     LigatureSubstitutionProcessor();
 
 protected:
-    ByteOffset ligatureActionTableOffset;
-    ByteOffset componentTableOffset;
-    ByteOffset ligatureTableOffset;
+    le_uint16 ligatureActionTableOffset;
+    le_uint16 componentTableOffset;
+    le_uint16 ligatureTableOffset;
 
     le_int32 componentStack[nComponents];
     le_int16 m;

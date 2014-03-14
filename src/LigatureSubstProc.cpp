@@ -40,7 +40,7 @@ void LigatureSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCod
     m = -1;
 }
 
-ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -50,8 +50,8 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
     if (LE_FAILURE(success))
         return stateArrayOffset;
 
-    ByteOffset newState = SWAPW(entry->newStateOffset);
-    le_uint16  flags    = SWAPW(entry->flags);
+    le_uint16 newState = SWAPW(entry->newStateOffset);
+    le_uint16 flags    = SWAPW(entry->flags);
 
     LE_TRACE_LOG("ligature state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
 
@@ -66,7 +66,7 @@ ByteOffset LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyp
         LE_TRACE_LOG("push[%d]", m);
     }
 
-    ByteOffset actionOffset = flags & lsfActionOffsetMask;
+    le_uint16 actionOffset = flags & lsfActionOffsetMask;
 
     if (actionOffset != 0) {
         LEReferenceTo<LigatureActionEntry> actionEntry(stateTableHeader, success, actionOffset);

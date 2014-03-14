@@ -41,7 +41,7 @@ void SegmentArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
 
         if (lookupSegment != NULL)  {
             TTGlyphID firstGlyph = SWAPW(lookupSegment->firstGlyph);
-            le_int16  offset     = SWAPW(lookupSegment->value);
+            le_uint16 offset     = SWAPW(lookupSegment->value);
 
             if (offset != 0) {
                 LEReferenceToArrayOf<TTGlyphID> glyphArray(segmentArrayLookupTable, success, offset, LE_UNBOUNDED_ARRAY);

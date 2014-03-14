@@ -23,7 +23,7 @@ NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcesso
 {
 }
 
-SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(le_int16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
+SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(le_uint16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return NULL;

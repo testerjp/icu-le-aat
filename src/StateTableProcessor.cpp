@@ -46,8 +46,8 @@ void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &suc
 
     // Start at state 0
     // XXX: How do we know when to start at state 1?
-    ByteOffset currentState = stateArrayOffset;
-    le_int32   glyphCount   = glyphStorage.getGlyphCount();
+    le_uint16 currentState = stateArrayOffset;
+    le_int32  glyphCount   = glyphStorage.getGlyphCount();
 
     LE_STATE_PATIENCE_INIT();
 
@@ -63,7 +63,7 @@ void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &suc
         if (LE_STATE_PATIENCE_DECR())
             break;
 
-        ClassCode classCode = classCodeOOB;
+        le_uint8 classCode = classCodeOOB;
         if (currGlyph == glyphCount) {
             // XXX: How do we handle EOT vs. EOL?
             classCode = classCodeEOT;

@@ -40,7 +40,7 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
             chainHeader.addOffset(chainLength, success); // Don't increment the first time
         }
 
-        FeatureFlags                        flag            = SWAPL(chainHeader->defaultFlags);
+        le_uint32                           flag            = SWAPL(chainHeader->defaultFlags);
         le_uint32                           nFeatureEntries = SWAPL(chainHeader->nFeatureEntries);
         le_uint32                           nSubtables      = SWAPL(chainHeader->nSubtables);
         LEReferenceTo<MorphSubtableHeader2> subtableHeader(chainHeader, success, (const MorphSubtableHeader2 *)&chainHeader->featureTable[nFeatureEntries]);
@@ -56,8 +56,8 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
             // Feature subtables
             for (featureEntry = 0; featureEntry < nFeatureEntries; featureEntry++) {
                 const FeatureTableEntry &featureTableEntry = featureTableRef(featureEntry, success);
-                le_int16                 featureType       = SWAPW(featureTableEntry.featureType);
-                le_int16                 featureSetting    = SWAPW(featureTableEntry.featureSetting);
+                le_uint16                featureType       = SWAPW(featureTableEntry.featureType);
+                le_uint16                featureSetting    = SWAPW(featureTableEntry.featureSetting);
                 le_uint32                enableFlags       = SWAPL(featureTableEntry.enableFlags);
                 le_uint32                disableFlags      = SWAPL(featureTableEntry.disableFlags);
 
@@ -196,8 +196,8 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
                 subtableHeader.addOffset(length, success); // Don't addOffset for the last entry.
             }
 
-            le_uint32    coverage         = SWAPL(subtableHeader->coverage);
-            FeatureFlags subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
+            le_uint32 coverage         = SWAPL(subtableHeader->coverage);
+            le_uint32 subtableFeatures = SWAPL(subtableHeader->subtableFeatures);
 
             // should check coverage more carefully...
             if (((coverage & scf2IgnoreVt) || !(coverage & scf2Vertical)) && (subtableFeatures & flag) != 0) {
@@ -246,7 +246,7 @@ void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &ba
     case mstNonContextualGlyphSubstitution: {
         LEReferenceTo<NonContextualGlyphSubstitutionHeader2> header(base, success);
         LEReferenceTo<LookupTable>                           lookupTable(header, success, &header->table);
-        le_int16 format = SWAPW(lookupTable->format);
+        le_uint16 format = SWAPW(lookupTable->format);
         processor = NonContextualGlyphSubstitutionProcessor2::createInstance(format, lookupTable, success);
         break;
     }

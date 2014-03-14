@@ -21,7 +21,7 @@ ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const
     if (LE_FAILURE(success))
         return;
 
-    // ByteOffset substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset); // unused
+    // le_uint16 substitutionTableOffset = SWAPW(contextualGlyphSubstitutionHeader->substitutionTableOffset); // unused
     entryTable = LEReferenceToArrayOf<ContextualGlyphSubstitutionStateEntry>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
     int16Table = LEReferenceToArrayOf<le_int16>(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY); // rest of the table as le_int16s
 }
@@ -35,7 +35,7 @@ void ContextualGlyphSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEE
     markGlyph = 0;
 }
 
-ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16 ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -45,10 +45,10 @@ ByteOffset ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorag
     if (LE_FAILURE(success))
         return stateArrayOffset;
 
-    ByteOffset newState   = SWAPW(entry->newStateOffset);
-    le_uint16  flags      = SWAPW(entry->flags);
-    WordOffset markOffset = SWAPW(entry->markOffset);
-    WordOffset currOffset = SWAPW(entry->currOffset);
+    le_uint16 newState   = SWAPW(entry->newStateOffset);
+    le_uint16 flags      = SWAPW(entry->flags);
+    le_uint16 markOffset = SWAPW(entry->markOffset);
+    le_uint16 currOffset = SWAPW(entry->currOffset);
 
     if (markOffset != 0) {
         LEGlyphID mGlyph   = glyphStorage[markGlyph];

@@ -14,7 +14,7 @@ U_NAMESPACE_BEGIN
 
 struct ContextualKerningHeader : StateTableHeader
 {
-    ByteOffset valueTable;
+    le_uint16 valueTable;
 };
 
 enum ContextualKerningFlags

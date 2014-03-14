@@ -83,7 +83,7 @@ TTGlyphID ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyp
     LEReferenceTo<LookupTable> lookupTable(substitutionTable, success, offset);
     if (LE_FAILURE(success)) return newGlyph;
 
-    le_int16 format = SWAPW(lookupTable->format);
+    le_uint16 format = SWAPW(lookupTable->format);
 
     switch (format) {
     case ltfSimpleArray: {

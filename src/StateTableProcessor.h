@@ -27,7 +27,7 @@ public:
 
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
-    virtual ByteOffset processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success) = 0;
+    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success) = 0;
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success) = 0;
 
@@ -37,11 +37,11 @@ protected:
 
     StateTableProcessor();
 
-    le_int32   dir;
-    le_int16   stateSize;       // size of row, that is number of class
-    ByteOffset classTableOffset;
-    ByteOffset stateArrayOffset;
-    ByteOffset entryTableOffset;
+    le_int32  dir;
+    le_uint16 stateSize;       // size of row, that is number of class
+    le_uint16 classTableOffset;
+    le_uint16 stateArrayOffset;
+    le_uint16 entryTableOffset;
 
     TTGlyphID firstGlyph;
     TTGlyphID lastGlyph;

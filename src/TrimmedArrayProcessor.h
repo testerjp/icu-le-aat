@@ -48,7 +48,7 @@ private:
 
 protected:
     TTGlyphID firstGlyph;
-    TTGlyphID glyphCount;
+    TTGlyphID limitGlyph;
 
     LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable;
 };

@@ -18,14 +18,14 @@ TrimmedArrayProcessor::TrimmedArrayProcessor()
 }
 
 TrimmedArrayProcessor::TrimmedArrayProcessor(const LEReferenceTo<TrimmedArrayLookupTable> &lookupTable, LEErrorCode &success)
-    : firstGlyph(0), glyphCount(0),
+    : firstGlyph(0), limitGlyph(0),
       trimmedArrayLookupTable(lookupTable)
 {
     if (LE_FAILURE(success))
         return;
 
     firstGlyph = SWAPW(trimmedArrayLookupTable->firstGlyph);
-    glyphCount = SWAPW(trimmedArrayLookupTable->glyphCount);
+    limitGlyph = firstGlyph + SWAPW(trimmedArrayLookupTable->glyphCount);
 }
 
 TrimmedArrayProcessor::~TrimmedArrayProcessor()
@@ -46,7 +46,7 @@ void TrimmedArrayProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &s
         LEGlyphID thisGlyph = glyphStorage[glyph];
         TTGlyphID ttGlyph   = (TTGlyphID) LE_GET_GLYPH(thisGlyph);
 
-        if (firstGlyph <= ttGlyph && ttGlyph < firstGlyph + glyphCount) {
+        if (firstGlyph <= ttGlyph && ttGlyph < limitGlyph) {
             TTGlyphID newGlyph  = SWAPW(valueArray(ttGlyph - firstGlyph, success));
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
         }

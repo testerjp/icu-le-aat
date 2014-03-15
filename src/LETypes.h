@@ -285,7 +285,7 @@ typedef struct LEPoint LEPoint;
  * @internal
  */
 #ifndef LE_TRACE
-#define LE_TRACE 1
+#define LE_TRACE 0
 #endif
 
 /**

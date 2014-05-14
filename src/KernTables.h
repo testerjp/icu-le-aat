@@ -34,9 +34,9 @@ enum KernCoverageFlags
 
 enum KernCoverageFlags2
 {
-    kcf2Vertical    = 0x800,
-    kcf2CrossStream = 0x400,
-    kcf2Variation   = 0x200,
+    kcf2Vertical    = 0x8000,
+    kcf2CrossStream = 0x4000,
+    kcf2Variation   = 0x2000,
     kcf2FormatMask  = 0x00FF,
     kcf2FormatShift = 0,
 };

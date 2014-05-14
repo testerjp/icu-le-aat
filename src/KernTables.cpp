@@ -76,7 +76,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (coverage & kcfHorizontal)
+            if ((coverage & kcfHorizontal) && !(coverage & kcfCrossStream))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
 
             subtableHeader.addOffset(length, success);
@@ -96,7 +96,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (!(coverage & kcf2Vertical))
+            if (!(coverage & kcf2Vertical) && !(coverage & kcf2CrossStream))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
 
             subtableHeader.addOffset(length, success);

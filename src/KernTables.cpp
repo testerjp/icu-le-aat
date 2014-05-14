@@ -96,7 +96,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
 
-            if (!(coverage & kcf2Vertical) && !(coverage & kcf2CrossStream))
+            if (!(coverage & kcf2Vertical))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
 
             subtableHeader.addOffset(length, success);
@@ -136,6 +136,9 @@ void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base
 
     switch (format) {
     case kfKerningPairs: {
+        if (coverage & kcf2CrossStream)
+            break;
+
         LEReferenceTo<OrderedListKerningPairsHeader> header(base, success, sizeof(KernSubtableHeader2));
         processor = new OrderedListKerningPairsProcessor(header, success);
         break;
@@ -144,7 +147,7 @@ void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base
     case kfContextualKerning: {
         LEReferenceTo<KernStateTableHeader> kernStateTableHeader(base, success);
         LEReferenceTo<StateTableHeader>     header(kernStateTableHeader, success, &kernStateTableHeader->stHeader);
-        processor = new ContextualKerningProcessor(header, 1, success);
+        processor = new ContextualKerningProcessor(header, 1, coverage & kcf2CrossStream ? TRUE : FALSE, success);
         break;
     }
     }

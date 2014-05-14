@@ -7,8 +7,9 @@ U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualKerningProcessor)
 
-ContextualKerningProcessor::ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
+ContextualKerningProcessor::ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, le_bool crossStream, LEErrorCode &success)
     : StateTableProcessor(header, dir, success),
+      crossStream(crossStream),
       sp(-1), kerningValues(0),
       contextualKerningHeader(header, success)
 {
@@ -29,11 +30,11 @@ void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, L
 
     sp = -1;
 
-    kerningValues = LE_NEW_ARRAY(le_int16, glyphStorage.getGlyphCount());
+    kerningValues = LE_NEW_ARRAY(le_int16, glyphStorage.getGlyphCount() * 2);
 
     le_int32 glyph;
 
-    for (glyph = 0; glyph < glyphStorage.getGlyphCount(); glyph++)
+    for (glyph = 0; glyph < glyphStorage.getGlyphCount() * 2; glyph++)
         kerningValues[glyph] = 0;
 }
 
@@ -60,7 +61,7 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
             return stateArrayOffset;
         }
         kerningStack[sp] = currGlyph;
-        LE_TRACE_LOG("push[%d]", sp);
+        LE_TRACE_LOG("push[%d] = %d<%d>", sp, currGlyph, glyphStorage.getGlyphID(currGlyph, success));
     }
 
     le_uint16 valueOffset = flags & ckfValueOffsetMask;
@@ -86,7 +87,7 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
 
             le_int32 kerningGlyph = kerningStack[sp--];
 
-            LE_TRACE_LOG("pop[%d] %d", sp + 1, kerningGlyph);
+            LE_TRACE_LOG("pop[%d] = %d<%d>", sp + 1, kerningGlyph, glyphStorage.getGlyphID(kerningGlyph, success));
 
             if (!(0 <= kerningGlyph && kerningGlyph < glyphStorage.getGlyphCount())) {
                 LE_TRACE_LOG("preposterous componentGlyph");
@@ -95,8 +96,13 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
                 return stateArrayOffset;
             }
 
-            action                      = SWAPW(*actionEntry.getAlias());
-            kerningValues[kerningGlyph] = action & ~1;
+            action = SWAPW(*actionEntry.getAlias());
+
+            if (!crossStream) {
+                kerningValues[kerningGlyph * 2 + 0] = action & ~1;
+            } else {
+                kerningValues[kerningGlyph * 2 + 1] = action & ~1;
+            }
 
             if (!(action & 1))
                 actionEntry.addObject(success);
@@ -123,15 +129,18 @@ void ContextualKerningProcessor::endStateTable(LEGlyphStorage &glyphStorage, LEE
 
     if (font) {
         le_int32 glyph;
-        float    adjust = 0.0;
+        float    adjustX = 0, adjustY = 0;
 
         for (glyph = 0; glyph < glyphStorage.getGlyphCount(); glyph++) {
-            if (kerningValues[glyph])
-                adjust += font->xUnitsToPoints(kerningValues[glyph]);
+            adjustX +=  font->xUnitsToPoints(kerningValues[glyph * 2 + 0]);
+            adjustY += -font->xUnitsToPoints(kerningValues[glyph * 2 + 1]);
 
-            glyphStorage.adjustPosition(glyph, adjust, 0, success);
+            if ((le_uint16)kerningValues[glyph * 2 + 1] == 0x8000) // reset cross-stream
+                adjustY = 0;
+
+            glyphStorage.adjustPosition(glyph, adjustX, adjustY, success);
         }
-        glyphStorage.adjustPosition(glyph, adjust, 0, success);
+        glyphStorage.adjustPosition(glyph, adjustX, adjustY, success);
     }
 
     LE_DELETE_ARRAY(kerningValues);

@@ -23,7 +23,7 @@ public:
 
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
-    ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
+    ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, le_bool crossStream, LEErrorCode &success);
     virtual ~ContextualKerningProcessor();
 
     /**
@@ -41,6 +41,7 @@ public:
     static UClassID getStaticClassID();
 
 protected:
+    le_bool  crossStream;
     le_int32 kerningStack[nComponents];
     le_int16 sp;
 

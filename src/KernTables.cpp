@@ -111,7 +111,7 @@ void KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, 
     SubtableProcessor *processor = NULL;
 
     le_uint16 coverage = SWAPW(base->coverage);
-    le_uint16 format   = (coverage & kcf2FormatMask) >> kcf2FormatShift;
+    le_uint16 format   = (coverage & kcfFormatMask) >> kcfFormatShift;
 
     switch (format) {
     case kfKerningPairs: {

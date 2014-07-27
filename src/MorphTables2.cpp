@@ -111,8 +111,6 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
                         ((typoFlags & LE_AFRC_FEATURE_FLAG) && featureSetting == verticalFractionsSelector)) {
                         flag &= disableFlags;
                         flag |= enableFlags;
-                    } else {
-                        flag &= disableFlags;
                     }
                     break;
 

@@ -36,6 +36,9 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
     if (LE_FAILURE(success))
         return NULL;
 
+    if (glyph == 0xFFFF) // The value that indicates binary search termination.
+        return NULL;
+
     if (SWAPW(trial->firstGlyph) <= ttGlyph) {
         entry = trial;
     }
@@ -67,6 +70,12 @@ const LookupSingle *BinarySearchLookupTable::lookupSingle(const LETableReference
     TTGlyphID ttGlyph = (TTGlyphID) LE_GET_GLYPH(glyph);
     LEReferenceTo<LookupSingle> entry(base, success, entries);
     LEReferenceTo<LookupSingle> trial(entry, success, extra);
+
+    if (LE_FAILURE(success))
+        return NULL;
+
+    if (glyph == 0xFFFF) // The value that indicates binary search termination.
+        return NULL;
 
     if (SWAPW(trial->glyph) <= ttGlyph) {
         entry = trial;

@@ -18,7 +18,9 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(GXLayoutEngine2)
 GXLayoutEngine2::GXLayoutEngine2(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode, const LEReferenceTo<MorphTableHeader2> &morphTable, le_int32 typoFlags, LEErrorCode &success)
     : LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success), fMorphTable(morphTable)
 {
-  // nothing else to do?
+    fFilterZeroWidth = FALSE;
+
+    // nothing else to do?
 }
 
 GXLayoutEngine2::~GXLayoutEngine2()

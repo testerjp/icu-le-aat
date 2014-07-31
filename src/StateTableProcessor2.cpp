@@ -96,7 +96,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
     }
 
     case ltfSegmentSingle: {
-        LEReferenceTo<SegmentSingleLookupTable> segmentSignleLookupTable(classTable, success);
+        LEReferenceTo<SegmentSingleLookupTable> segmentSingleLookupTable(classTable, success);
 
         while (((dir == 1 && currGlyph <= glyphCount) || (dir == -1 && -1 <= currGlyph)) && LE_SUCCESS(success)) {
             if (LE_STATE_PATIENCE_DECR())
@@ -114,7 +114,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
                     classCode = classCodeDEL;
                 } else {
                     const LookupSegment *segment =
-                        segmentSignleLookupTable->lookupSegment(segmentSignleLookupTable, segmentSignleLookupTable->segments, gid, success);
+                        segmentSingleLookupTable->lookupSegment(segmentSingleLookupTable, segmentSingleLookupTable->segments, gid, success);
                     if (segment != NULL && LE_SUCCESS(success))
                         classCode = SWAPW(segment->value);
                 }

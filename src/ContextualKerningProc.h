@@ -26,20 +26,6 @@ public:
     ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, le_bool crossStream, LEErrorCode &success);
     virtual ~ContextualKerningProcessor();
 
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for the actual class.
-     *
-     * @stable ICU 2.8
-     */
-    virtual UClassID getDynamicClassID() const;
-
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for this class.
-     *
-     * @stable ICU 2.8
-     */
-    static UClassID getStaticClassID();
-
 protected:
     le_bool  crossStream;
     le_int32 kerningStack[nComponents];

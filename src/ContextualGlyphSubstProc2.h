@@ -32,20 +32,6 @@ public:
     ContextualGlyphSubstitutionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
     virtual ~ContextualGlyphSubstitutionProcessor2();
 
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for the actual class.
-     *
-     * @stable ICU 2.8
-     */
-    virtual UClassID getDynamicClassID() const;
-
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for this class.
-     *
-     * @stable ICU 2.8
-     */
-    static UClassID getStaticClassID();
-
 private:
     ContextualGlyphSubstitutionProcessor2();
     le_bool lookup(le_uint32 offset, LEGlyphID gid, TTGlyphID &newGlyphs, LEErrorCode &success);

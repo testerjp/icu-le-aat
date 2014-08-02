@@ -11,8 +11,6 @@
 
 U_NAMESPACE_BEGIN
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IndicRearrangementProcessor2)
-
 IndicRearrangementProcessor2::IndicRearrangementProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
     : StateTableProcessor2(header, dir, success),
       firstGlyph(0), lastGlyph(0),

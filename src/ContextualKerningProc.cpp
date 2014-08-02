@@ -5,8 +5,6 @@
 
 U_NAMESPACE_BEGIN
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualKerningProcessor)
-
 ContextualKerningProcessor::ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, le_bool crossStream, LEErrorCode &success)
     : StateTableProcessor(header, dir, success),
       crossStream(crossStream),

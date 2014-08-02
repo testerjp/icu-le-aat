@@ -34,20 +34,6 @@ public:
     LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
     virtual ~LigatureSubstitutionProcessor();
 
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for the actual class.
-     *
-     * @stable ICU 2.8
-     */
-    virtual UClassID getDynamicClassID() const;
-
-    /**
-     * ICU "poor man's RTTI", returns a UClassID for this class.
-     *
-     * @stable ICU 2.8
-     */
-    static UClassID getStaticClassID();
-
 private:
     LigatureSubstitutionProcessor();
 

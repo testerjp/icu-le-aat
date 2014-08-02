@@ -15,8 +15,6 @@ U_NAMESPACE_BEGIN
 #define SignBit(m) ((ExtendedComplement(m) >> 1) & (le_int32)(m))
 #define SignExtend(v,m) (((v) & SignBit(m))? ((v) | ExtendedComplement(m)): (v))
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LigatureSubstitutionProcessor)
-
 LigatureSubstitutionProcessor::LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
     : StateTableProcessor(header, dir, success),
       ligatureActionTableOffset(0), componentTableOffset(0), ligatureTableOffset(0), m(-1),

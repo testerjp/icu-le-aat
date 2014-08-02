@@ -11,8 +11,6 @@
 
 U_NAMESPACE_BEGIN
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ContextualGlyphInsertionProcessor2)
-
 ContextualGlyphInsertionProcessor2::ContextualGlyphInsertionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
     : StateTableProcessor2(header, dir, success),
       contextualGlyphInsertionHeader(header, success)

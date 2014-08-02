@@ -72,11 +72,8 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
         LEReferenceTo<LigatureActionEntry> actionEntry(stateTableHeader, success, actionOffset);
         LEReferenceToArrayOf<le_int16> componentTable(stateTableHeader, success, (size_t)0, LE_UNBOUNDED_ARRAY);
 
-        if (LE_FAILURE(success)) {
-            currGlyph += dir;
-            m          = -1;
+        if (LE_FAILURE(success))
             return stateArrayOffset;
-        }
 
         le_int32 ligatureGlyphs[nComponents];
         le_int32 n = -1;
@@ -113,11 +110,8 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
             if (action & (lafLast | lafStore))  {
                 LEReferenceTo<TTGlyphID> ligatureEntry(stateTableHeader, success, ligatureOffset);
 
-                if (LE_FAILURE(success)) {
-                    currGlyph += dir;
-                    m          = -1;
+                if (LE_FAILURE(success))
                     return stateArrayOffset;
-                }
 
                 TTGlyphID ligatureGlyph      = SWAPW(*ligatureEntry.getAlias());
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);

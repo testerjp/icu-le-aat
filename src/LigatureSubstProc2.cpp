@@ -68,7 +68,7 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
     }
 
     if (flags & lsfPerformAction) {
-        LEReferenceTo<LigatureActionEntry> actionEntry(stateTableHeader, success, ligActionOffset + ligActionIndex * sizeof(LigatureActionEntry));
+        LEReferenceToArrayOf<LigatureActionEntry> actionEntry(stateTableHeader, success, ligActionOffset, LE_UNBOUNDED_ARRAY);
         LEReferenceToArrayOf<le_uint16> componentTable(stateTableHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
         LEReferenceToArrayOf<TTGlyphID> ligatureTable(stateTableHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
 
@@ -100,7 +100,12 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
                 return 0;
             }
 
-            action = SWAPL(*actionEntry.getAlias());
+            action = lafLast;
+
+            if (!actionEntry.getObject(ligActionIndex++, action, success))
+                return 0;
+
+            action = SWAPL(action);
 
             le_int32  offset = SignExtend(action & lafComponentOffsetMask, lafComponentOffsetMask);
             le_uint16 component;
@@ -129,9 +134,6 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
 
                 LE_TRACE_LOG("replace with deleted");
             }
-
-            if (!(action & lafLast))
-                actionEntry.addObject(success);
         } while (!(action & lafLast));
 
         while (0 <= n) {

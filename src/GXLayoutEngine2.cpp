@@ -44,7 +44,8 @@ le_int32 GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset
         return 0;
 
     fMorphTable->process(fMorphTable, glyphStorage, fTypoFlags, success);
-    return count;
+
+    return glyphStorage.getGlyphCount();
 }
 
 void GXLayoutEngine2::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool /* reverse */,

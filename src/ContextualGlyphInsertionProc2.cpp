@@ -63,11 +63,9 @@ void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorag
         insertGlyphs[count] = glyphStorage[atGlyph];
     }
 
-    while(count--) {
-        insertGlyphs[targetIndex++] = insertionAction.getObject(index++, success);
+    while(count-- && LE_SUCCESS(success)) {
+        insertGlyphs[targetIndex++] = SWAPW(insertionAction.getObject(index++, success));
     }
-
-    glyphStorage.applyInsertions();
 }
 
 le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
@@ -110,8 +108,9 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
     return newState;
 }
 
-void ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
+void ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
 {
+    glyphStorage.applyInsertions();
 }
 
 U_NAMESPACE_END

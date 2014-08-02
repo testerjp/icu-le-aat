@@ -58,7 +58,7 @@ private:
      * @param isKashidaLike Kashida like (vs Split Vowel like). No effect currently.
      * @param isBefore if true, insert extra glyphs before the marked glyph
      */
-    void doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_int16 count, le_bool isKashidaLike, le_bool isBefore, LEErrorCode &success);
+    void doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_uint16 count, le_bool isKashidaLike, le_bool isBefore, LEErrorCode &success);
 
 protected:
     le_int32 markGlyph;

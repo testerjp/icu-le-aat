@@ -34,7 +34,7 @@ void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &, LEErr
     markGlyph = 0;
 }
 
-void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_int16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)
+void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_uint16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)
 {
     if (!count)
         return;
@@ -83,16 +83,16 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
     le_uint16 currIndex = SWAPW(entry->currentInsertIndex);
 
     if (markIndex != 0xFFFF) {
-        le_int16 count         = (flags & cgiMarkedInsertCountMask) >> cgiMarkedInsertCountShift;
-        le_bool  isKashidaLike = (flags & cgiMarkedIsKashidaLike);
-        le_bool  isBefore      = (flags & cgiMarkInsertBefore);
+        le_uint16 count         = (flags & cgiMarkedInsertCountMask) >> cgiMarkedInsertCountShift;
+        le_bool   isKashidaLike = (flags & cgiMarkedIsKashidaLike);
+        le_bool   isBefore      = (flags & cgiMarkInsertBefore);
         doInsertion(glyphStorage, markGlyph, markIndex, count, isKashidaLike, isBefore, success);
     }
 
     if (currIndex != 0xFFFF) {
-        le_int16 count         = (flags & cgiCurrentInsertCountMask) >> cgiCurrentInsertCountShift;
-        le_bool  isKashidaLike = (flags & cgiCurrentIsKashidaLike);
-        le_bool  isBefore      = (flags & cgiCurrentInsertBefore);
+        le_uint16 count         = (flags & cgiCurrentInsertCountMask) >> cgiCurrentInsertCountShift;
+        le_bool   isKashidaLike = (flags & cgiCurrentIsKashidaLike);
+        le_bool   isBefore      = (flags & cgiCurrentInsertBefore);
         doInsertion(glyphStorage, currGlyph, currIndex, count, isKashidaLike, isBefore, success);
     }
 

@@ -110,9 +110,17 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
             action = SWAPL(action);
 
             le_int32 offset = SignExtend(action & lafComponentOffsetMask, lafComponentOffsetMask);
-            ligatureOffset += SWAPW(componentTable(LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset, success));
+            offset         += LE_GET_GLYPH(glyphStorage[componentGlyph]);
 
-            LE_TRACE_LOG("action =  %x; signed offset = %d, add %d; ligatureOffset = %d", action, offset, LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset, ligatureOffset);
+            le_int16 component;
+
+            if (!componentTable.getObject(offset, component, success))
+                return stateArrayOffset;
+
+            component       = SWAPW(component);
+            ligatureOffset += component;
+
+            LE_TRACE_LOG("action =  %x; offset = %d; ligatureOffset = %d", action, offset, ligatureOffset);
 
             if (action & (lafLast | lafStore))  {
                 LEReferenceTo<TTGlyphID> ligatureEntry(stateTableHeader, success, ligatureOffset);

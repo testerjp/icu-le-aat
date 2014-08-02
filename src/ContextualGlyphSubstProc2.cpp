@@ -102,7 +102,7 @@ le_bool ContextualGlyphSubstitutionProcessor2::lookup(le_uint32 offset, LEGlyphI
     if (processor && LE_SUCCESS(success)) {
         LookupValue value;
 
-        if (processor->lookup(gid, value, success)) {
+        if (processor->lookup(gid, value, success) && value) {
             newGlyph = value;
             result   = TRUE;
         }

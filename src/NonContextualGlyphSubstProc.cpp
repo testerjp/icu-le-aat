@@ -42,7 +42,7 @@ void NonContextualGlyphSubstitutionProcessor::process(LEGlyphStorage &glyphStora
         LEGlyphID thisGlyph = glyphStorage[glyph];
         TTGlyphID newGlyph;
 
-        if (processor->lookup(thisGlyph, newGlyph, success))
+        if (processor->lookup(thisGlyph, newGlyph, success) && newGlyph)
             glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
     }
 }

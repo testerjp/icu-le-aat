@@ -44,10 +44,11 @@ protected:
     le_uint16 entryTableOffset;
 
     TTGlyphID firstGlyph;
-    TTGlyphID lastGlyph;
+    TTGlyphID nGlyphs;
 
     LEReferenceTo<StateTableHeader> stateTableHeader;
     LEReferenceTo<ClassTable> classTable;
+    LEReferenceToArrayOf<le_uint8> classArray;
 
 private:
     StateTableProcessor(const StateTableProcessor &other); // forbid copying of this class

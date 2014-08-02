@@ -48,7 +48,7 @@ public:
 
 private:
     ContextualGlyphSubstitutionProcessor2();
-    TTGlyphID lookup(le_uint32 offset, LEGlyphID gid, LEErrorCode &success);
+    le_bool lookup(le_uint32 offset, LEGlyphID gid, TTGlyphID &newGlyphs, LEErrorCode &success);
 
 protected:
     le_int32 markGlyph;

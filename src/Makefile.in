@@ -73,13 +73,8 @@ LigatureSubstProc.o \
 LookupTables.o \
 MorphTables.o \
 NonContextualGlyphSubstProc.o \
-SegmentArrayProcessor.o \
-SegmentSingleProcessor.o \
-SimpleArrayProcessor.o \
-SingleTableProcessor.o \
 StateTableProcessor.o \
 SubtableProcessor.o \
-TrimmedArrayProcessor.o \
 AlternateSubstSubtables.o \
 AnchorTables.o \
 ArabicShaping.o \
@@ -140,7 +135,8 @@ MorphTables2.o \
 StateTableProcessor2.o \
 ContextualKerningProc.o \
 OrderedListKerningPairsProc.o \
-IndicRearrangement.o
+IndicRearrangement.o \
+LookupTableProcessor.o
 
 ## Header files to install
 HEADERS= $(srcdir)/LayoutEngine.h $(srcdir)/LE*.h $(srcdir)/loengine.h

@@ -27,7 +27,7 @@ enum LookupTableFormat
     ltfTrimmedArray     = 8
 };
 
-typedef le_int16 LookupValue;
+typedef le_uint16 LookupValue;
 
 struct LookupTable
 {
@@ -55,9 +55,9 @@ struct BinarySearchLookupTable : LookupTable
     le_uint16 entrySelector;
     le_uint16 rangeShift;
 
-    const LookupSegment *lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const;
-
+    le_bool validate(const LETableReference &base, le_uint32 _unitSize) const;
     const LookupSingle *lookupSingle(const LETableReference &base, const LookupSingle *entries, LEGlyphID glyph, LEErrorCode &success) const;
+    const LookupSegment *lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const;
 };
 
 struct SimpleArrayLookupTable : LookupTable

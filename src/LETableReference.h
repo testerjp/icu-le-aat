@@ -65,7 +65,7 @@ public:
     LE_TRACE_TR("INFO: new clone")
   }
 
-   LETableReference(const le_uint8* data, size_t length = LE_UINTPTR_MAX) :
+  LETableReference(const le_uint8* data, size_t length = LE_UINTPTR_MAX) :
     fFont(NULL), fTag(kQuestionmarkTableTag), fParent(NULL), fStart(data), fLength(length) {
     LE_TRACE_TR("INFO: new raw")
   }
@@ -219,7 +219,7 @@ protected:
 
 template<class T>
 class LETableVarSizer {
- public:
+public:
   inline static size_t getSize();
 };
 
@@ -267,9 +267,9 @@ public:
     LE_TRACE_TR("INFO: new RTAO by offset")
     if(LE_SUCCESS(success)) {
       if(count == LE_UNBOUNDED_ARRAY) { // not a known length
-        count = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
+        fCount = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
       }
-      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*count, success);
+      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*fCount, success);
     }
     if(LE_FAILURE(success)) {
       fCount=0;
@@ -279,28 +279,35 @@ public:
 
   LEReferenceToArrayOf(const LETableReference &parent, LEErrorCode &success, const T* array, le_uint32 count)
     : LETableReference(parent, parent.ptrToOffset(array, success), LE_UINTPTR_MAX, success), fCount(count) {
-LE_TRACE_TR("INFO: new RTAO")
+    LE_TRACE_TR("INFO: new RTAO")
     if(LE_SUCCESS(success)) {
       if(count == LE_UNBOUNDED_ARRAY) { // not a known length
-        count = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
+        fCount = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
       }
-      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*count, success);
+      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*fCount, success);
     }
-    if(LE_FAILURE(success)) clear();
-  }
- LEReferenceToArrayOf(const LETableReference &parent, LEErrorCode &success, const T* array, size_t offset, le_uint32 count)
-   : LETableReference(parent, parent.ptrToOffset(array, success)+offset, LE_UINTPTR_MAX, success), fCount(count) {
-LE_TRACE_TR("INFO: new RTAO")
-    if(LE_SUCCESS(success)) {
-      if(count == LE_UNBOUNDED_ARRAY) { // not a known length
-        count = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
-      }
-      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*count, success);
+    if(LE_FAILURE(success)) {
+      fCount=0;
+      clear();
     }
-    if(LE_FAILURE(success)) clear();
   }
 
- LEReferenceToArrayOf() :LETableReference(), fCount(0) {}
+  LEReferenceToArrayOf(const LETableReference &parent, LEErrorCode &success, const T* array, size_t offset, le_uint32 count)
+    : LETableReference(parent, parent.ptrToOffset(array, success)+offset, LE_UINTPTR_MAX, success), fCount(count) {
+    LE_TRACE_TR("INFO: new RTAO")
+    if(LE_SUCCESS(success)) {
+      if(count == LE_UNBOUNDED_ARRAY) { // not a known length
+        fCount = getLength()/LETableVarSizer<T>::getSize(); // fit to max size
+      }
+      LETableReference::verifyLength(0, LETableVarSizer<T>::getSize()*fCount, success);
+    }
+    if(LE_FAILURE(success)) {
+      fCount=0;
+      clear();
+    }
+  }
+
+  LEReferenceToArrayOf() :LETableReference(), fCount(0) {}
 
   le_uint32 getCount() const { return fCount; }
 
@@ -315,9 +322,21 @@ LE_TRACE_TR("INFO: new RTAO")
   const T& getObject(le_uint32 i, LEErrorCode &success) const {
     return *getAlias(i,success);
   }
-  
+
   const T& operator()(le_uint32 i, LEErrorCode &success) const {
     return *getAlias(i,success);
+  }
+
+  le_bool getObject(le_uint32 i, T &object, LEErrorCode &success) const {
+    if(LE_FAILURE(success))
+      return FALSE;
+    if(i<getCount()) {
+      object = *((const T*)(((const char*)getAlias())+LETableVarSizer<T>::getSize()*i));
+      return TRUE;
+    } else {
+      success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
+      return FALSE;
+    }
   }
 
   size_t getOffsetFor(le_uint32 i, LEErrorCode &success) const {
@@ -334,7 +353,7 @@ LE_TRACE_TR("INFO: new RTAO")
     return *this;
   }
 
- LEReferenceToArrayOf(const LETableReference& parent, LEErrorCode & success) : LETableReference(parent,0, LE_UINTPTR_MAX, success), fCount(0) {
+  LEReferenceToArrayOf(const LETableReference& parent, LEErrorCode & success) : LETableReference(parent,0, LE_UINTPTR_MAX, success), fCount(0) {
     LE_TRACE_TR("INFO: null RTAO")
   }
 
@@ -352,7 +371,7 @@ public:
    * @param success error status
    * @param atPtr location of reference - if NULL, will be at offset zero (i.e. downcast of parent). Otherwise must be a pointer within parent's bounds.
    */
- inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, const void* atPtr)
+  inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, const void* atPtr)
     : LETableReference(parent, parent.ptrToOffset(atPtr, success), LE_UINTPTR_MAX, success) {
     verifyLength(0, LETableVarSizer<T>::getSize(), success);
     if(LE_FAILURE(success)) clear();
@@ -360,31 +379,31 @@ public:
   /**
    * ptr plus offset
    */
- inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, const void* atPtr, size_t offset)
+  inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, const void* atPtr, size_t offset)
     : LETableReference(parent, parent.ptrToOffset(atPtr, success)+offset, LE_UINTPTR_MAX, success) {
     verifyLength(0, LETableVarSizer<T>::getSize(), success);
     if(LE_FAILURE(success)) clear();
   }
- inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, size_t offset)
+  inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success, size_t offset)
     : LETableReference(parent, offset, LE_UINTPTR_MAX, success) {
     verifyLength(0, LETableVarSizer<T>::getSize(), success);
     if(LE_FAILURE(success)) clear();
   }
- inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success)
+  inline LEReferenceTo(const LETableReference &parent, LEErrorCode &success)
     : LETableReference(parent, 0, LE_UINTPTR_MAX, success) {
     verifyLength(0, LETableVarSizer<T>::getSize(), success);
     if(LE_FAILURE(success)) clear();
   }
- inline LEReferenceTo(const LEFontInstance *font, LETag tableTag, LEErrorCode &success)
-   : LETableReference(font, tableTag, success) {
+  inline LEReferenceTo(const LEFontInstance *font, LETag tableTag, LEErrorCode &success)
+    : LETableReference(font, tableTag, success) {
     verifyLength(0, LETableVarSizer<T>::getSize(), success);
     if(LE_FAILURE(success)) clear();
   }
- inline LEReferenceTo(const le_uint8 *data, size_t length = LE_UINTPTR_MAX) : LETableReference(data, length) {}
- inline LEReferenceTo(const T *data, size_t length = LE_UINTPTR_MAX) : LETableReference((const le_uint8*)data, length) {}
- inline LEReferenceTo() : LETableReference(NULL) {}
+  inline LEReferenceTo(const le_uint8 *data, size_t length = LE_UINTPTR_MAX) : LETableReference(data, length) {}
+  inline LEReferenceTo(const T *data, size_t length = LE_UINTPTR_MAX) : LETableReference((const le_uint8*)data, length) {}
+  inline LEReferenceTo() : LETableReference(NULL) {}
 
- inline LEReferenceTo<T>& operator=(const T* other) {
+  inline LEReferenceTo<T>& operator=(const T* other) {
     setRaw(other);
     return *this;
   }

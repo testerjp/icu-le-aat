@@ -20,6 +20,7 @@
 U_NAMESPACE_BEGIN
 
 class LEGlyphStorage;
+class LookupTableProcessor;
 
 class StateTableProcessor2 : public SubtableProcessor
 {
@@ -39,7 +40,6 @@ protected:
     StateTableProcessor2();
 
     le_int32  dir;
-    le_uint16 format;
     le_uint32 nClasses;
     le_uint32 classTableOffset;
     le_uint32 stateArrayOffset;
@@ -48,6 +48,8 @@ protected:
     LEReferenceTo<StateTableHeader2> stateTableHeader;
     LEReferenceTo<LookupTable> classTable;
     LEReferenceToArrayOf<EntryTableIndex2> stateArray;
+
+    LookupTableProcessor *processor;
 
 private:
     StateTableProcessor2(const StateTableProcessor2 &other); // forbid copying of this class

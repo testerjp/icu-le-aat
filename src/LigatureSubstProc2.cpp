@@ -72,11 +72,8 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
         LEReferenceToArrayOf<le_uint16> componentTable(stateTableHeader, success, componentOffset, LE_UNBOUNDED_ARRAY);
         LEReferenceToArrayOf<TTGlyphID> ligatureTable(stateTableHeader, success, ligatureOffset, LE_UNBOUNDED_ARRAY);
 
-        if (LE_FAILURE(success)) {
-            currGlyph += dir;
-            m          = -1;
+        if (LE_FAILURE(success))
             return 0;
-        }
 
         le_int32 ligatureGlyphs[nComponents];
         le_int32 n = -1;
@@ -105,17 +102,28 @@ le_uint16 LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyp
 
             action = SWAPL(*actionEntry.getAlias());
 
-            le_int32 offset = SignExtend(action & lafComponentOffsetMask, lafComponentOffsetMask);
-            ligatureIndex  += SWAPW(componentTable(LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset, success));
+            le_int32  offset = SignExtend(action & lafComponentOffsetMask, lafComponentOffsetMask);
+            le_uint16 component;
+
+            if (componentTable.getObject(LE_GET_GLYPH(glyphStorage[componentGlyph]) + offset, component, success)) {
+                component      = SWAPW(component);
+                ligatureIndex += component;
+            } else {
+                return 0;
+            }
 
             LE_TRACE_LOG("action = %x; offset = %d; component index = %d; ", action, offset, ligatureIndex);
 
             if (action & (lafLast | lafStore))  {
-                TTGlyphID ligatureGlyph      = SWAPW(ligatureTable(ligatureIndex, success)); // FIXME: check index and gid boundary
-                glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
-                ligatureGlyphs[++n]          = componentGlyph;
-                ligatureIndex                = 0;
-
+                TTGlyphID ligatureGlyph;
+                if (ligatureTable.getObject(ligatureIndex, ligatureGlyph, success)) {
+                    ligatureGlyph                = SWAPW(ligatureGlyph);
+                    glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
+                    ligatureGlyphs[++n]          = componentGlyph;
+                    ligatureIndex                = 0;
+                } else {
+                    return 0;
+                }
                 LE_TRACE_LOG("replace with %d", ligatureGlyph);
             } else {
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], 0xFFFF);

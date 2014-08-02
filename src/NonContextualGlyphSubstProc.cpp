@@ -5,57 +5,45 @@
  */
 
 #include "LETypes.h"
+#include "LEGlyphStorage.h"
 #include "LESwaps.h"
+#include "LookupTableProcessor.h"
 #include "NonContextualGlyphSubstProc.h"
-#include "SimpleArrayProcessor.h"
-#include "SegmentSingleProcessor.h"
-#include "SegmentArrayProcessor.h"
-#include "SingleTableProcessor.h"
-#include "TrimmedArrayProcessor.h"
 
 U_NAMESPACE_BEGIN
 
-NonContextualGlyphSubstitutionProcessor::NonContextualGlyphSubstitutionProcessor()
+NonContextualGlyphSubstitutionProcessor::NonContextualGlyphSubstitutionProcessor(const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
+    : processor(0)
 {
+    if (LE_FAILURE(success))
+        return;
+
+    processor = LookupTableProcessor::createInstance((LookupTableFormat)SWAPW(lookupTable->format), lookupTable, success);
+
+    if (!processor)
+        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
 }
 
 NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcessor()
 {
+    if (processor)
+        delete processor;
 }
 
-SubtableProcessor *NonContextualGlyphSubstitutionProcessor::createInstance(le_uint16 format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
+void NonContextualGlyphSubstitutionProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
-    if (LE_FAILURE(success))
-        return NULL;
+    if (LE_FAILURE(success) || !processor)
+        return;
 
-    switch (format) {
-    case ltfSimpleArray: {
-        LEReferenceTo<SimpleArrayLookupTable> simpleArrayLookupTable(lookupTable, success);
-        return new SimpleArrayProcessor(simpleArrayLookupTable, success);
-    }
+    le_int32 glyphCount = glyphStorage.getGlyphCount();
+    le_int32 glyph;
 
-    case ltfSegmentSingle: {
-        LEReferenceTo<SegmentSingleLookupTable> segmentSingleLookupTable(lookupTable, success);
-        return new SegmentSingleProcessor(segmentSingleLookupTable, success);
-    }
+    for (glyph = 0; LE_SUCCESS(success) && glyph < glyphCount; glyph++) {
+        LEGlyphID thisGlyph = glyphStorage[glyph];
+        TTGlyphID newGlyph;
 
-    case ltfSegmentArray: {
-        LEReferenceTo<SegmentArrayLookupTable> segmentArrayLookupTable(lookupTable, success);
-        return new SegmentArrayProcessor(segmentArrayLookupTable, success);
-    }
-
-    case ltfSingleTable: {
-        LEReferenceTo<SingleTableLookupTable> singleTableLookupTable(lookupTable, success);
-        return new SingleTableProcessor(singleTableLookupTable, success);
-    }
-
-    case ltfTrimmedArray: {
-        LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable(lookupTable, success);
-        return new TrimmedArrayProcessor(trimmedArrayLookupTable, success);
-    }
-
-    default:
-        return NULL;
+        if (processor->lookup(thisGlyph, newGlyph, success))
+            glyphStorage[glyph] = LE_SET_GLYPH(thisGlyph, newGlyph);
     }
 }
 

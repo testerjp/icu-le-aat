@@ -65,41 +65,39 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 
     switch (version) {
     case 0: {
-        LEReferenceTo<KernSubtableHeader> subtableHeader(table, success, sizeof(KernTableHeader));
+        le_uint32 subtableOffset = 0;
 
-        if (LE_FAILURE(success))
-            return;
+        for (le_uint32 subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
+            LEReferenceTo<KernSubtableHeader> subtableHeader(table, success, sizeof(KernTableHeader) + subtableOffset);
 
-        le_uint32 subtable;
+            if (LE_FAILURE(success))
+                break;
 
-        for (subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
+            subtableOffset    += length;
 
             if ((coverage & kcfHorizontal) && !(coverage & kcfCrossStream))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
-
-            subtableHeader.addOffset(length, success);
         }
         break;
     }
 
     case 1: {
-        LEReferenceTo<KernSubtableHeader2> subtableHeader(table, success, sizeof(KernTableHeader2));
+        le_uint32 subtableOffset = 0;
 
-        if (LE_FAILURE(success))
-            return;
+        for (le_uint32 subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
+            LEReferenceTo<KernSubtableHeader2> subtableHeader(table, success, sizeof(KernTableHeader2) + subtableOffset);
 
-        le_uint32 subtable;
+            if (LE_FAILURE(success))
+                break;
 
-        for (subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
             le_uint32 length   = SWAPL(subtableHeader->length);
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
+            subtableOffset    += length;
 
             if (!(coverage & kcf2Vertical))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
-
-            subtableHeader.addOffset(length, success);
         }
         break;
     }

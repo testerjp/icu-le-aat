@@ -20,9 +20,6 @@ ContextualGlyphInsertionProcessor2::ContextualGlyphInsertionProcessor2(const LER
     if (LE_FAILURE(success))
         return;
 
-    if (!contextualGlyphInsertionHeader.isValid())
-        return;
-
     le_uint32 insertionActionOffset = SWAPL(contextualGlyphInsertionHeader->insertionActionOffset);
     entryTable      = LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2>(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY);
     insertionAction = LEReferenceToArrayOf<le_uint16>(stateTableHeader, success, insertionActionOffset, LE_UNBOUNDED_ARRAY);
@@ -47,24 +44,26 @@ void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorag
     if (LE_FAILURE(success))
         return;
 
-    if (insertGlyphs == NULL)
-        return;
+    for (le_uint32 glyph = 0; glyph < count + 1; glyph++)
+        insertGlyphs[glyph] = 0; // undef
 
     // Note: Kashida vs Split Vowel seems to only affect selection and highlighting.
     // We note the flag, but do not layout different.
     // https://developer.apple.com/fonts/TTRefMan/RM06/Chap6mort.html
 
     le_int16 targetIndex = 0;
+
     if (isBefore) {
-        // insert at beginning
         insertGlyphs[targetIndex++] = glyphStorage[atGlyph];
     } else {
-        // insert at end
         insertGlyphs[count] = glyphStorage[atGlyph];
     }
 
     while(count-- && LE_SUCCESS(success)) {
-        insertGlyphs[targetIndex++] = SWAPW(insertionAction.getObject(index++, success));
+        le_uint16 insertGlyph;
+
+        if (insertionAction.getObject(index++, insertGlyph, success))
+            insertGlyphs[targetIndex++] = SWAPW(insertGlyph);
     }
 }
 

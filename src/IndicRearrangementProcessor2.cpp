@@ -53,7 +53,7 @@ le_uint16 IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphS
         lastGlyph = currGlyph;
     }
 
-    doRearrangementAction(glyphStorage, firstGlyph, lastGlyph, (IndicRearrangementVerb) (flags & irfVerbMask), success);
+    doRearrangementAction(glyphStorage, firstGlyph, lastGlyph, (IndicRearrangementVerb)(flags & irfVerbMask), success);
 
     if (!(flags & irfDontAdvance)) {
         currGlyph += dir;

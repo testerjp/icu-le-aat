@@ -24,6 +24,9 @@ OrderedListKerningPairsProcessor::OrderedListKerningPairsProcessor(LEReferenceTo
     rangeShift    = SWAPW(orderedListKerningPairsHeader->rangeShift);
 
     pairs         = LEReferenceToArrayOf<KerningPair>(orderedListKerningPairsHeader, success, &orderedListKerningPairsHeader->entries[0], nPairs);
+
+    if (!orderedListKerningPairsHeader->validate(header))
+        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
 }
 
 OrderedListKerningPairsProcessor::~OrderedListKerningPairsProcessor()

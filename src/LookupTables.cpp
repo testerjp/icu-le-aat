@@ -11,6 +11,19 @@
 
 U_NAMESPACE_BEGIN
 
+le_bool BinarySearchLookupTable::validate(const LETableReference &base, le_uint32 _unitSize) const
+{
+    le_uint16 unity = SWAPW(unitSize);
+    le_uint16 probe = SWAPW(searchRange);
+    le_uint16 extra = SWAPW(rangeShift);
+    le_uint16 head  = sizeof(BinarySearchLookupTable);
+
+    if (unity <= _unitSize && probe % unity == 0 && (probe / unity & (probe / unity - 1)) == 0 && (!base.hasBounds() || head + probe + extra < base.getLength()))
+        return TRUE;
+
+    return FALSE;
+}
+
 /*
     These are the rolled-up versions of the uniform binary search.
     Someday, if we need more performance, we can un-roll them.
@@ -29,7 +42,7 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
     le_uint16 unity = SWAPW(unitSize);
     le_uint16 probe = SWAPW(searchRange);
     le_uint16 extra = SWAPW(rangeShift);
-    TTGlyphID ttGlyph = (TTGlyphID) LE_GET_GLYPH(glyph);
+    TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
     LEReferenceTo<LookupSegment> entry(base, success, segments);
     LEReferenceTo<LookupSegment> trial(entry, success, extra);
 
@@ -43,13 +56,10 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
         entry = trial;
     }
 
-    while (probe > unity) {
+    while (probe > unity && LE_SUCCESS(success)) {
         probe >>= 1;
         trial = entry; // copy
         trial.addOffset(probe, success);
-
-        if (LE_FAILURE(success))
-            return NULL;
 
         if (SWAPW(trial->firstGlyph) <= ttGlyph) {
             entry = trial;
@@ -67,7 +77,7 @@ const LookupSingle *BinarySearchLookupTable::lookupSingle(const LETableReference
     le_uint16 unity = SWAPW(unitSize);
     le_uint16 probe = SWAPW(searchRange);
     le_uint16 extra = SWAPW(rangeShift);
-    TTGlyphID ttGlyph = (TTGlyphID) LE_GET_GLYPH(glyph);
+    TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
     LEReferenceTo<LookupSingle> entry(base, success, entries);
     LEReferenceTo<LookupSingle> trial(entry, success, extra);
 

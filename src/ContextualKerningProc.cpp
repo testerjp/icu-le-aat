@@ -67,15 +67,12 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
     le_uint16 valueOffset = flags & ckfValueOffsetMask;
 
     if (valueOffset) {
-        LEReferenceTo<le_uint16> actionEntry(stateTableHeader, success, valueOffset);
+        le_int16                       action;
+        le_int16                       actionIndex = 0;
+        LEReferenceToArrayOf<le_int16> actionEntry(stateTableHeader, success, valueOffset, LE_UNBOUNDED_ARRAY);
 
-        if (LE_FAILURE(success)) {
-            currGlyph += dir;
-            sp         = -1;
+        if (LE_FAILURE(success))
             return stateArrayOffset;
-        }
-
-        le_int16 action;
 
         do {
             if (sp == -1) {
@@ -96,16 +93,18 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
                 return stateArrayOffset;
             }
 
-            action = SWAPW(*actionEntry.getAlias());
+            action = 1; // end of list
+
+            if (!actionEntry.getObject(actionIndex++, action, success))
+                break;
+
+            action = SWAPW(action);
 
             if (!crossStream) {
                 kerningValues[kerningGlyph * 2 + 0] = action & ~1;
             } else {
                 kerningValues[kerningGlyph * 2 + 1] = action & ~1;
             }
-
-            if (!(action & 1))
-                actionEntry.addObject(success);
         } while (!(action & 1) && LE_SUCCESS(success));
     }
 

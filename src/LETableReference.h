@@ -413,6 +413,9 @@ public:
     return *this;
   }
 
+#if 0
+  // don't use because of this tends to causes illegal memory access
+
   /**
    * roll forward by one <T> size.
    * same as addOffset(LETableVarSizer<T>::getSize(),success)
@@ -423,6 +426,7 @@ public:
   void addObject(size_t count, LEErrorCode &success) {
     addOffset(LETableVarSizer<T>::getSize()*count, success);
   }
+#endif
 
   const T *operator->() const { return getAlias(); }
   const T *getAlias() const { return (const T*)fStart; }

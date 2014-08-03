@@ -18,7 +18,7 @@ le_bool BinarySearchLookupTable::validate(const LETableReference &base, le_uint3
     le_uint16 extra = SWAPW(rangeShift);
     le_uint16 head  = sizeof(BinarySearchLookupTable);
 
-    if (unity <= _unitSize && probe % unity == 0 && (probe / unity & (probe / unity - 1)) == 0 && (!base.hasBounds() || head + probe + extra < base.getLength()))
+    if (_unitSize <= unity && probe % unity == 0 && (probe / unity & (probe / unity - 1)) == 0 && (!base.hasBounds() || head + probe + extra < base.getLength()))
         return TRUE;
 
     return FALSE;

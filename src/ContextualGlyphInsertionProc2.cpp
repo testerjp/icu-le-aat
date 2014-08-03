@@ -52,9 +52,9 @@ void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorag
     le_int16 targetIndex = 0;
 
     if (isBefore) {
-        insertGlyphs[targetIndex++] = glyphStorage[atGlyph];
-    } else {
         insertGlyphs[count] = glyphStorage[atGlyph];
+    } else {
+        insertGlyphs[targetIndex++] = glyphStorage[atGlyph];
     }
 
     while(count-- && LE_SUCCESS(success)) {

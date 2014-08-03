@@ -15,17 +15,8 @@
 #include "OrderedListKerningPairsProc.h"
 #include "OpenTypeUtilities.h"
 
-#define SWAP_KEY(p) (((le_uint32) SWAPW((p)->left) << 16) | SWAPW((p)->right))
-
 U_NAMESPACE_BEGIN
 
-/*
- * This implementation isn't careful about the kern table flags, and
- * might invoke kerning when it is not supposed to.  That too I'm
- * leaving for a bug fix.
- *
- * TODO: respect header flags
- */
 KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
     : version(0), nTables(0), table(base)
 {
@@ -71,7 +62,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
             subtableOffset    += length;
 
-            if ((coverage & kcfHorizontal) && !(coverage & kcfCrossStream))
+            if ((coverage & kcfHorizontal) && !(coverage & kcfCrossStream) && !(coverage & kcfMinimum))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
         }
         break;
@@ -90,7 +81,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             le_uint16 coverage = SWAPW(subtableHeader->coverage);
             subtableOffset    += length;
 
-            if (!(coverage & kcf2Vertical))
+            if (!(coverage & kcf2Vertical) && !(coverage & kcf2Variation))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
         }
         break;

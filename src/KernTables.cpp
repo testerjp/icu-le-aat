@@ -32,9 +32,6 @@ KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
     if (LE_FAILURE(success))
         return;
 
-    if (!base.isValid()) // LEReferenceTo(const LEFontInstance *, ... may return NULL
-        return;
-
     LEReferenceTo<KernTableHeader> kernTableHeader(table, success);
 
     if (LE_FAILURE(success))
@@ -58,9 +55,6 @@ KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
 void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
-        return;
-
-    if (!nTables)
         return;
 
     switch (version) {

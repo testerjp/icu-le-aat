@@ -13,7 +13,6 @@
 #include "SubtableProcessor.h"
 #include "ContextualKerningProc.h"
 #include "OrderedListKerningPairsProc.h"
-#include "OpenTypeUtilities.h"
 
 U_NAMESPACE_BEGIN
 

@@ -156,31 +156,6 @@ protected:
     LayoutEngine();
 
     /**
-     * This method does any required pre-processing to the input characters. It
-     * may generate output characters that differ from the input charcters due to
-     * insertions, deletions, or reorderings. In such cases, it will also generate an
-     * output character index array reflecting these changes.
-     *
-     * Subclasses must override this method.
-     *
-     * Input parameters:
-     * @param chars - the input character context
-     * @param offset - the index of the first character to process
-     * @param count - the number of characters to process
-     * @param max - the number of characters in the input context
-     * @param rightToLeft - TRUE if the characters are in a right to left directional run
-     * @param outChars - the output character array, if different from the input
-     * @param glyphStorage - the object that holds the per-glyph storage. The character index array may be set.
-     * @param success - set to an error code if the operation fails
-     *
-     * @return the output character count (input character count if no change)
-     *
-     * @internal
-     */
-    virtual le_int32 characterProcessing(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft,
-            LEUnicode *&outChars, LEGlyphStorage &glyphStorage, LEErrorCode &success);
-
-    /**
      * This method does the glyph processing. It converts an array of characters
      * into an array of glyph indices and character indices. The characters to be
      * processed are passed in a surrounding context. The context is specified as
@@ -291,43 +266,6 @@ protected:
      * @internal
      */
     virtual void mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool reverse, le_bool mirror, LEGlyphStorage &glyphStorage, LEErrorCode &success);
-
-#ifndef U_HIDE_INTERNAL_API
-    /**
-     * This is a convenience method that forces the advance width of mark
-     * glyphs to be zero, which is required for proper selection and highlighting.
-     * 
-     * @param glyphStorage - the object containing the per-glyph storage. The positions array will be modified.
-     * @param markFilter - used to identify mark glyphs
-     * @param success - output parameter set to an error code if the operation fails
-     *
-     * @see LEGlyphFilter
-     *
-     * @internal
-     */
-    static void adjustMarkGlyphs(LEGlyphStorage &glyphStorage, LEGlyphFilter *markFilter, LEErrorCode &success);
-
-
-    /**
-     * This is a convenience method that forces the advance width of mark
-     * glyphs to be zero, which is required for proper selection and highlighting.
-     * This method uses the input characters to identify marks. This is required in
-     * cases where the font does not contain enough information to identify them based
-     * on the glyph IDs.
-     * 
-     * @param chars - the array of input characters
-     * @param charCount - the number of input characers
-     * @param glyphStorage - the object containing the per-glyph storage. The positions array will be modified.
-     * @param reverse - <code>TRUE</code> if the glyph array has been reordered
-     * @param markFilter - used to identify mark glyphs
-     * @param success - output parameter set to an error code if the operation fails
-     *
-     * @see LEGlyphFilter
-     *
-     * @internal
-     */
-    static void adjustMarkGlyphs(const LEUnicode chars[], le_int32 charCount, le_bool reverse, LEGlyphStorage &glyphStorage, LEGlyphFilter *markFilter, LEErrorCode &success);
-#endif  /* U_HIDE_INTERNAL_API */
 
 public:
     /**
@@ -505,6 +443,19 @@ public:
      */
     static UClassID getStaticClassID();
 
+    /**
+     * The array of language tags, indexed by language code.
+     *
+     * @internal
+     */
+    static const LETag languageTags[];
+
+ private:
+
+    /**
+     * The array of script tags, indexed by script code.
+     */
+    static const LETag scriptTags[];
 };
 
 U_NAMESPACE_END

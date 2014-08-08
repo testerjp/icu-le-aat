@@ -227,20 +227,35 @@ LayoutEngine *LayoutEngine::layoutEngineFactory(const LEFontInstance *fontInstan
         return NULL;
 
     LayoutEngine *engine = NULL;
+    LEErrorCode   err;
 
-    LEReferenceTo<MorphTableHeader2> morxTable(fontInstance, morxTableTag, success);
+    {
+        err = LE_NO_ERROR;
+        LEReferenceTo<MorphTableHeader2> morxTable(fontInstance, morxTableTag, err);
 
-    if (LE_SUCCESS(success) && morxTable.isValid() && SWAPL(morxTable->version) == 0x00020000) {
-        engine = new GXLayoutEngine2(fontInstance, scriptCode, languageCode, morxTable, typoFlags, success);
-    } else {
-        LEReferenceTo<MorphTableHeader> mortTable(fontInstance, mortTableTag, success);
+        if (LE_SUCCESS(err) && morxTable.isValid() && SWAPL(morxTable->version) == 0x00020000) {
+            engine = new GXLayoutEngine2(fontInstance, scriptCode, languageCode, morxTable, typoFlags, success);
 
-        if (LE_SUCCESS(success) && mortTable.isValid() && SWAPL(mortTable->version) == 0x00010000) {
-            engine = new GXLayoutEngine(fontInstance, scriptCode, languageCode, mortTable, success);
-        } else {
-            engine = new LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success);
+            goto created;
         }
     }
+
+    {
+        err = LE_NO_ERROR;
+        LEReferenceTo<MorphTableHeader> mortTable(fontInstance, mortTableTag, err);
+
+        if (LE_SUCCESS(err) && mortTable.isValid() && SWAPL(mortTable->version) == 0x00010000) {
+            engine = new GXLayoutEngine(fontInstance, scriptCode, languageCode, mortTable, success);
+
+            goto created;
+        }
+    }
+
+    {
+        engine = new LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success);
+    }
+
+created:
 
     if (engine && LE_FAILURE(success)) {
 		delete engine;

@@ -47,8 +47,7 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
     if (LE_FAILURE(success))
         return;
 
-    switch (version) {
-    case 0: {
+    if (version == 0) {
         le_uint32 subtableOffset = 0;
 
         for (le_uint32 subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
@@ -64,10 +63,9 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             if ((coverage & kcfHorizontal) && !(coverage & kcfCrossStream) && !(coverage & kcfMinimum))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
         }
-        break;
     }
 
-    case 1: {
+    if (version == 1) {
         le_uint32 subtableOffset = 0;
 
         for (le_uint32 subtable = 0; LE_SUCCESS(success) && (subtable < nTables); subtable++) {
@@ -83,8 +81,6 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
             if (!(coverage & kcf2Vertical) && !(coverage & kcf2Variation))
                 subtableHeader->process(subtableHeader, glyphStorage, success);
         }
-        break;
-    }
     }
 }
 

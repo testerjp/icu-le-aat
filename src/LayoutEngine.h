@@ -450,8 +450,6 @@ public:
      */
     static const LETag languageTags[];
 
- private:
-
     /**
      * The array of script tags, indexed by script code.
      */

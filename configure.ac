@@ -1,0 +1,13 @@
+AC_PREREQ(2.69)
+AC_INIT(icu-le-aat, 0.0.0)
+
+AM_INIT_AUTOMAKE(1.9)
+AC_PROG_CC
+AC_PROG_CXX
+AM_PROG_LIBTOOL
+
+PKG_CHECK_MODULES(ICU, icu-uc)
+
+AC_CONFIG_FILES([Makefile
+                 src/Makefile])
+AC_OUTPUT

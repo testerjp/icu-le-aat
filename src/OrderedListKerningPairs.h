@@ -30,7 +30,7 @@ struct OrderedListKerningPairsHeader {
         le_uint16 probe = SWAPW(searchRange);
         le_uint16 extra = SWAPW(rangeShift);
 
-        if (probe % unity == 0 && (probe / unity & (probe / unity - 1)) == 0 && (!pairs.hasBounds() || probe + extra < pairs.getLength()))
+        if (probe % unity == 0 && (probe / unity & (probe / unity - 1)) == 0 && (!pairs.hasBounds() || probe + extra <= pairs.getLength()))
             return TRUE;
 
         return FALSE;

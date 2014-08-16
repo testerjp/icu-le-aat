@@ -51,17 +51,13 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
     le_uint16 newState = SWAPW(entry->newStateOffset);
     le_uint16 flags    = SWAPW(entry->flags);
 
-    LE_TRACE_LOG("ligature state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
-
     if (flags & lsfSetComponent) {
         if (nComponents <= m++) {
-            LE_TRACE_LOG("stack overflow");
             currGlyph += dir;
             m          = -1;
             return stateArrayOffset;
         }
         componentStack[m] = currGlyph;
-        LE_TRACE_LOG("push[%d]", m);
     }
 
     le_uint16 actionOffset = flags & lsfActionOffsetMask;
@@ -83,7 +79,6 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
 
         do {
             if (m == -1) {
-                LE_TRACE_LOG("stack underflow");
                 currGlyph += dir;
                 m          = -1;
                 return stateArrayOffset;
@@ -91,10 +86,7 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
 
             le_int32 componentGlyph = componentStack[m--];
 
-            LE_TRACE_LOG("pop[%d] %d", m + 1, componentGlyph);
-
             if (!(0 <= componentGlyph && componentGlyph < glyphStorage.getGlyphCount())) {
-                LE_TRACE_LOG("preposterous componentGlyph");
                 currGlyph += dir;
                 m          = -1;
                 return stateArrayOffset;
@@ -118,8 +110,6 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
             component       = SWAPW(component);
             ligatureOffset += component;
 
-            LE_TRACE_LOG("action =  %x; offset = %d; ligatureOffset = %d", action, offset, ligatureOffset);
-
             if (action & (lafLast | lafStore))  {
                 LEReferenceTo<TTGlyphID> ligatureEntry(stateTableHeader, success, ligatureOffset);
 
@@ -130,24 +120,18 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], ligatureGlyph);
                 ligatureGlyphs[++n]          = componentGlyph;
                 ligatureOffset               = 0;
-
-                LE_TRACE_LOG("replace with %d", ligatureGlyph);
             } else {
                 glyphStorage[componentGlyph] = LE_SET_GLYPH(glyphStorage[componentGlyph], 0xFFFF);
-
-                LE_TRACE_LOG("replace with deleted");
             }
         } while (!(action & lafLast));
 
         while (0 <= n) {
             if (nComponents <= m++) {
-                LE_TRACE_LOG("stack overflow");
                 currGlyph += dir;
                 m          = -1;
                 return 0;
             }
             componentStack[m] = ligatureGlyphs[n--];
-            LE_TRACE_LOG("push[%d]", m);
         }
     }
 

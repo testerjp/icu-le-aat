@@ -51,7 +51,6 @@ void MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &gly
 
             // should check coverage more carefully...
             if ((coverage & scfVertical) == 0 && (subtableFeatures & defaultFlags) != 0  && LE_SUCCESS(success)) {
-                LE_TRACE_LOG("subtable %d", subtable);
                 subtableHeader->process(subtableHeader, glyphStorage, success);
             }
         }

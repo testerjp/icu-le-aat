@@ -100,9 +100,7 @@ void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &su
             break;
 
         LE_STATE_PATIENCE_CURR(le_int32, currGlyph);
-        LE_TRACE_LOG("process state entry: classCode %d; nClasses %d; entry table index %d; current state %d", classCode, nClasses, entryTableIndex, currentState);
         currentState = processStateEntry(glyphStorage, currGlyph, entryTableIndex, success); // return a zero-based index instead of a byte offset
-        LE_TRACE_LOG("new state %d", currentState);
         LE_STATE_PATIENCE_INCR(currGlyph);
     }
 

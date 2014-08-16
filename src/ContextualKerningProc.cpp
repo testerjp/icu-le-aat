@@ -49,17 +49,13 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
     le_uint16 newState = SWAPW(entry->newStateOffset);
     le_uint16 flags    = SWAPW(entry->flags);
 
-    LE_TRACE_LOG("kerning state entry: flags = %x; glyph = %d; glyph index = %d; newState: %d", flags, 0 <= currGlyph && currGlyph < glyphStorage.getGlyphCount() ? glyphStorage[currGlyph] : -1, currGlyph, (newState - stateArrayOffset) / stateSize);
-
     if (flags & ckfPush) {
         if (nComponents <= sp++) {
-            LE_TRACE_LOG("stack overflow");
             currGlyph += dir;
             sp         = -1;
             return stateArrayOffset;
         }
         kerningStack[sp] = currGlyph;
-        LE_TRACE_LOG("push[%d] = %d<%d>", sp, currGlyph, glyphStorage.getGlyphID(currGlyph, success));
     }
 
     le_uint16 valueOffset = flags & ckfValueOffsetMask;
@@ -74,7 +70,6 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
 
         do {
             if (sp == -1) {
-                LE_TRACE_LOG("stack underflow");
                 currGlyph += dir;
                 sp         = -1;
                 return stateArrayOffset;
@@ -82,10 +77,7 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
 
             le_int32 kerningGlyph = kerningStack[sp--];
 
-            LE_TRACE_LOG("pop[%d] = %d<%d>", sp + 1, kerningGlyph, glyphStorage.getGlyphID(kerningGlyph, success));
-
             if (!(0 <= kerningGlyph && kerningGlyph < glyphStorage.getGlyphCount())) {
-                LE_TRACE_LOG("preposterous componentGlyph");
                 currGlyph += dir;
                 sp         = -1;
                 return stateArrayOffset;

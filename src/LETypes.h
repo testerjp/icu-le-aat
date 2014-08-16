@@ -281,31 +281,6 @@ typedef struct LEPoint LEPoint;
 #endif
 
 /**
- * \def
- * @internal
- */
-#ifndef LE_TRACE
-#define LE_TRACE 0
-#endif
-
-/**
- * \def LE_TRACE_LOG
- * @internal
- */
-#if LE_TRACE
-#include <stdio.h>
-#define LE_TRACE_LOG(...)                               \
-    do {                                                \
-        FILE *dst = stdout;                             \
-        fprintf(dst, "%s:%d: ", __FILE__, __LINE__);    \
-        fprintf(dst, __VA_ARGS__);                      \
-        fprintf(dst, "\n");                             \
-    } while (0)
-#else
-#define LE_TRACE_LOG(...)
-#endif
-
-/**
  * \def LE_UINTPTR_MAX
  * Max value representable by a uintptr
  */

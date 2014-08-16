@@ -52,7 +52,6 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
 
             // should check coverage more carefully...
             if (((coverage & scf2IgnoreVt) || !(coverage & scf2Vertical)) && (subtableFeatures & flag) != 0) {
-                LE_TRACE_LOG("subtable %d", subtable);
                 subtableHeader->process(subtableHeader, glyphStorage, success);
             }
         }

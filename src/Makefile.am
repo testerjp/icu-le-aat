@@ -87,5 +87,3 @@ libicu_le_aat_la_SOURCES = \
 	SubtableProcessor.h \
 	loengine.cpp
 	$(NULL)
-
--include $(top_srcdir)/git.mk

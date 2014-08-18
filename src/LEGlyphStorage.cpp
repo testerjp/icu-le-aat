@@ -662,5 +662,10 @@ le_bool LEGlyphStorage::applyInsertion(le_int32 atPosition, le_int32 count, LEGl
     return FALSE;
 }
 
+void LEGlyphStorage::setInsertionDirection(le_bool rightToLeft)
+{
+    fInsertionList->setAppend(rightToLeft);
+}
+
 U_NAMESPACE_END
 

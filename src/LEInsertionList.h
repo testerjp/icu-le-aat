@@ -124,6 +124,15 @@ public:
     void reset();
 
     /**
+     * Set append
+     *
+     * @param rightToLeft Set to <code>TRUE</code> if the direction of insertion is right to left.
+     *
+     * @internal
+     */
+    void setAppend(le_bool rightToLeft);
+
+    /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.8

@@ -381,6 +381,15 @@ public:
     le_int32 applyInsertions();
 
     /**
+     * Set direction of insertion
+     *
+     * @param rightToLeft <code>true</code> if the direction is right to left.
+     *
+     * @internal
+     */
+    void setInsertionDirection(le_bool rightToLeft);
+
+    /**
      * Set the glyph ID for a particular glyph.
      *
      * @param glyphIndex the index of the glyph

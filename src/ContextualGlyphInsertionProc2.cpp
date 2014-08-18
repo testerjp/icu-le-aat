@@ -27,9 +27,11 @@ ContextualGlyphInsertionProcessor2::~ContextualGlyphInsertionProcessor2()
 {
 }
 
-void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
+void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
 {
     markGlyph = 0;
+
+    glyphStorage.setInsertionDirection(dir == -1 ? TRUE : FALSE);
 }
 
 void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int16 atGlyph, le_uint16 &index, le_uint16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)

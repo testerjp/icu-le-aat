@@ -46,6 +46,13 @@ void LEInsertionList::reset()
     growAmount = 0;
 }
 
+void LEInsertionList::setAppend(le_bool rightToLeft)
+{
+    reset();
+
+    append = rightToLeft;
+}
+
 le_int32 LEInsertionList::getGrowAmount()
 {
     return growAmount;

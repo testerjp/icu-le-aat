@@ -15,13 +15,19 @@
 #include "KernTables.h"
 #include "MorphTables.h"
 
+#include "unicode/uchar.h"
+
 U_NAMESPACE_BEGIN
 
 class DefaultCharMapper : public LECharMapper
 {
 public:
+    DefaultCharMapper(le_bool mirror);
     virtual ~DefaultCharMapper();
     LEUnicode32 mapChar(LEUnicode32 ch) const;
+
+private:
+    le_bool fMirror;
 };
 
 /* Leave this copyright notice here! It needs to go somewhere in this library. */
@@ -30,13 +36,21 @@ static const char copyright[] = U_COPYRIGHT_STRING;
 const le_int32 LayoutEngine::kTypoFlagKern = LE_Kerning_FEATURE_FLAG;
 const le_int32 LayoutEngine::kTypoFlagLiga = LE_Ligatures_FEATURE_FLAG;
 
+DefaultCharMapper::DefaultCharMapper(le_bool mirror)
+    : fMirror(mirror)
+{
+}
+
 DefaultCharMapper::~DefaultCharMapper()
 {
 }
 
 LEUnicode32 DefaultCharMapper::mapChar(LEUnicode32 ch) const
 {
-    return ch;
+    if (fMirror)
+        return u_charMirror(ch);
+    else
+        return ch;
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LayoutEngine)
@@ -49,10 +63,10 @@ LayoutEngine::LayoutEngine(const LEFontInstance *fontInstance,
     : fGlyphStorage(NULL), fFontInstance(fontInstance), fScriptCode(scriptCode), fLanguageCode(languageCode),
       fTypoFlags(typoFlags), fFilterZeroWidth(TRUE)
 {
+    (void)copyright;
+
     if (LE_FAILURE(success))
         return;
-
-    (void)copyright;
 
     fGlyphStorage = new LEGlyphStorage();
     if (fGlyphStorage == NULL) {
@@ -167,7 +181,7 @@ const void *LayoutEngine::getFontTable(LETag tableTag, size_t &length) const
     return fFontInstance->getFontTable(tableTag, length);
 }
 
-void LayoutEngine::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool reverse, le_bool /* mirror */,
+void LayoutEngine::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool reverse, le_bool mirror,
                                     LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
@@ -175,7 +189,7 @@ void LayoutEngine::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le
 
     glyphStorage.allocateGlyphArray(count, reverse, success);
 
-    DefaultCharMapper charMapper;
+    DefaultCharMapper charMapper(mirror);
 
     fFontInstance->mapCharsToGlyphs(chars, offset, count, reverse, &charMapper, fFilterZeroWidth, glyphStorage);
 }

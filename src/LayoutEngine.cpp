@@ -247,7 +247,7 @@ LayoutEngine *LayoutEngine::layoutEngineFactory(const LEFontInstance *fontInstan
         err = LE_NO_ERROR;
         LEReferenceTo<MorphTableHeader2> morxTable(fontInstance, morxTableTag, err);
 
-        if (LE_SUCCESS(err) && morxTable.isValid() && SWAPW(morxTable->version) == 2) {
+        if (LE_SUCCESS(err) && morxTable.isValid() && (SWAPW(morxTable->version) == 2 || SWAPW(morxTable->version) == 3)) {
             engine = new GXLayoutEngine2(fontInstance, scriptCode, languageCode, morxTable, typoFlags, success);
 
             goto created;

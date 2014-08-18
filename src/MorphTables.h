@@ -107,7 +107,8 @@ LE_VAR_ARRAY(ChainHeader2, featureTable)
 
 struct MorphTableHeader2
 {
-    fixed32      version;
+    le_int16     version;
+    le_int16     unused;
     le_uint32    nChains;
     ChainHeader2 chains[ANY_NUMBER];
 

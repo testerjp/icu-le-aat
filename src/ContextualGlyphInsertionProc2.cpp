@@ -109,6 +109,13 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
 
 void ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
 {
+    // The following description about dontAdvance flag was added.
+    // "This does not mean that the glyph pointed to is the same one as before.
+    // If you've made insertions immediately downstream of the current glyph,
+    // the next glyph processed would in fact be the first one inserted."
+    // However, some fonts such as TeluguSangamMN and Ayuthaya don't terminate, if process as above desctiption.
+    // Fonts which are created as different from the description already exists.
+
     glyphStorage.applyInsertions();
 }
 

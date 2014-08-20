@@ -84,15 +84,15 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
 
     if (markIndex != 0xFFFF) {
         le_uint16 count         = (flags & cgiMarkedInsertCountMask) >> cgiMarkedInsertCountShift;
-        le_bool   isKashidaLike = (flags & cgiMarkedIsKashidaLike);
-        le_bool   isBefore      = (flags & cgiMarkInsertBefore);
+        le_bool   isKashidaLike = flags & cgiMarkedIsKashidaLike ? TRUE : FALSE;
+        le_bool   isBefore      = flags & cgiMarkInsertBefore    ? TRUE : FALSE;
         doInsertion(glyphStorage, markGlyph, markIndex, count, isKashidaLike, isBefore, success);
     }
 
     if (currIndex != 0xFFFF) {
         le_uint16 count         = (flags & cgiCurrentInsertCountMask) >> cgiCurrentInsertCountShift;
-        le_bool   isKashidaLike = (flags & cgiCurrentIsKashidaLike);
-        le_bool   isBefore      = (flags & cgiCurrentInsertBefore);
+        le_bool   isKashidaLike = flags & cgiCurrentIsKashidaLike ? TRUE : FALSE;
+        le_bool   isBefore      = flags & cgiCurrentInsertBefore  ? TRUE : FALSE;
         doInsertion(glyphStorage, currGlyph, currIndex, count, isKashidaLike, isBefore, success);
     }
 

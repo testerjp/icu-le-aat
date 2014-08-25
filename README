@@ -1,15 +1,15 @@
-This is layout engine extracted the Apple Advanced Typography(AAT) implementation from ICU Layout Engine.
+This is layout engine extracted Apple Advanced Typography(AAT) implementation from ICU Layout Engine.
 Some refactoring and many fixing bugs have been done.
-Major functions of the AAT which is necessary for shaping complex script such as Arabic, Devanagari, Thai, and so on, have been added.
+Major functions of AAT which are necessary for shaping complex script such as Arabic, Devanagari, Thai, and so on, have been added.
 
 On the other hand, OpenType implementations have been removed.
 
-The new version 3 of morx table was introduced, but it is not implemented yet.
-Newly introduced functions are the function which improves performance of shaping, and chooses language-specific glyph.
-Since new specification is designed with paying attention to compatibility, it can perform shaping as well as before.
+A new version of morx table was introduced, but it is not implemented yet.
+Newly introduced functions are functions which can choose language-specific glyph, and improve performance of shaping.
+Since new specification is designed with paying attention to compatibility, it can shape as well as before.
 
-The kerx table which is new version of kern table was introduced, but it is not implemented yet.
+A kerx table which is a new version of kern table was introduced, but it is not implemented yet.
 
-The features of morx table cannot choose. The default features are always chosen.
+Features of morx table cannot choose. Default features are always chosen.
 
-Any modifications and additions which are made to the ICU can use under the ICU License.
+Any modifications and additions which are made to ICU Layout Engine can use under ICU License.

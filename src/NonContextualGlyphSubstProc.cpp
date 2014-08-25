@@ -20,8 +20,8 @@ NonContextualGlyphSubstitutionProcessor::NonContextualGlyphSubstitutionProcessor
 
     processor = LookupTableProcessor::createInstance((LookupTableFormat)SWAPW(lookupTable->format), lookupTable, success);
 
-    if (!processor)
-        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
+    if (!processor && !LE_FAILURE(success))
+        success = LE_MEMORY_ALLOCATION_ERROR;
 }
 
 NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcessor()

@@ -36,8 +36,8 @@ StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2
 
     processor        = LookupTableProcessor::createInstance((LookupTableFormat)SWAPW(classTable->format), classTable, success);
 
-    if (!processor)
-        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
+    if (!processor && !LE_FAILURE(success))
+        success = LE_MEMORY_ALLOCATION_ERROR;
 
     stateArray       = LEReferenceToArrayOf<EntryTableIndex2>(stateTableHeader, success, stateArrayOffset, LE_UNBOUNDED_ARRAY);
 }

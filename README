@@ -1,4 +1,4 @@
-This is layout engine extracted Apple Advanced Typography(AAT) implementation from ICU Layout Engine.
+This is a layout engine extracted Apple Advanced Typography(AAT) implementation from ICU Layout Engine.
 Some refactoring and many fixing bugs have been done.
 Major functions of AAT which are necessary for shaping complex script such as Arabic, Devanagari, Thai, and so on, have been added.
 

@@ -16,11 +16,15 @@ U_NAMESPACE_BEGIN
 #define SignExtend(v,m) (((v) & SignBit(m))? ((v) | ExtendedComplement(m)): (v))
 
 LigatureSubstitutionProcessor::LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
-    : StateTableProcessor(header, dir, success),
-      ligatureActionTableOffset(0), componentTableOffset(0), ligatureTableOffset(0), m(-1),
-      ligatureSubstitutionHeader(header, success)
+    : StateTableProcessor(header, dir, success)
+    , ligatureActionTableOffset(0)
+    , componentTableOffset(0)
+    , ligatureTableOffset(0)
+    , m(-1)
+    , ligatureSubstitutionHeader(header, success)
 {
-    if (LE_FAILURE(success)) return;
+    if (LE_FAILURE(success))
+        return;
 
     ligatureActionTableOffset = SWAPW(ligatureSubstitutionHeader->ligatureActionTableOffset);
     componentTableOffset      = SWAPW(ligatureSubstitutionHeader->componentTableOffset);
@@ -33,12 +37,14 @@ LigatureSubstitutionProcessor::~LigatureSubstitutionProcessor()
 {
 }
 
-void LigatureSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+LigatureSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     m = -1;
 }
 
-le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16
+LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -146,7 +152,8 @@ le_uint16 LigatureSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyph
     return newState;
 }
 
-void LigatureSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+LigatureSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

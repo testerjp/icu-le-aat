@@ -19,8 +19,14 @@ LEInsertionCallback::~LEInsertionCallback()
 }
 
 LEGlyphStorage::LEGlyphStorage()
-    : fGlyphCount(0), fGlyphs(NULL), fCharIndices(NULL), fPositions(NULL),
-      fAuxData(NULL), fInsertionList(NULL), fSrcIndex(0), fDestIndex(0)
+    : fGlyphCount(0)
+    , fGlyphs(NULL)
+    , fCharIndices(NULL)
+    , fPositions(NULL)
+    , fAuxData(NULL)
+    , fInsertionList(NULL)
+    , fSrcIndex(0)
+    , fDestIndex(0)
 {
     // nothing else to do!
 }
@@ -30,7 +36,8 @@ LEGlyphStorage::~LEGlyphStorage()
     reset();
 }
 
-void LEGlyphStorage::reset()
+void
+LEGlyphStorage::reset()
 {
     fGlyphCount = 0;
 
@@ -62,11 +69,11 @@ void LEGlyphStorage::reset()
 
 // FIXME: This might get called more than once, for various reasons. Is
 // testing for pre-existing glyph and charIndices arrays good enough?
-void LEGlyphStorage::allocateGlyphArray(le_int32 initialGlyphCount, le_bool rightToLeft, LEErrorCode &success)
+void
+LEGlyphStorage::allocateGlyphArray(le_int32 initialGlyphCount, le_bool rightToLeft, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (initialGlyphCount <= 0) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -109,7 +116,7 @@ void LEGlyphStorage::allocateGlyphArray(le_int32 initialGlyphCount, le_bool righ
     if (fInsertionList == NULL) {
         // FIXME: check this for failure?
         fInsertionList = new LEInsertionList(rightToLeft);
-        if (fInsertionList == NULL) { 
+        if (fInsertionList == NULL) {
             LE_DELETE_ARRAY(fCharIndices);
             fCharIndices = NULL;
 
@@ -123,11 +130,11 @@ void LEGlyphStorage::allocateGlyphArray(le_int32 initialGlyphCount, le_bool righ
 }
 
 // FIXME: do we want to initialize the positions to [0, 0]?
-le_int32 LEGlyphStorage::allocatePositions(LEErrorCode &success)
+le_int32
+LEGlyphStorage::allocatePositions(LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return -1;
-    }
 
     if (fPositions != NULL) {
         success = LE_INTERNAL_ERROR;
@@ -145,11 +152,11 @@ le_int32 LEGlyphStorage::allocatePositions(LEErrorCode &success)
 }
 
 // FIXME: do we want to initialize the aux data to NULL?
-le_int32 LEGlyphStorage::allocateAuxData(LEErrorCode &success)
+le_int32
+LEGlyphStorage::allocateAuxData(LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return -1;
-    }
 
     if (fAuxData != NULL) {
         success = LE_INTERNAL_ERROR;
@@ -166,13 +173,13 @@ le_int32 LEGlyphStorage::allocateAuxData(LEErrorCode &success)
     return fGlyphCount;
 }
 
-void LEGlyphStorage::getCharIndices(le_int32 charIndices[], le_int32 indexBase, LEErrorCode &success) const
+void
+LEGlyphStorage::getCharIndices(le_int32 charIndices[], le_int32 indexBase, LEErrorCode &success) const
 {
     le_int32 i;
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (charIndices == NULL) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -191,31 +198,30 @@ void LEGlyphStorage::getCharIndices(le_int32 charIndices[], le_int32 indexBase, 
 
 void LEGlyphStorage::getCharIndices(le_int32 charIndices[], LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
-      return;
-    }
-    
+    if (LE_FAILURE(success))
+        return;
+
     if (charIndices == NULL) {
-      success = LE_ILLEGAL_ARGUMENT_ERROR;
-      return;
+        success = LE_ILLEGAL_ARGUMENT_ERROR;
+        return;
     }
-    
+
     if (fCharIndices == NULL) {
-      success = LE_NO_LAYOUT_ERROR;
-      return;
+        success = LE_NO_LAYOUT_ERROR;
+        return;
     }
-    
+
     LE_ARRAY_COPY(charIndices, fCharIndices, fGlyphCount);
 }
 
 // Copy the glyphs into caller's (32-bit) glyph array, OR in extraBits
-void LEGlyphStorage::getGlyphs(le_uint32 glyphs[], le_uint32 extraBits, LEErrorCode &success) const
+void
+LEGlyphStorage::getGlyphs(le_uint32 glyphs[], le_uint32 extraBits, LEErrorCode &success) const
 {
     le_int32 i;
 
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (glyphs == NULL) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -227,35 +233,34 @@ void LEGlyphStorage::getGlyphs(le_uint32 glyphs[], le_uint32 extraBits, LEErrorC
         return;
     }
 
-    for (i = 0; i < fGlyphCount; i += 1) {
+    for (i = 0; i < fGlyphCount; i += 1)
         glyphs[i] = fGlyphs[i] | extraBits;
-    }
 }
 
-void LEGlyphStorage::getGlyphs(LEGlyphID glyphs[], LEErrorCode &success) const
+void
+LEGlyphStorage::getGlyphs(LEGlyphID glyphs[], LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
-      return;
-    }
-    
+    if (LE_FAILURE(success))
+        return;
+
     if (glyphs == NULL) {
-      success = LE_ILLEGAL_ARGUMENT_ERROR;
-      return;
+        success = LE_ILLEGAL_ARGUMENT_ERROR;
+        return;
     }
-    
+
     if (fGlyphs == NULL) {
-      success = LE_NO_LAYOUT_ERROR;
-      return;
+        success = LE_NO_LAYOUT_ERROR;
+        return;
     }
-    
+
     LE_ARRAY_COPY(glyphs, fGlyphs, fGlyphCount);
 }
 
-LEGlyphID LEGlyphStorage::getGlyphID(le_int32 glyphIndex, LEErrorCode &success) const
+LEGlyphID
+LEGlyphStorage::getGlyphID(le_int32 glyphIndex, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0xFFFF;
-    }
 
     if (fGlyphs == NULL) {
         success = LE_NO_LAYOUT_ERROR;
@@ -270,11 +275,11 @@ LEGlyphID LEGlyphStorage::getGlyphID(le_int32 glyphIndex, LEErrorCode &success) 
     return fGlyphs[glyphIndex];
 }
 
-void LEGlyphStorage::setGlyphID(le_int32 glyphIndex, LEGlyphID glyphID, LEErrorCode &success)
+void
+LEGlyphStorage::setGlyphID(le_int32 glyphIndex, LEGlyphID glyphID, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (fGlyphs == NULL) {
         success = LE_NO_LAYOUT_ERROR;
@@ -289,11 +294,11 @@ void LEGlyphStorage::setGlyphID(le_int32 glyphIndex, LEGlyphID glyphID, LEErrorC
     fGlyphs[glyphIndex] = glyphID;
 }
 
-le_int32 LEGlyphStorage::getCharIndex(le_int32 glyphIndex, LEErrorCode &success) const
+le_int32
+LEGlyphStorage::getCharIndex(le_int32 glyphIndex, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return -1;
-    }
 
     if (fCharIndices == NULL) {
         success = LE_NO_LAYOUT_ERROR;
@@ -308,11 +313,11 @@ le_int32 LEGlyphStorage::getCharIndex(le_int32 glyphIndex, LEErrorCode &success)
     return fCharIndices[glyphIndex];
 }
 
-void LEGlyphStorage::setCharIndex(le_int32 glyphIndex, le_int32 charIndex, LEErrorCode &success)
+void
+LEGlyphStorage::setCharIndex(le_int32 glyphIndex, le_int32 charIndex, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (fCharIndices == NULL) {
         success = LE_NO_LAYOUT_ERROR;
@@ -327,36 +332,36 @@ void LEGlyphStorage::setCharIndex(le_int32 glyphIndex, le_int32 charIndex, LEErr
     fCharIndices[glyphIndex] = charIndex;
 }
 
-void LEGlyphStorage::getAuxData(le_uint32 auxData[], LEErrorCode &success) const
+void
+LEGlyphStorage::getAuxData(le_uint32 auxData[], LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
-      return;
-    }
-    
+    if (LE_FAILURE(success))
+        return;
+
     if (auxData == NULL) {
-      success = LE_ILLEGAL_ARGUMENT_ERROR;
-      return;
+        success = LE_ILLEGAL_ARGUMENT_ERROR;
+        return;
     }
-    
+
     if (fAuxData == NULL) {
-      success = LE_NO_LAYOUT_ERROR;
-      return;
+        success = LE_NO_LAYOUT_ERROR;
+        return;
     }
-    
+
     LE_ARRAY_COPY(auxData, fAuxData, fGlyphCount);
 }
 
-le_uint32 LEGlyphStorage::getAuxData(le_int32 glyphIndex, LEErrorCode &success) const
+le_uint32
+LEGlyphStorage::getAuxData(le_int32 glyphIndex, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     if (fAuxData == NULL) {
         success = LE_NO_LAYOUT_ERROR;
         return 0;
     }
-    
+
     if (glyphIndex < 0 || glyphIndex >= fGlyphCount) {
         success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
         return 0;
@@ -365,11 +370,11 @@ le_uint32 LEGlyphStorage::getAuxData(le_int32 glyphIndex, LEErrorCode &success) 
     return fAuxData[glyphIndex];
 }
 
-void LEGlyphStorage::setAuxData(le_int32 glyphIndex, le_uint32 auxData, LEErrorCode &success)
+void
+LEGlyphStorage::setAuxData(le_int32 glyphIndex, le_uint32 auxData, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return;
-    }
 
     if (fAuxData == NULL) {
         success = LE_NO_LAYOUT_ERROR;
@@ -384,142 +389,144 @@ void LEGlyphStorage::setAuxData(le_int32 glyphIndex, le_uint32 auxData, LEErrorC
     fAuxData[glyphIndex] = auxData;
 }
 
-void LEGlyphStorage::getGlyphPositions(float positions[], LEErrorCode &success) const
+void
+LEGlyphStorage::getGlyphPositions(float positions[], LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
-      return;
-    }
-  
+    if (LE_FAILURE(success))
+        return;
+
     if (positions == NULL) {
-      success = LE_ILLEGAL_ARGUMENT_ERROR;
-      return;
+        success = LE_ILLEGAL_ARGUMENT_ERROR;
+        return;
     }
-    
+
     if (fPositions == NULL) {
-      success = LE_NO_LAYOUT_ERROR;
-      return;
+        success = LE_NO_LAYOUT_ERROR;
+        return;
     }
-    
+
     LE_ARRAY_COPY(positions, fPositions, fGlyphCount * 2 + 2);
 }
 
-void LEGlyphStorage::getGlyphPosition(le_int32 glyphIndex, float &x, float &y, LEErrorCode &success) const
+void
+LEGlyphStorage::getGlyphPosition(le_int32 glyphIndex, float &x, float &y, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
-      return;
-    }
-    
+    if (LE_FAILURE(success))
+        return;
+
     if (glyphIndex < 0 || glyphIndex > fGlyphCount) {
-      success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
-      return;
+        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
+        return;
     }
-    
+
     if (fPositions == NULL) {
-      success = LE_NO_LAYOUT_ERROR;
-      return;
+        success = LE_NO_LAYOUT_ERROR;
+        return;
     }
-    
+
     x = fPositions[glyphIndex * 2];
     y = fPositions[glyphIndex * 2 + 1];
 }
 
-void LEGlyphStorage::setPosition(le_int32 glyphIndex, float x, float y, LEErrorCode &success)
+void
+LEGlyphStorage::setPosition(le_int32 glyphIndex, float x, float y, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
+        return;
+
+    if (glyphIndex < 0 || glyphIndex > fGlyphCount) {
+        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
         return;
     }
-    
-    if (glyphIndex < 0 || glyphIndex > fGlyphCount) {
-      success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
-      return;
-    }
-    
+
     fPositions[glyphIndex * 2]     = x;
     fPositions[glyphIndex * 2 + 1] = y;
 }
 
-void LEGlyphStorage::adjustPosition(le_int32 glyphIndex, float xAdjust, float yAdjust, LEErrorCode &success)
+void
+LEGlyphStorage::adjustPosition(le_int32 glyphIndex, float xAdjust, float yAdjust, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
+        return;
+
+    if (glyphIndex < 0 || glyphIndex > fGlyphCount) {
+        success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
         return;
     }
-    
-    if (glyphIndex < 0 || glyphIndex > fGlyphCount) {
-      success = LE_INDEX_OUT_OF_BOUNDS_ERROR;
-      return;
-    }
-    
+
     fPositions[glyphIndex * 2]     += xAdjust;
     fPositions[glyphIndex * 2 + 1] += yAdjust;
 }
 
-void LEGlyphStorage::adoptGlyphArray(LEGlyphStorage &from)
+void
+LEGlyphStorage::adoptGlyphArray(LEGlyphStorage &from)
 {
-    if (fGlyphs != NULL) {
+    if (fGlyphs != NULL)
         LE_DELETE_ARRAY(fGlyphs);
-    }
 
     fGlyphs = from.fGlyphs;
     from.fGlyphs = NULL;
 
-    if (fInsertionList != NULL) {
+    if (fInsertionList != NULL)
         delete fInsertionList;
-    }
 
     fInsertionList = from.fInsertionList;
     from.fInsertionList = NULL;
 }
 
-void LEGlyphStorage::adoptCharIndicesArray(LEGlyphStorage &from)
+void
+LEGlyphStorage::adoptCharIndicesArray(LEGlyphStorage &from)
 {
-    if (fCharIndices != NULL) {
+    if (fCharIndices != NULL)
         LE_DELETE_ARRAY(fCharIndices);
-    }
 
     fCharIndices = from.fCharIndices;
     from.fCharIndices = NULL;
 }
 
-void LEGlyphStorage::adoptPositionArray(LEGlyphStorage &from)
+void
+LEGlyphStorage::adoptPositionArray(LEGlyphStorage &from)
 {
-    if (fPositions != NULL) {
+    if (fPositions != NULL)
         LE_DELETE_ARRAY(fPositions);
-    }
 
     fPositions = from.fPositions;
     from.fPositions = NULL;
 }
 
-void LEGlyphStorage::adoptAuxDataArray(LEGlyphStorage &from)
+void
+LEGlyphStorage::adoptAuxDataArray(LEGlyphStorage &from)
 {
-    if (fAuxData != NULL) {
+    if (fAuxData != NULL)
         LE_DELETE_ARRAY(fAuxData);
-    }
 
     fAuxData = from.fAuxData;
     from.fAuxData = NULL;
 }
 
-void LEGlyphStorage::adoptGlyphCount(LEGlyphStorage &from)
+void
+LEGlyphStorage::adoptGlyphCount(LEGlyphStorage &from)
 {
     fGlyphCount = from.fGlyphCount;
 }
 
-void LEGlyphStorage::adoptGlyphCount(le_int32 newGlyphCount)
+void
+LEGlyphStorage::adoptGlyphCount(le_int32 newGlyphCount)
 {
     fGlyphCount = newGlyphCount;
 }
 
 // Move a glyph to a different position in the LEGlyphStorage ( used for Indic v2 processing )
 
-void LEGlyphStorage::moveGlyph(le_int32 fromPosition, le_int32 toPosition, le_uint32 marker )
+void
+LEGlyphStorage::moveGlyph(le_int32 fromPosition, le_int32 toPosition, le_uint32 marker )
 {
 
     LEErrorCode success = LE_NO_ERROR;
 
-    LEGlyphID holdGlyph = getGlyphID(fromPosition,success);
-    le_int32 holdCharIndex = getCharIndex(fromPosition,success);
-    le_uint32 holdAuxData = getAuxData(fromPosition,success);
+    LEGlyphID holdGlyph     = getGlyphID(fromPosition,success);
+    le_int32  holdCharIndex = getCharIndex(fromPosition,success);
+    le_uint32 holdAuxData   = getAuxData(fromPosition,success);
 
     if ( fromPosition < toPosition ) {
         for ( le_int32 i = fromPosition ; i < toPosition ; i++ ) {
@@ -543,48 +550,50 @@ void LEGlyphStorage::moveGlyph(le_int32 fromPosition, le_int32 toPosition, le_ui
 }
 
 // Glue code for existing stable API
-LEGlyphID *LEGlyphStorage::insertGlyphs(le_int32  atIndex, le_int32 insertCount)
+LEGlyphID *
+LEGlyphStorage::insertGlyphs(le_int32  atIndex, le_int32 insertCount)
 {
     LEErrorCode ignored = LE_NO_LAYOUT_ERROR;
     return insertGlyphs(atIndex, insertCount, ignored);
 }
 
 // FIXME: add error checking?
-LEGlyphID *LEGlyphStorage::insertGlyphs(le_int32  atIndex, le_int32 insertCount, LEErrorCode& success)
+LEGlyphID *
+LEGlyphStorage::insertGlyphs(le_int32  atIndex, le_int32 insertCount, LEErrorCode& success)
 {
     return fInsertionList->insert(atIndex, insertCount, success);
 }
 
-le_int32 LEGlyphStorage::applyInsertions()
+le_int32
+LEGlyphStorage::applyInsertions()
 {
     le_int32 growAmount = fInsertionList->getGrowAmount();
 
-    if (growAmount == 0) {
+    if (growAmount == 0)
         return fGlyphCount;
-    }
 
     le_int32 newGlyphCount = fGlyphCount + growAmount;
 
-    LEGlyphID *newGlyphs = (LEGlyphID *) LE_GROW_ARRAY(fGlyphs, newGlyphCount); 
-    if (newGlyphs == NULL) { 
-        // Could not grow the glyph array 
-        return fGlyphCount; 
-    } 
-    fGlyphs = newGlyphs; 
+    LEGlyphID *newGlyphs = (LEGlyphID *) LE_GROW_ARRAY(fGlyphs, newGlyphCount);
+
+    if (newGlyphs == NULL) // Could not grow the glyph array
+        return fGlyphCount;
+
+    fGlyphs = newGlyphs;
 
     le_int32 *newCharIndices = (le_int32 *) LE_GROW_ARRAY(fCharIndices, newGlyphCount);
-    if (newCharIndices == NULL) { 
-        // Could not grow the glyph array 
-        return fGlyphCount; 
-    } 
+
+    if (newCharIndices == NULL) // Could not grow the glyph array
+        return fGlyphCount;
+
     fCharIndices = newCharIndices;
 
-    if (fAuxData != NULL) {	
-        le_uint32 *newAuxData = (le_uint32 *) LE_GROW_ARRAY(fAuxData, newGlyphCount); 
-        if (newAuxData == NULL) { 
-            // could not grow the aux data array 
-            return fGlyphCount; 
-        } 
+    if (fAuxData != NULL) {
+        le_uint32 *newAuxData = (le_uint32 *) LE_GROW_ARRAY(fAuxData, newGlyphCount);
+
+        if (newAuxData == NULL) // could not grow the aux data array
+            return fGlyphCount;
+
         fAuxData = (le_uint32 *)newAuxData;
     }
 
@@ -600,9 +609,8 @@ le_int32 LEGlyphStorage::applyInsertions()
     // really need it 'cause the insertions don't get  applied until after a
     // complete pass over the glyphs, after which the iterator gets reset anyhow...
     // probably better to just document that for LEGlyphStorage and GlyphIterator...
-    if (position == glyphCount) {
+    if (position == glyphCount)
         position = newGlyphCount;
-    }
 #endif
 
     fInsertionList->applyInsertions(this);
@@ -612,7 +620,8 @@ le_int32 LEGlyphStorage::applyInsertions()
     return fGlyphCount = newGlyphCount;
 }
 
-le_bool LEGlyphStorage::applyInsertion(le_int32 atPosition, le_int32 count, LEGlyphID newGlyphs[])
+le_bool
+LEGlyphStorage::applyInsertion(le_int32 atPosition, le_int32 count, LEGlyphID newGlyphs[])
 {
 #if 0
     // if the current position is within the block we're shifting
@@ -623,21 +632,18 @@ le_bool LEGlyphStorage::applyInsertion(le_int32 atPosition, le_int32 count, LEGl
     // really need it 'cause the insertions don't get  applied until after a
     // complete pass over the glyphs, after which the iterator gets reset anyhow...
     // probably better to just document that for LEGlyphStorage and GlyphIterator...
-    if (position >= atPosition && position <= fSrcIndex) {
+    if (position >= atPosition && position <= fSrcIndex)
         position += fDestIndex - fSrcIndex;
-    }
 #endif
 
     if (fAuxData != NULL) {
         le_int32 src = fSrcIndex, dest = fDestIndex;
 
-        while (src > atPosition) {
+        while (src > atPosition)
             fAuxData[dest--] = fAuxData[src--];
-        }
 
-        for (le_int32 i = count - 1; i >= 0; i -= 1) {
+        for (le_int32 i = count - 1; i >= 0; i -= 1)
             fAuxData[dest--] = fAuxData[atPosition];
-        }
     }
 
     while (fSrcIndex > atPosition) {
@@ -662,7 +668,8 @@ le_bool LEGlyphStorage::applyInsertion(le_int32 atPosition, le_int32 count, LEGl
     return FALSE;
 }
 
-void LEGlyphStorage::setInsertionDirection(le_bool rightToLeft)
+void
+LEGlyphStorage::setInsertionDirection(le_bool rightToLeft)
 {
     fInsertionList->setAppend(rightToLeft);
 }

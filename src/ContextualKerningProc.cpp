@@ -6,10 +6,11 @@
 U_NAMESPACE_BEGIN
 
 ContextualKerningProcessor::ContextualKerningProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, le_bool crossStream, LEErrorCode &success)
-    : StateTableProcessor(header, dir, success),
-      crossStream(crossStream),
-      sp(-1), kerningValues(0),
-      contextualKerningHeader(header, success)
+    : StateTableProcessor(header, dir, success)
+    , crossStream(crossStream)
+    , sp(-1)
+    , kerningValues(0)
+    , contextualKerningHeader(header, success)
 {
     if (LE_FAILURE(success))
         return;
@@ -21,7 +22,8 @@ ContextualKerningProcessor::~ContextualKerningProcessor()
 {
 }
 
-void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return;
@@ -36,7 +38,8 @@ void ContextualKerningProcessor::beginStateTable(LEGlyphStorage &glyphStorage, L
         kerningValues[glyph] = 0;
 }
 
-le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16
+ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -109,7 +112,8 @@ le_uint16 ContextualKerningProcessor::processStateEntry(LEGlyphStorage &glyphSto
     return newState;
 }
 
-void ContextualKerningProcessor::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+ContextualKerningProcessor::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (!kerningValues)
         return;

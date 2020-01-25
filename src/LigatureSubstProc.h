@@ -26,9 +26,7 @@ class LigatureSubstitutionProcessor : public StateTableProcessor
 {
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
-
     virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success);
-
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     LigatureSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success);
@@ -38,14 +36,12 @@ private:
     LigatureSubstitutionProcessor();
 
 protected:
-    le_uint16 ligatureActionTableOffset;
-    le_uint16 componentTableOffset;
-    le_uint16 ligatureTableOffset;
-
-    le_int32 componentStack[nComponents];
-    le_int16 m;
-
-    LEReferenceTo<LigatureSubstitutionHeader> ligatureSubstitutionHeader;
+    le_uint16                                            ligatureActionTableOffset;
+    le_uint16                                            componentTableOffset;
+    le_uint16                                            ligatureTableOffset;
+    le_int32                                             componentStack[nComponents];
+    le_int16                                             m;
+    LEReferenceTo<LigatureSubstitutionHeader>            ligatureSubstitutionHeader;
     LEReferenceToArrayOf<LigatureSubstitutionStateEntry> entryTable;
 
 };

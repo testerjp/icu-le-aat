@@ -16,7 +16,8 @@ U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(GXLayoutEngine2)
 
 GXLayoutEngine2::GXLayoutEngine2(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode, const LEReferenceTo<MorphTableHeader2> &morphTable, le_int32 typoFlags, LEErrorCode &success)
-    : LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success), fMorphTable(morphTable)
+    : LayoutEngine(fontInstance, scriptCode, languageCode, typoFlags, success)
+    , fMorphTable(morphTable)
 {
     fFilterZeroWidth = FALSE;
 
@@ -28,7 +29,8 @@ GXLayoutEngine2::~GXLayoutEngine2()
     reset();
 }
 
-le_int32 GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success)
+le_int32
+GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return 0;
@@ -48,8 +50,8 @@ le_int32 GXLayoutEngine2::computeGlyphs(const LEUnicode chars[], le_int32 offset
     return glyphStorage.getGlyphCount();
 }
 
-void GXLayoutEngine2::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool /* reverse */,
-                                           LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+GXLayoutEngine2::adjustGlyphPositions(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool /* reverse */, LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return;

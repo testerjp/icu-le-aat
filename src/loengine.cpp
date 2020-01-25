@@ -9,18 +9,14 @@
 #include "LayoutEngine.h"
 
 /**
- * \file 
+ * \file
  * \brief C API for complex text layout.
  */
 
 U_NAMESPACE_USE
 
 U_CAPI le_engine * U_EXPORT2
-le_create(const le_font *font,
-		  le_int32 scriptCode,
-		  le_int32 languageCode,
-		  le_int32 typo_flags,
-		  LEErrorCode *success)
+le_create(const le_font *font, le_int32 scriptCode, le_int32 languageCode, le_int32 typo_flags, LEErrorCode *success)
 {
 	LEFontInstance *fontInstance = (LEFontInstance *) font;
 
@@ -36,15 +32,7 @@ le_close(le_engine *engine)
 }
 
 U_CAPI le_int32 U_EXPORT2
-le_layoutChars(le_engine *engine,
-			   const LEUnicode chars[],
-			   le_int32 offset,
-			   le_int32 count,
-			   le_int32 max,
-			   le_bool rightToLeft,
-			   float x,
-			   float y,
-			   LEErrorCode *success)
+le_layoutChars(le_engine *engine, const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, float x, float y, LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -57,8 +45,7 @@ le_layoutChars(le_engine *engine,
 }
 
 U_CAPI le_int32 U_EXPORT2
-le_getGlyphCount(le_engine *engine,
-				 LEErrorCode *success)
+le_getGlyphCount(le_engine *engine, LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -71,9 +58,7 @@ le_getGlyphCount(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_getGlyphs(le_engine *engine,
-			 LEGlyphID glyphs[],
-			 LEErrorCode *success)
+le_getGlyphs(le_engine *engine, LEGlyphID glyphs[], LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -86,9 +71,7 @@ le_getGlyphs(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_getCharIndices(le_engine *engine,
-				  le_int32 charIndices[],
-				  LEErrorCode *success)
+le_getCharIndices(le_engine *engine, le_int32 charIndices[], LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -101,10 +84,7 @@ le_getCharIndices(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_getCharIndicesWithBase(le_engine *engine,
-				          le_int32 charIndices[],
-				          le_int32 indexBase,
-				          LEErrorCode *success)
+le_getCharIndicesWithBase(le_engine *engine, le_int32 charIndices[], le_int32 indexBase, LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -117,9 +97,7 @@ le_getCharIndicesWithBase(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_getGlyphPositions(le_engine *engine,
-					 float positions[],
-					 LEErrorCode *success)
+le_getGlyphPositions(le_engine *engine, float positions[], LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -132,11 +110,7 @@ le_getGlyphPositions(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_getGlyphPosition(le_engine *engine,
-					le_int32 glyphIndex,
-					float *x,
-					float *y,
-					LEErrorCode *success)
+le_getGlyphPosition(le_engine *engine, le_int32 glyphIndex, float *x, float *y, LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 
@@ -149,8 +123,7 @@ le_getGlyphPosition(le_engine *engine,
 }
 
 U_CAPI void U_EXPORT2
-le_reset(le_engine *engine,
-		 LEErrorCode *success)
+le_reset(le_engine *engine, LEErrorCode *success)
 {
 	LayoutEngine *le = (LayoutEngine *) engine;
 

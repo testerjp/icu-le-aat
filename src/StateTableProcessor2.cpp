@@ -18,8 +18,13 @@ StateTableProcessor2::StateTableProcessor2()
 }
 
 StateTableProcessor2::StateTableProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 direction, LEErrorCode &success)
-    : dir(direction), nClasses(0), classTableOffset(0), stateArrayOffset(0), entryTableOffset(0),
-      stateTableHeader(header), processor(0)
+    : dir(direction)
+    , nClasses(0)
+    , classTableOffset(0)
+    , stateArrayOffset(0)
+    , entryTableOffset(0)
+    , stateTableHeader(header)
+    , processor(0)
 {
     if (LE_FAILURE(success))
         return;
@@ -48,7 +53,8 @@ StateTableProcessor2::~StateTableProcessor2()
         delete processor;
 }
 
-void StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+StateTableProcessor2::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success) || !processor)
         return;

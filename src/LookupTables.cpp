@@ -11,7 +11,8 @@
 
 U_NAMESPACE_BEGIN
 
-le_bool BinarySearchLookupTable::validate(const LETableReference &base, le_uint32 _unitSize) const
+le_bool
+BinarySearchLookupTable::validate(const LETableReference &base, le_uint32 _unitSize) const
 {
     le_uint16 unity = SWAPW(unitSize);
     le_uint16 probe = SWAPW(searchRange);
@@ -37,7 +38,8 @@ le_bool BinarySearchLookupTable::validate(const LETableReference &base, le_uint3
     of the derived classes, and implement it in the others by casting
     the "this" pointer to the type that has the implementation.
 */
-const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const
+const LookupSegment *
+BinarySearchLookupTable::lookupSegment(const LETableReference &base, const LookupSegment *segments, LEGlyphID glyph, LEErrorCode &success) const
 {
     le_uint16 unity = SWAPW(unitSize);
     le_uint16 probe = SWAPW(searchRange);
@@ -72,7 +74,8 @@ const LookupSegment *BinarySearchLookupTable::lookupSegment(const LETableReferen
     return NULL;
 }
 
-const LookupSingle *BinarySearchLookupTable::lookupSingle(const LETableReference &base, const LookupSingle *entries, LEGlyphID glyph, LEErrorCode &success) const
+const LookupSingle *
+BinarySearchLookupTable::lookupSingle(const LETableReference &base, const LookupSingle *entries, LEGlyphID glyph, LEErrorCode &success) const
 {
     le_uint16 unity = SWAPW(unitSize);
     le_uint16 probe = SWAPW(searchRange);

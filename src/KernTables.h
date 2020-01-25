@@ -76,9 +76,8 @@ public:
     void process(LEGlyphStorage& storage, LEErrorCode &success);
 
 private:
-    fixed32   version;
-    le_uint32 nTables;
-
+    fixed32          version;
+    le_uint32        nTables;
     LETableReference table;
 };
 

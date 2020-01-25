@@ -47,8 +47,8 @@ protected:
     TTGlyphID nGlyphs;
 
     LEReferenceTo<StateTableHeader> stateTableHeader;
-    LEReferenceTo<ClassTable> classTable;
-    LEReferenceToArrayOf<le_uint8> classArray;
+    LEReferenceTo<ClassTable>       classTable;
+    LEReferenceToArrayOf<le_uint8>  classArray;
 
 private:
     StateTableProcessor(const StateTableProcessor &other); // forbid copying of this class

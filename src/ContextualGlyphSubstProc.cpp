@@ -12,9 +12,9 @@
 U_NAMESPACE_BEGIN
 
 ContextualGlyphSubstitutionProcessor::ContextualGlyphSubstitutionProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 dir, LEErrorCode &success)
-    : StateTableProcessor(header, dir, success),
-      markGlyph(0),
-      contextualGlyphSubstitutionHeader(header, success)
+    : StateTableProcessor(header, dir, success)
+    , markGlyph(0)
+    , contextualGlyphSubstitutionHeader(header, success)
 {
     if (LE_FAILURE(success))
         return;
@@ -28,12 +28,14 @@ ContextualGlyphSubstitutionProcessor::~ContextualGlyphSubstitutionProcessor()
 {
 }
 
-void ContextualGlyphSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+ContextualGlyphSubstitutionProcessor::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     markGlyph = 0;
 }
 
-le_uint16 ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
+le_uint16
+ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return stateArrayOffset;
@@ -71,7 +73,8 @@ le_uint16 ContextualGlyphSubstitutionProcessor::processStateEntry(LEGlyphStorage
     return newState;
 }
 
-void ContextualGlyphSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+ContextualGlyphSubstitutionProcessor::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

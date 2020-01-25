@@ -11,7 +11,8 @@
 
 U_NAMESPACE_BEGIN
 
-void doRearrangementAction(LEGlyphStorage &glyphStorage, le_int32 firstGlyph, le_int32 lastGlyph, IndicRearrangementVerb verb, LEErrorCode &success)
+void
+doRearrangementAction(LEGlyphStorage &glyphStorage, le_int32 firstGlyph, le_int32 lastGlyph, IndicRearrangementVerb verb, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return;

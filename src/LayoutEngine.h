@@ -8,7 +8,7 @@
 #include "LETypes.h"
 
 /**
- * \file 
+ * \file
  * \brief C++ API: Virtual base class for complex text layout.
  */
 
@@ -40,7 +40,7 @@ class LEGlyphStorage;
  * character to glyph mapping and default positioning using the glyph's advance
  * widths. Subclasses can override these methods for more advanced layout.
  * There is a public method which invokes the steps in the correct order.
- * 
+ *
  * The steps are:
  *
  * 1) Glyph processing - character to glyph mapping and any other glyph processing
@@ -67,7 +67,7 @@ public:
     /** @internal Flag to request kerning. Use LE_Kerning_FEATURE_FLAG instead. */
     static const le_int32 kTypoFlagKern;
     /** @internal Flag to request ligatures. Use LE_Ligatures_FEATURE_FLAG instead. */
-    static const le_int32 kTypoFlagLiga;	
+    static const le_int32 kTypoFlagLiga;
 #endif  /* U_HIDE_INTERNAL_API */
 
 protected:
@@ -137,11 +137,7 @@ protected:
      *
      * @internal
      */
-    LayoutEngine(const LEFontInstance *fontInstance,
-                 le_int32 scriptCode,
-                 le_int32 languageCode,
-                 le_int32 typoFlags,
-                 LEErrorCode &success);
+    LayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode, le_int32 typoFlags, LEErrorCode &success);
 #endif  /* U_HIDE_INTERNAL_API */
 
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
@@ -225,7 +221,7 @@ protected:
      * the text. The default implementation gets the table from
      * the font instance. Subclasses which need to get the tables
      * some other way must override this method.
-     * 
+     *
      * @param tableTag - the four byte table tag.
      * @param length - length to use
      *

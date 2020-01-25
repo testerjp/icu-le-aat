@@ -18,8 +18,8 @@
 
 U_NAMESPACE_BEGIN
 
-void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LEGlyphStorage &glyphStorage,
-                                le_int32 /* typoFlags */, LEErrorCode &success) const
+void
+MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LEGlyphStorage &glyphStorage, le_int32 /* typoFlags */, LEErrorCode &success) const
 {
     if (LE_FAILURE(success))
         return;
@@ -58,7 +58,8 @@ void MorphTableHeader2::process(const LEReferenceTo<MorphTableHeader2> &base, LE
     }
 }
 
-void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+void
+MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
     SubtableProcessor *processor = NULL;
 

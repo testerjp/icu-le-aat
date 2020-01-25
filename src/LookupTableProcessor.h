@@ -94,11 +94,10 @@ private:
 
 protected:
     LEReferenceTo<TrimmedArrayLookupTable> trimmedArrayLookupTable;
-
-    le_uint32 firstGlyph;
-    le_uint32 glyphCount;
-    le_uint32 limitGlyph;
-    LEReferenceToArrayOf<LookupValue> valueArray;
+    le_uint32                              firstGlyph;
+    le_uint32                              glyphCount;
+    le_uint32                              limitGlyph;
+    LEReferenceToArrayOf<LookupValue>      valueArray;
 };
 
 U_NAMESPACE_END

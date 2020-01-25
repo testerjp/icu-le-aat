@@ -30,7 +30,8 @@ NonContextualGlyphSubstitutionProcessor::~NonContextualGlyphSubstitutionProcesso
         delete processor;
 }
 
-void NonContextualGlyphSubstitutionProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+NonContextualGlyphSubstitutionProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success) || !processor)
         return;

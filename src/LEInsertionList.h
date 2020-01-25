@@ -38,7 +38,7 @@ public:
      * @internal
      */
     virtual le_bool applyInsertion(le_int32 atPosition, le_int32 count, LEGlyphID newGlyphs[]) = 0;
-    
+
     /**
      * The destructor
      */

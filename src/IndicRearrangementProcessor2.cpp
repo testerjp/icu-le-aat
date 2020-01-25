@@ -12,10 +12,11 @@
 U_NAMESPACE_BEGIN
 
 IndicRearrangementProcessor2::IndicRearrangementProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
-    : StateTableProcessor2(header, dir, success),
-      firstGlyph(0), lastGlyph(0),
-      indicRearrangementSubtableHeader(header, success),
-      entryTable(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
+    : StateTableProcessor2(header, dir, success)
+    , firstGlyph(0)
+    , lastGlyph(0)
+    , indicRearrangementSubtableHeader(header, success)
+    , entryTable(stateTableHeader, success, entryTableOffset, LE_UNBOUNDED_ARRAY)
 {
 }
 
@@ -23,14 +24,15 @@ IndicRearrangementProcessor2::~IndicRearrangementProcessor2()
 {
 }
 
-void IndicRearrangementProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+IndicRearrangementProcessor2::beginStateTable(LEGlyphStorage &, LEErrorCode &)
 {
     firstGlyph = 0;
     lastGlyph  = 0;
 }
 
-le_uint16 IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph,
-                                                          EntryTableIndex2 index, LEErrorCode &success)
+le_uint16
+IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return 0;
@@ -60,7 +62,8 @@ le_uint16 IndicRearrangementProcessor2::processStateEntry(LEGlyphStorage &glyphS
     return newState;
 }
 
-void IndicRearrangementProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
+void
+IndicRearrangementProcessor2::endStateTable(LEGlyphStorage &, LEErrorCode &)
 {
 }
 

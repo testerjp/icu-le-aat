@@ -12,8 +12,11 @@
 U_NAMESPACE_BEGIN
 
 OrderedListKerningPairsProcessor::OrderedListKerningPairsProcessor(LEReferenceTo<OrderedListKerningPairsHeader> header, LEErrorCode &success)
-    : nPairs(0), searchRange(0), entrySelector(0), rangeShift(0),
-      orderedListKerningPairsHeader(header, success)
+    : nPairs(0)
+    , searchRange(0)
+    , entrySelector(0)
+    , rangeShift(0)
+    , orderedListKerningPairsHeader(header, success)
 {
     if (LE_FAILURE(success))
         return;
@@ -33,7 +36,8 @@ OrderedListKerningPairsProcessor::~OrderedListKerningPairsProcessor()
 {
 }
 
-const KerningPair *OrderedListKerningPairsProcessor::search(le_uint32 key, LEErrorCode &success) const
+const KerningPair *
+OrderedListKerningPairsProcessor::search(le_uint32 key, LEErrorCode &success) const
 {
     le_uint16 unity = sizeof(KerningPair);
     le_uint16 probe = searchRange;

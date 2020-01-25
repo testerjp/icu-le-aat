@@ -26,13 +26,12 @@ protected:
 
     const KerningPair *search(le_uint32 key, LEErrorCode &success) const;
 
-    le_uint16 nPairs;
-    le_uint16 searchRange;
-    le_uint16 entrySelector;
-    le_uint16 rangeShift;
-
+    le_uint16                                    nPairs;
+    le_uint16                                    searchRange;
+    le_uint16                                    entrySelector;
+    le_uint16                                    rangeShift;
     LEReferenceTo<OrderedListKerningPairsHeader> orderedListKerningPairsHeader;
-    LEReferenceToArrayOf<KerningPair> pairs;
+    LEReferenceToArrayOf<KerningPair>            pairs;
 
 private:
     OrderedListKerningPairsProcessor(const OrderedListKerningPairsProcessor &other); // forbid copying of this class

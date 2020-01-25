@@ -30,12 +30,11 @@ LEFontInstance::~LEFontInstance()
     // nothing to do
 }
 
-const LEFontInstance *LEFontInstance::getSubFont(const LEUnicode chars[], le_int32 *offset, le_int32 limit,
-                                                       le_int32 script, LEErrorCode &success) const
+const LEFontInstance *
+LEFontInstance::getSubFont(const LEUnicode chars[], le_int32 *offset, le_int32 limit, le_int32 script, LEErrorCode &success) const
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return NULL;
-    }
 
     if (chars == NULL || *offset < 0 || limit < 0 || *offset >= limit || script < 0 || script >= scriptCodeCount) {
         success = LE_ILLEGAL_ARGUMENT_ERROR;
@@ -46,8 +45,8 @@ const LEFontInstance *LEFontInstance::getSubFont(const LEUnicode chars[], le_int
     return this;
 }
 
-void LEFontInstance::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count,
-                                      le_bool reverse, const LECharMapper *mapper, le_bool filterZeroWidth, LEGlyphStorage &glyphStorage) const
+void
+LEFontInstance::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, le_int32 count, le_bool reverse, const LECharMapper *mapper, le_bool filterZeroWidth, LEGlyphStorage &glyphStorage) const
 {
     le_int32 i, out = 0, dir = 1;
 
@@ -77,12 +76,14 @@ void LEFontInstance::mapCharsToGlyphs(const LEUnicode chars[], le_int32 offset, 
     }
 }
 
-LEGlyphID LEFontInstance::mapCharToGlyph(LEUnicode32 ch, const LECharMapper *mapper) const
+LEGlyphID
+LEFontInstance::mapCharToGlyph(LEUnicode32 ch, const LECharMapper *mapper) const
 {
     return mapCharToGlyph(ch, mapper, TRUE);
 }
 
-LEGlyphID LEFontInstance::mapCharToGlyph(LEUnicode32 ch, const LECharMapper *mapper, le_bool filterZeroWidth) const
+LEGlyphID
+LEFontInstance::mapCharToGlyph(LEUnicode32 ch, const LECharMapper *mapper, le_bool filterZeroWidth) const
 {
     LEUnicode32 mappedChar = mapper->mapChar(ch);
 
@@ -107,40 +108,47 @@ float LEFontInstance::xUnitsToPoints(float xUnits) const
     return (xUnits * getXPixelsPerEm()) / (float) getUnitsPerEM();
 }
 
-float LEFontInstance::yUnitsToPoints(float yUnits) const
+float
+LEFontInstance::yUnitsToPoints(float yUnits) const
 {
     return (yUnits * getYPixelsPerEm()) / (float) getUnitsPerEM();
 }
 
-void LEFontInstance::unitsToPoints(LEPoint &units, LEPoint &points) const
+void
+LEFontInstance::unitsToPoints(LEPoint &units, LEPoint &points) const
 {
     points.fX = xUnitsToPoints(units.fX);
     points.fY = yUnitsToPoints(units.fY);
 }
 
-float LEFontInstance::xPixelsToUnits(float xPixels) const
+float
+LEFontInstance::xPixelsToUnits(float xPixels) const
 {
     return (xPixels * getUnitsPerEM()) / (float) getXPixelsPerEm();
 }
 
-float LEFontInstance::yPixelsToUnits(float yPixels) const
+float
+LEFontInstance::yPixelsToUnits(float yPixels) const
 {
     return (yPixels * getUnitsPerEM()) / (float) getYPixelsPerEm();
 }
 
-void LEFontInstance::pixelsToUnits(LEPoint &pixels, LEPoint &units) const
+void
+LEFontInstance::pixelsToUnits(LEPoint &pixels, LEPoint &units) const
 {
     units.fX = xPixelsToUnits(pixels.fX);
     units.fY = yPixelsToUnits(pixels.fY);
 }
 
-void LEFontInstance::transformFunits(float xFunits, float yFunits, LEPoint &pixels) const
+void
+LEFontInstance::transformFunits(float xFunits, float yFunits, LEPoint &pixels) const
 {
     pixels.fX = xUnitsToPoints(xFunits) * getScaleFactorX();
     pixels.fY = yUnitsToPoints(yFunits) * getScaleFactorY();
 }
 
-le_int32 LEFontInstance::getLineHeight() const
+le_int32
+LEFontInstance::getLineHeight() const
 {
     return getAscent() + getDescent() + getLeading();
 }

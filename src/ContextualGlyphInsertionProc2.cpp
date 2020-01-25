@@ -12,8 +12,8 @@
 U_NAMESPACE_BEGIN
 
 ContextualGlyphInsertionProcessor2::ContextualGlyphInsertionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success)
-    : StateTableProcessor2(header, dir, success),
-      contextualGlyphInsertionHeader(header, success)
+    : StateTableProcessor2(header, dir, success)
+    , contextualGlyphInsertionHeader(header, success)
 {
     if (LE_FAILURE(success))
         return;
@@ -27,14 +27,16 @@ ContextualGlyphInsertionProcessor2::~ContextualGlyphInsertionProcessor2()
 {
 }
 
-void ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
+void
+ContextualGlyphInsertionProcessor2::beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
 {
     markGlyph = 0;
 
     glyphStorage.setInsertionDirection(dir == -1 ? TRUE : FALSE);
 }
 
-void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int32 atGlyph, le_uint16 &index, le_uint16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)
+void
+ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorage, le_int32 atGlyph, le_uint16 &index, le_uint16 count, le_bool /* isKashidaLike */, le_bool isBefore, LEErrorCode &success)
 {
     if (!count)
         return;
@@ -67,7 +69,8 @@ void ContextualGlyphInsertionProcessor2::doInsertion(LEGlyphStorage &glyphStorag
     }
 }
 
-le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
+le_uint16
+ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return 0;
@@ -107,7 +110,8 @@ le_uint16 ContextualGlyphInsertionProcessor2::processStateEntry(LEGlyphStorage &
     return newState;
 }
 
-void ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
+void
+ContextualGlyphInsertionProcessor2::endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &)
 {
     // The following description about dontAdvance flag was added.
     // "This does not mean that the glyph pointed to is the same one as before.

@@ -23,7 +23,10 @@ struct InsertionRecord
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LEInsertionList)
 
 LEInsertionList::LEInsertionList(le_bool rightToLeft)
-: head(NULL), tail(NULL), growAmount(0), append(rightToLeft)
+    : head(NULL)
+    , tail(NULL)
+    , growAmount(0)
+    , append(rightToLeft)
 {
     tail = (InsertionRecord *) &head;
 }
@@ -33,7 +36,8 @@ LEInsertionList::~LEInsertionList()
     reset();
 }
 
-void LEInsertionList::reset()
+void
+LEInsertionList::reset()
 {
     while (head != NULL) {
         InsertionRecord *record = head;
@@ -46,26 +50,28 @@ void LEInsertionList::reset()
     growAmount = 0;
 }
 
-void LEInsertionList::setAppend(le_bool rightToLeft)
+void
+LEInsertionList::setAppend(le_bool rightToLeft)
 {
     reset();
 
     append = rightToLeft;
 }
 
-le_int32 LEInsertionList::getGrowAmount()
+le_int32
+LEInsertionList::getGrowAmount()
 {
     return growAmount;
 }
 
-LEGlyphID *LEInsertionList::insert(le_int32 position, le_int32 count, LEErrorCode &success)
+LEGlyphID *
+LEInsertionList::insert(le_int32 position, le_int32 count, LEErrorCode &success)
 {
-    if (LE_FAILURE(success)) {
+    if (LE_FAILURE(success))
         return 0;
-    }
 
     InsertionRecord *insertion = (InsertionRecord *) LE_NEW_ARRAY(char, sizeof(InsertionRecord) + (count - ANY_NUMBER) * sizeof (LEGlyphID));
-    if (insertion == NULL) { 
+    if (insertion == NULL) {
         success = LE_MEMORY_ALLOCATION_ERROR;
         return 0;
     }
@@ -89,12 +95,12 @@ LEGlyphID *LEInsertionList::insert(le_int32 position, le_int32 count, LEErrorCod
     return insertion->glyphs;
 }
 
-le_bool LEInsertionList::applyInsertions(LEInsertionCallback *callback)
+le_bool
+LEInsertionList::applyInsertions(LEInsertionCallback *callback)
 {
     for (InsertionRecord *rec = head; rec != NULL; rec = rec->next) {
-        if (callback->applyInsertion(rec->position, rec->count, rec->glyphs)) {
+        if (callback->applyInsertion(rec->position, rec->count, rec->glyphs))
             return TRUE;
-        }
     }
 
     return FALSE;

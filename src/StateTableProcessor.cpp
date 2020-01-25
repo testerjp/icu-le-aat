@@ -16,7 +16,8 @@ StateTableProcessor::StateTableProcessor()
 }
 
 StateTableProcessor::StateTableProcessor(const LEReferenceTo<StateTableHeader> &header, le_int32 direction, LEErrorCode &success)
-    : dir(direction), stateTableHeader(header)
+    : dir(direction)
+    , stateTableHeader(header)
 {
     if (LE_FAILURE(success))
         return;
@@ -41,7 +42,8 @@ StateTableProcessor::~StateTableProcessor()
 {
 }
 
-void StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+StateTableProcessor::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return;

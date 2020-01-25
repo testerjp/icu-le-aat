@@ -17,7 +17,9 @@
 U_NAMESPACE_BEGIN
 
 KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
-    : version(0), nTables(0), table(base)
+    : version(0)
+    , nTables(0)
+    , table(base)
 {
     if (LE_FAILURE(success))
         return;
@@ -42,7 +44,8 @@ KernTable::KernTable(const LETableReference &base, LEErrorCode &success)
     }
 }
 
-void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
+void
+KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
 {
     if (LE_FAILURE(success))
         return;
@@ -84,7 +87,8 @@ void KernTable::process(LEGlyphStorage &glyphStorage, LEErrorCode &success)
     }
 }
 
-void KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+void
+KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
     SubtableProcessor *processor = NULL;
 
@@ -105,7 +109,8 @@ void KernSubtableHeader::process(const LEReferenceTo<KernSubtableHeader> &base, 
     }
 }
 
-void KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+void
+KernSubtableHeader2::process(const LEReferenceTo<KernSubtableHeader2> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
     SubtableProcessor *processor = NULL;
 

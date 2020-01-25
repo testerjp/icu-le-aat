@@ -626,13 +626,13 @@ enum LEFeatureENUMs {
   LE_SS05_FEATURE_ENUM,  /**< Feature specific enum */
   LE_SS06_FEATURE_ENUM,  /**< Feature specific enum */
   LE_SS07_FEATURE_ENUM,   /**< Feature specific enum */
-  
+
   LE_CHAR_FILTER_FEATURE_ENUM = 31, /**< Apply CharSubstitutionFilter */
   LE_FEATURE_ENUM_MAX = LE_CHAR_FILTER_FEATURE_ENUM
 };
 
 
-/** 
+/**
  * Flags for typographic features.
  * @internal
  * @{

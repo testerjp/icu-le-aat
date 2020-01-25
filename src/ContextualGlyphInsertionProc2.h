@@ -24,10 +24,7 @@ class ContextualGlyphInsertionProcessor2 : public StateTableProcessor2
 {
 public:
     virtual void beginStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
-
-    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage,
-                                        le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success);
-
+    virtual le_uint16 processStateEntry(LEGlyphStorage &glyphStorage, le_int32 &currGlyph, EntryTableIndex2 index, LEErrorCode &success);
     virtual void endStateTable(LEGlyphStorage &glyphStorage, LEErrorCode &success);
 
     ContextualGlyphInsertionProcessor2(const LEReferenceTo<StateTableHeader2> &header, le_int32 dir, LEErrorCode &success);
@@ -47,11 +44,10 @@ private:
     void doInsertion(LEGlyphStorage &glyphStorage, le_int32 atGlyph, le_uint16 &index, le_uint16 count, le_bool isKashidaLike, le_bool isBefore, LEErrorCode &success);
 
 protected:
-    le_int32 markGlyph;
-
-    LEReferenceTo<ContextualGlyphInsertionHeader2> contextualGlyphInsertionHeader;
+    le_int32                                                  markGlyph;
+    LEReferenceTo<ContextualGlyphInsertionHeader2>            contextualGlyphInsertionHeader;
     LEReferenceToArrayOf<ContextualGlyphInsertionStateEntry2> entryTable;
-    LEReferenceToArrayOf<le_uint16> insertionAction;
+    LEReferenceToArrayOf<le_uint16>                           insertionAction;
 };
 
 U_NAMESPACE_END

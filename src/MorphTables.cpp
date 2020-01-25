@@ -21,7 +21,8 @@
 
 U_NAMESPACE_BEGIN
 
-void MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+void
+MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
     le_uint32 chainCount  = SWAPL(nChains);
     le_uint32 chainOffset = 0;
@@ -57,7 +58,8 @@ void MorphTableHeader::process(const LETableReference &base, LEGlyphStorage &gly
     }
 }
 
-void MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
+void
+MorphSubtableHeader::process(const LEReferenceTo<MorphSubtableHeader> &base, LEGlyphStorage &glyphStorage, LEErrorCode &success) const
 {
     SubtableProcessor *processor = NULL;
 

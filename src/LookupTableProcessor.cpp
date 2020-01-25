@@ -8,7 +8,8 @@ LookupTableProcessor::~LookupTableProcessor()
 {
 }
 
-LookupTableProcessor *LookupTableProcessor::createInstance(LookupTableFormat format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
+LookupTableProcessor *
+LookupTableProcessor::createInstance(LookupTableFormat format, const LEReferenceTo<LookupTable> &lookupTable, LEErrorCode &success)
 {
     switch (format) {
     case ltfSimpleArray:
@@ -45,7 +46,8 @@ SimpleArrayLookupTableProcessor::~SimpleArrayLookupTableProcessor()
 {
 }
 
-le_bool SimpleArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
+le_bool
+SimpleArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
 {
     TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
 
@@ -80,7 +82,8 @@ SegmentSingleLookupTableProcessor::~SegmentSingleLookupTableProcessor()
 {
 }
 
-le_bool SegmentSingleLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
+le_bool
+SegmentSingleLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
 {
     TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
 
@@ -111,7 +114,8 @@ SegmentArrayLookupTableProcessor::~SegmentArrayLookupTableProcessor()
 {
 }
 
-le_bool SegmentArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
+le_bool
+SegmentArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
 {
     TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
 
@@ -155,7 +159,8 @@ SingleTableLookupTableProcessor::~SingleTableLookupTableProcessor()
 {
 }
 
-le_bool SingleTableLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
+le_bool
+SingleTableLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
 {
     TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
 
@@ -189,7 +194,8 @@ TrimmedArrayLookupTableProcessor::~TrimmedArrayLookupTableProcessor()
 {
 }
 
-le_bool TrimmedArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
+le_bool
+TrimmedArrayLookupTableProcessor::lookup(LEGlyphID glyph, LookupValue &value, LEErrorCode &success)
 {
     TTGlyphID ttGlyph = (TTGlyphID)LE_GET_GLYPH(glyph);
 

@@ -10,7 +10,7 @@
 #include "LETypes.h"
 
 /**
- * \file 
+ * \file
  * \brief C++ API: Endian independent access to data for LayoutEngine
  */
 

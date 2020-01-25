@@ -11,7 +11,7 @@
 
 #ifndef U_HIDE_INTERNAL_API
 /**
- * \file 
+ * \file
  * \brief C API for complex text layout.
  * \internal
  *
@@ -50,11 +50,7 @@ typedef void le_font;
  * @internal
  */
 U_INTERNAL le_engine * U_EXPORT2
-le_create(const le_font *font,
-          le_int32 scriptCode,
-          le_int32 languageCode,
-          le_int32 typo_flags,
-          LEErrorCode *success);
+le_create(const le_font *font,le_int32 scriptCode, le_int32 languageCode, le_int32 typo_flags, LEErrorCode *success);
 
 /**
  * This function closes the given LayoutEngine. After
@@ -92,15 +88,7 @@ le_close(le_engine *engine);
  * @internal
  */
 U_INTERNAL le_int32 U_EXPORT2
-le_layoutChars(le_engine *engine,
-               const LEUnicode chars[],
-               le_int32 offset,
-               le_int32 count,
-               le_int32 max,
-               le_bool rightToLeft,
-               float x,
-               float y,
-               LEErrorCode *success);
+le_layoutChars(le_engine *engine, const LEUnicode chars[], le_int32 offset, le_int32 count, le_int32 max, le_bool rightToLeft, float x, float y, LEErrorCode *success);
 
 /**
  * This function returns the number of glyphs in the glyph array. Note
@@ -115,8 +103,7 @@ le_layoutChars(le_engine *engine,
  * @internal
  */
 U_INTERNAL le_int32 U_EXPORT2
-le_getGlyphCount(le_engine *engine,
-                 LEErrorCode *success);
+le_getGlyphCount(le_engine *engine, LEErrorCode *success);
 
 /**
  * This function copies the glyph array into a caller supplied array.
@@ -130,9 +117,7 @@ le_getGlyphCount(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_getGlyphs(le_engine *engine,
-             LEGlyphID glyphs[],
-             LEErrorCode *success);
+le_getGlyphs(le_engine *engine, LEGlyphID glyphs[], LEErrorCode *success);
 
 /**
  * This function copies the character index array into a caller supplied array.
@@ -146,9 +131,7 @@ le_getGlyphs(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_getCharIndices(le_engine *engine,
-                  le_int32 charIndices[],
-                  LEErrorCode *success);
+le_getCharIndices(le_engine *engine, le_int32 charIndices[], LEErrorCode *success);
 
 /**
  * This function copies the character index array into a caller supplied array.
@@ -163,10 +146,7 @@ le_getCharIndices(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_getCharIndicesWithBase(le_engine *engine,
-                  le_int32 charIndices[],
-                  le_int32 indexBase,
-                  LEErrorCode *success);
+le_getCharIndicesWithBase(le_engine *engine, le_int32 charIndices[], le_int32 indexBase, LEErrorCode *success);
 
 /**
  * This function copies the position array into a caller supplied array.
@@ -181,9 +161,7 @@ le_getCharIndicesWithBase(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_getGlyphPositions(le_engine *engine,
-                     float positions[],
-                     LEErrorCode *success);
+le_getGlyphPositions(le_engine *engine, float positions[], LEErrorCode *success);
 
 /**
  * This function returns the X and Y position of the glyph at
@@ -201,11 +179,7 @@ le_getGlyphPositions(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_getGlyphPosition(le_engine *engine,
-                    le_int32 glyphIndex,
-                    float *x,
-                    float *y,
-                    LEErrorCode *success);
+le_getGlyphPosition(le_engine *engine, le_int32 glyphIndex, float *x, float *y, LEErrorCode *success);
 
 /**
  * This function frees the glyph, character index and position arrays
@@ -218,8 +192,7 @@ le_getGlyphPosition(le_engine *engine,
  * @internal
  */
 U_INTERNAL void U_EXPORT2
-le_reset(le_engine *engine,
-         LEErrorCode *success);
+le_reset(le_engine *engine, LEErrorCode *success);
 #endif  /* U_HIDE_INTERNAL_API */
 
 #endif

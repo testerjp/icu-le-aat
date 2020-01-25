@@ -12,7 +12,7 @@
 #include "LEInsertionList.h"
 
 /**
- * \file 
+ * \file
  * \brief C++ API: This class encapsulates the per-glyph storage used by the ICU LayoutEngine.
  */
 
@@ -47,7 +47,7 @@ private:
      * @internal
      */
     LEGlyphID *fGlyphs;
- 
+
     /**
      * The char indices array.
      *
@@ -352,8 +352,8 @@ public:
     LEGlyphID *insertGlyphs(le_int32 atIndex, le_int32 insertCount);
 
     /**
-     * This method is used to reposition glyphs during Indic v2 processing.  It moves 
-     * all of the relevant glyph information ( glyph, indices, positions, and auxData ), 
+     * This method is used to reposition glyphs during Indic v2 processing.  It moves
+     * all of the relevant glyph information ( glyph, indices, positions, and auxData ),
      * from the source position to the target position, and also allows for a marker bit
      * to be set in the target glyph's auxData so that it won't be reprocessed later in the
      * cycle.

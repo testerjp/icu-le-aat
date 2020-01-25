@@ -45,8 +45,8 @@ protected:
     le_uint32 stateArrayOffset;
     le_uint32 entryTableOffset;
 
-    LEReferenceTo<StateTableHeader2> stateTableHeader;
-    LEReferenceTo<LookupTable> classTable;
+    LEReferenceTo<StateTableHeader2>       stateTableHeader;
+    LEReferenceTo<LookupTable>             classTable;
     LEReferenceToArrayOf<EntryTableIndex2> stateArray;
 
     LookupTableProcessor *processor;

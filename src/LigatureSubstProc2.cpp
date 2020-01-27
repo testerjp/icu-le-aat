@@ -140,7 +140,7 @@ LigatureSubstitutionProcessor2::processStateEntry(LEGlyphStorage &glyphStorage, 
         currGlyph += dir;
 
     if (newState == 0 || newState == 1)
-         m = -1; // undocumented
+        m = -1; // undocumented
 
     return newState;
 }
